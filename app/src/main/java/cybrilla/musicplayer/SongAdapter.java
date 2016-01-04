@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +26,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private MediaPlayer mediaPlayer;
     private TextView selectedTractTitle;
     private ImageView playerController;
+    private static final String TAG = "SongAdapter";
+    private boolean isPaused = false;
 
     public SongAdapter(List<Song> allSongList, Activity activity){
         this.allSongList = new ArrayList<>(allSongList);
@@ -58,8 +61,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private void toggleMusicPlayer(){
         if (mediaPlayer.isPlaying()){
             mediaPlayer.pause();
+            isPaused = true;
             playerController.setImageResource(R.drawable.ic_play);
         } else {
+            isPaused = false;
             mediaPlayer.start();
             playerController.setImageResource(R.drawable.ic_pause);
         }
@@ -69,7 +74,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying() || isPaused){
                     mediaPlayer.stop();
                     mediaPlayer.reset();
                 }
@@ -90,6 +95,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 }
             }
         });
+    }
+
+    public void releaseMediaPlayer(){
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                Log.e(TAG, "Called when playing");
+            }
+            Log.e(TAG, "Called when not playing");
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.provider.MediaStore.Audio.Media;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class AllSongsActivity extends AppCompatActivity{
     private List<Song> allSongsList;
     private RecyclerView songList;
     private SongAdapter mAdapter;
+    private static final String TAG = "AllSongsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,5 +62,12 @@ public class AllSongsActivity extends AppCompatActivity{
         }
         mAdapter = new SongAdapter(allSongsList, this);
         songList.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG, "Destroy called");
+        mAdapter.releaseMediaPlayer();
+        super.onDestroy();
     }
 }
