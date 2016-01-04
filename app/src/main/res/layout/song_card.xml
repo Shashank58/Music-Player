@@ -17,15 +17,17 @@
             android:layout_height="wrap_content"
             android:id="@+id/song_title"
             android:textSize="18sp"
+            android:padding="5dp"
             android:textStyle="bold"
-            android:gravity="center_horizontal"/>
+            android:gravity="start"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/song_artist"
-            android:textSize="16sp"
-            android:gravity="center_horizontal"/>
+            android:textSize="12sp"
+            android:padding="5dp"
+            android:gravity="start"/>
 
     </LinearLayout>
 

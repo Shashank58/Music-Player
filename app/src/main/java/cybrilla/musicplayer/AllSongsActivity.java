@@ -13,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllSongsActivity extends AppCompatActivity {
+public class AllSongsActivity extends AppCompatActivity{
     private List<Song> allSongsList;
     private RecyclerView songList;
     private SongAdapter mAdapter;
@@ -23,6 +23,7 @@ public class AllSongsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_songs);
         songList = (RecyclerView) findViewById(R.id.songList);
+
         songList.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         songList.setLayoutManager(linearLayout);
@@ -57,7 +58,7 @@ public class AllSongsActivity extends AppCompatActivity {
             } while (musicCursor.moveToNext());
             musicCursor.close();
         }
-        mAdapter = new SongAdapter(allSongsList);
+        mAdapter = new SongAdapter(allSongsList, this);
         songList.setAdapter(mAdapter);
     }
 }
