@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private ImageView playerController;
     private static final String TAG = "SongAdapter";
     private boolean isPaused = false;
+    private Toolbar songSelectedToolbar;
 
     public SongAdapter(List<Song> allSongList, Activity activity){
         this.allSongList = new ArrayList<>(allSongList);
@@ -39,8 +41,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
         setMediaPlayer();
-        selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
-        playerController = (ImageView) mActivity.findViewById(R.id.player_control);
+        songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
 
         songSelected(view);
 
@@ -62,11 +63,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         if (mediaPlayer.isPlaying()){
             mediaPlayer.pause();
             isPaused = true;
-            playerController.setImageResource(R.drawable.ic_play);
+            playerController.setImageResource(android.R.drawable.ic_media_play);
         } else {
             isPaused = false;
             mediaPlayer.start();
-            playerController.setImageResource(R.drawable.ic_pause);
+            playerController.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
@@ -74,6 +75,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (songSelectedToolbar.getVisibility() == View.GONE){
+                    songSelectedToolbar.setVisibility(View.VISIBLE);
+                    selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
+                    playerController = (ImageView) mActivity.findViewById(R.id.player_control);
+                }
                 if (mediaPlayer.isPlaying() || isPaused){
                     mediaPlayer.stop();
                     mediaPlayer.reset();
