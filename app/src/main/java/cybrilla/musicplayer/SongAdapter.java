@@ -1,8 +1,11 @@
 package cybrilla.musicplayer;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build.VERSION_CODES;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +45,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public SongAdapter.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
-        setMediaPlayer();
+        if (mediaPlayer == null) {
+            setMediaPlayer();
+        }
         songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
 
         songSelected(view);
@@ -49,6 +56,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     private void setMediaPlayer(){
+        Log.e(TAG, "How many times is this called");
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -76,7 +84,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             @Override
             public void onClick(View v) {
                 if (songSelectedToolbar.getVisibility() == View.GONE){
-                    songSelectedToolbar.setVisibility(View.VISIBLE);
+                    setSelectedLayoutVisible();
                     selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
                     playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 }
@@ -101,6 +109,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 }
             }
         });
+    }
+
+    @TargetApi(VERSION_CODES.LOLLIPOP)
+    private void setSelectedLayoutVisible(){
+        songSelectedToolbar.setVisibility(View.INVISIBLE);
+        int cx = songSelectedToolbar.getWidth() / 2;
+        int cy = songSelectedToolbar.getHeight() / 2;
+
+        int finalRadius = Math.max(songSelectedToolbar.getWidth(), songSelectedToolbar.getHeight());
+
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(songSelectedToolbar, cx, cy, 0, finalRadius);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setDuration(100);
+        songSelectedToolbar.setVisibility(View.VISIBLE);
+        anim.start();
     }
 
     public void releaseMediaPlayer(){

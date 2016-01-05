@@ -3,8 +3,8 @@
     package="cybrilla.musicplayer" >
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".AllSongsActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +22,13 @@
             </intent-filter>
         </activity>
         a
-        <!--<service android:name="cybrilla.musicplayer.MusicService"/>-->
+        <!-- <service android:name="cybrilla.musicplayer.MusicService"/> -->
+        <activity
+            android:name=".SongDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_song_detail"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>
