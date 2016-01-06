@@ -1,21 +1,17 @@
-package cybrilla.musicplayer;
+package cybrilla.musicplayer.adapter;
 
-import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build.VERSION_CODES;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,17 +19,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.MusicPlayerHelper;
+
 /**
  * Created by shashankm on 03/01/16.
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private List<Song> allSongList;
     private Activity mActivity;
-    private MediaPlayer mediaPlayer;
     private TextView selectedTractTitle;
     private ImageView playerController;
     private static final String TAG = "SongAdapter";
-    private boolean isPaused = false;
     private Toolbar songSelectedToolbar;
 
     public SongAdapter(List<Song> allSongList, Activity activity){
@@ -45,8 +43,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public SongAdapter.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
-        if (mediaPlayer == null) {
-            setMediaPlayer();
+        if (MusicPlayerHelper.mediaPlayer == null) {
+            MusicPlayerHelper.getInstance().initializeMediaPlayer(playerController);
         }
         songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
 
@@ -55,55 +53,32 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return new SongViewHolder(view);
     }
 
-    private void setMediaPlayer(){
-        Log.e(TAG, "How many times is this called");
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                toggleMusicPlayer();
-            }
-        });
-    }
-
-    private void toggleMusicPlayer(){
-        if (mediaPlayer.isPlaying()){
-            mediaPlayer.pause();
-            isPaused = true;
-            playerController.setImageResource(android.R.drawable.ic_media_play);
-        } else {
-            isPaused = false;
-            mediaPlayer.start();
-            playerController.setImageResource(android.R.drawable.ic_media_pause);
-        }
-    }
-
     private void songSelected(View view){
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (songSelectedToolbar.getVisibility() == View.GONE){
-                    setSelectedLayoutVisible();
+                if (songSelectedToolbar.getVisibility() == View.GONE) {
+                    animateSongPlayerLayout();
                     selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
                     playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 }
-                if (mediaPlayer.isPlaying() || isPaused){
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
+                playerController.setImageResource(android.R.drawable.ic_media_pause);
+                if (MusicPlayerHelper.mediaPlayer.isPlaying() || MusicPlayerHelper.isPaused) {
+                    MusicPlayerHelper.mediaPlayer.stop();
+                    MusicPlayerHelper.mediaPlayer.reset();
                 }
                 int pos = (int) v.getTag();
                 Song s = allSongList.get(pos);
                 playerController.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleMusicPlayer();
+                        MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
                     }
                 });
                 selectedTractTitle.setText(s.getSongTitle());
                 try {
-                    mediaPlayer.setDataSource(mActivity, s.getUri());
-                    mediaPlayer.prepareAsync();
+                    MusicPlayerHelper.mediaPlayer.setDataSource(mActivity, s.getUri());
+                    MusicPlayerHelper.mediaPlayer.prepareAsync();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -112,31 +87,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
-    private void setSelectedLayoutVisible(){
-        songSelectedToolbar.setVisibility(View.INVISIBLE);
-        int cx = songSelectedToolbar.getWidth() / 2;
-        int cy = songSelectedToolbar.getHeight() / 2;
-
-        int finalRadius = Math.max(songSelectedToolbar.getWidth(), songSelectedToolbar.getHeight());
-
-        Animator anim =
-                ViewAnimationUtils.createCircularReveal(songSelectedToolbar, cx, cy, 0, finalRadius);
-        anim.setInterpolator(new AccelerateInterpolator());
-        anim.setDuration(100);
+    private void animateSongPlayerLayout(){
+        TransitionManager.beginDelayedTransition(songSelectedToolbar, new Fade());
         songSelectedToolbar.setVisibility(View.VISIBLE);
-        anim.start();
-    }
-
-    public void releaseMediaPlayer(){
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-                Log.e(TAG, "Called when playing");
-            }
-            Log.e(TAG, "Called when not playing");
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
     }
 
     @Override

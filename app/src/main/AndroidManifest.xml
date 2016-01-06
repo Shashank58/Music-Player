@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".AllSongsActivity"
+            android:name=".android.AllSongsActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
         a
         <!-- <service android:name="cybrilla.musicplayer.MusicService"/> -->
         <activity
-            android:name=".SongDetailActivity"
+            android:name=".android.SongDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_song_detail"
             android:theme="@style/FullscreenTheme" >

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer;
+package cybrilla.musicplayer.modle;
 
 import android.content.ContentUris;
 import android.net.Uri;
