@@ -6,8 +6,6 @@ import android.os.Build.VERSION_CODES;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,27 +65,21 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     MusicPlayerHelper.mediaPlayer.reset();
                 }
                 int pos = (int) v.getTag();
-                Song s = allSongList.get(pos);
+                String title = MusicPlayerHelper.getInstance().startMusic(pos, mActivity);
                 playerController.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
                     }
                 });
-                selectedTractTitle.setText(s.getSongTitle());
-                try {
-                    MusicPlayerHelper.mediaPlayer.setDataSource(mActivity, s.getUri());
-                    MusicPlayerHelper.mediaPlayer.prepareAsync();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                selectedTractTitle.setText(title);
             }
         });
     }
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
     private void animateSongPlayerLayout(){
-        TransitionManager.beginDelayedTransition(songSelectedToolbar, new Fade());
+        //TransitionManager.beginDelayedTransition(songSelectedToolbar, new Fade());
         songSelectedToolbar.setVisibility(View.VISIBLE);
     }
 
