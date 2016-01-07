@@ -19,7 +19,7 @@ import cybrilla.musicplayer.modle.Song;
 /**
  * Created by shashankm on 05/01/16.
  */
-public class MusicPlayerHelper {
+public class MusicPlayerHelper{
     public static MediaPlayer mediaPlayer;
     private static MusicPlayerHelper instance;
     public static boolean isPaused = false;

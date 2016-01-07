@@ -1,10 +1,13 @@
 package cybrilla.musicplayer.android;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
@@ -14,6 +17,8 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     public static final String TITLE_NAME = "TITLE_NAME";
     private TextView detailSelectedTrack;
     private ImageView detailController, detailFastForward, detailReverse;
+    private SeekBar musicSeeker;
+    Handler seekHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +32,37 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailController = (ImageView) findViewById(R.id.detail_controller);
         detailFastForward = (ImageView) findViewById(R.id.detail_fast_forward);
         detailReverse = (ImageView) findViewById(R.id.detail_reverse);
+        musicSeeker = (SeekBar) findViewById(R.id.music_seeker);
 
-        if (MusicPlayerHelper.mediaPlayer.isPlaying())
+        if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
             detailController.setImageResource(android.R.drawable.ic_media_pause);
+        }
 
         detailSelectedTrack.setText(getIntent().getStringExtra(TITLE_NAME));
         detailController.setOnClickListener(this);
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
+        musicSeeker.setMax(MusicPlayerHelper.mediaPlayer.getDuration());
+        seekUpdation();
+    }
+
+    Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            seekUpdation();
+        }
+    };
+
+    private void seekUpdation(){
+        musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+        Log.e("Song detail", "The position is: "+MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+        seekHandler.postDelayed(run, 1000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        seekHandler.removeCallbacks(run);
+        super.onDestroy();
     }
 
     @Override
@@ -42,6 +70,10 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()){
             case R.id.detail_controller:
                 MusicPlayerHelper.getInstance().toggleMusicPlayer(detailController);
+                if (MusicPlayerHelper.isPaused)
+                    seekHandler.removeCallbacks(run);
+                else
+                    seekUpdation();
                 break;
 
             case R.id.detail_fast_forward:

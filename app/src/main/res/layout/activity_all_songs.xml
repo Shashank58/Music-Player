@@ -40,6 +40,7 @@
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
                 android:layout_weight="1"
+                android:layout_marginTop="15dp"
                 android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
