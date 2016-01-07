@@ -15,11 +15,6 @@
         <activity
             android:name=".android.AllSongsActivity"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         a
         <!-- <service android:name="cybrilla.musicplayer.MusicService"/> -->
@@ -28,6 +23,13 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_song_detail"
             android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity android:name=".android.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -15,6 +14,7 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TITLE_NAME = "TITLE_NAME";
+    public static final String ALBUM_COVER = "ALBUM_COVER";
     private TextView detailSelectedTrack;
     private ImageView detailController, detailFastForward, detailReverse;
     private SeekBar musicSeeker;
@@ -37,7 +37,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         }
-
         detailSelectedTrack.setText(getIntent().getStringExtra(TITLE_NAME));
         detailController.setOnClickListener(this);
         detailFastForward.setOnClickListener(this);
@@ -55,7 +54,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
 
     private void seekUpdation(){
         musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
-        Log.e("Song detail", "The position is: "+MusicPlayerHelper.mediaPlayer.getCurrentPosition());
         seekHandler.postDelayed(run, 1000);
     }
 

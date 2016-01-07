@@ -97,6 +97,7 @@ public class MusicPlayerHelper{
                     (Media.ALBUM);
             int durationColumn = musicCursor.getColumnIndex
                     (Media.DURATION);
+
             do {
                 long id = musicCursor.getLong(idColumn);
                 String title = musicCursor.getString(titleColumn);
@@ -112,6 +113,10 @@ public class MusicPlayerHelper{
 
     public String getSongTitle(){
         return allSongsList.get(songPosition).getSongTitle();
+    }
+
+    public Uri getSongUri() {
+        return allSongsList.get(songPosition).getUri();
     }
 
     public String playNextSong(Activity activity){

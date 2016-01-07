@@ -2,7 +2,15 @@ package cybrilla.musicplayer.adapter;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build.VERSION_CODES;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
@@ -27,9 +36,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private List<Song> allSongList;
     private Activity mActivity;
     private TextView selectedTractTitle;
-    private ImageView playerController;
+    private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
+    public static int selectedSongPosition;
 
     public SongAdapter(List<Song> allSongList, Activity activity){
         this.allSongList = new ArrayList<>(allSongList);
@@ -54,11 +64,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedSongPosition = (int) v.getTag();
                 if (songSelectedToolbar.getVisibility() == View.GONE) {
                     animateSongPlayerLayout();
                     selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
                     playerController = (ImageView) mActivity.findViewById(R.id.player_control);
+                    selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 }
+                ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
+                BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
+                if (bitmapDrawable != null)
+                    selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
                 playerController.setImageResource(android.R.drawable.ic_media_pause);
                 if (MusicPlayerHelper.mediaPlayer.isPlaying() || MusicPlayerHelper.isPaused) {
                     MusicPlayerHelper.mediaPlayer.stop();
@@ -75,6 +91,26 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 selectedTractTitle.setText(title);
             }
         });
+        setToolBarListener();
+    }
+
+    private void setToolBarListener(){
+        songSelectedToolbar.setOnClickListener(new OnClickListener() {
+            @TargetApi(VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, SongDetailActivity.class);
+                intent.putExtra(SongDetailActivity.TITLE_NAME,
+                        selectedTractTitle.getText().toString());
+                intent.putExtra(SongDetailActivity.ALBUM_COVER,
+                        allSongList.get(selectedSongPosition).getUri().toString());
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation
+                                (mActivity, songSelectedToolbar
+                                        , songSelectedToolbar.getTransitionName());
+                ActivityCompat.startActivity(mActivity, intent, options.toBundle());
+            }
+        });
     }
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
@@ -89,6 +125,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         Song song = allSongList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        byte[] rawArt;
+        Bitmap art;
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        Uri uri = song.getUri();
+        mmr.setDataSource(mActivity, uri);
+        try {
+            rawArt = mmr.getEmbeddedPicture();
+            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
+            holder.songImage.setImageBitmap(art);
+        } catch (Exception e) {
+            holder.songImage.setImageResource(R.mipmap.ic_launcher);
+        }
+
     }
 
     @Override
@@ -99,12 +149,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public static class SongViewHolder extends RecyclerView.ViewHolder{
         protected TextView songTitle, songArtist;
         protected CardView songCard;
+        protected ImageView songImage;
 
         public SongViewHolder(View itemView) {
             super(itemView);
             songTitle = (TextView) itemView.findViewById(R.id.song_title);
             songArtist = (TextView) itemView.findViewById(R.id.song_artist);
             songCard = (CardView) itemView.findViewById(R.id.songCard);
+            songImage = (ImageView) itemView.findViewById(R.id.song_image);
         }
     }
 }

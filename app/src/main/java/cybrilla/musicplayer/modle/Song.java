@@ -34,6 +34,7 @@ public class Song {
         return songDuration;
     }
 
+
     public String getSongAlbum(){
         return songAlbum;
     }
