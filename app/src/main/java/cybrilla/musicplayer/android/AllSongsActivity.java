@@ -55,7 +55,6 @@ public class AllSongsActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        super.onResume();
         selectedSongTrack.setText(MusicPlayerHelper.getInstance().getSongTitle());
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
@@ -67,16 +66,16 @@ public class AllSongsActivity extends AppCompatActivity{
             art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
             selectedAlbumCover.setImageBitmap(art);
         } catch (Exception e) {
-            selectedAlbumCover.setImageResource(R.mipmap.ic_launcher);
+            selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
         }
         if (MusicPlayerHelper.mediaPlayer != null) {
             if (MusicPlayerHelper.mediaPlayer.isPlaying())
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                playerControl.setImageResource(R.drawable.ic_pause);
             else
-                playerControl.setImageResource(android.R.drawable.ic_media_play);
+                playerControl.setImageResource(R.drawable.ic_play);
         }
+        super.onResume();
     }
-
 
     @Override
     protected void onDestroy() {

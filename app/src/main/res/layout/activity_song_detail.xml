@@ -2,17 +2,18 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/song_card_black"
+             android:background="@drawable/blue_image"
              tools:context="cybrilla.musicplayer.android.SongDetailActivity">
 
 
         <android.support.v7.widget.Toolbar
-            android:background="@color/pure_black"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:id="@+id/playing_song_detail_toolbar"
             android:elevation="4dp"
             android:visibility="visible"
+            android:alpha="0.8"
             android:transitionName="songBar">
 
             <LinearLayout
@@ -29,25 +30,19 @@
                     android:paddingStart="8dp"
                     android:layout_weight="1"
                     android:layout_marginTop="15dp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/pure_black"/>
 
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/playing_song_detail_toolbar"
-            android:layout_above="@+id/detail_controls_layout"
-            android:src="@drawable/song_image"
-            android:scaleType="fitXY"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="110dp"
             android:id="@+id/detail_controls_layout"
             android:background="@color/pure_black"
+            android:alpha="0.8"
             android:layout_alignParentBottom="true">
 
             <SeekBar

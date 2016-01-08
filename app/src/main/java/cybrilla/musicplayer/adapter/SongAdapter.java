@@ -77,7 +77,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)
                     selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
-                playerController.setImageResource(android.R.drawable.ic_media_pause);
+                playerController.setImageResource(R.drawable.ic_pause);
                 if (MusicPlayerHelper.mediaPlayer.isPlaying() || MusicPlayerHelper.isPaused) {
                     MusicPlayerHelper.mediaPlayer.stop();
                     MusicPlayerHelper.mediaPlayer.reset();
@@ -137,7 +137,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
             holder.songImage.setImageBitmap(art);
         } catch (Exception e) {
-            holder.songImage.setImageResource(R.mipmap.ic_launcher);
+            holder.songImage.setImageResource(R.drawable.ic_action_ic_default_cover);
         } finally {
             setAnimation(holder.songCard, position);
         }

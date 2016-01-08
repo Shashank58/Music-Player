@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AllSongsActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/all_songs_bg">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -17,11 +18,11 @@
     </android.support.v7.widget.RecyclerView>
 
     <android.support.v7.widget.Toolbar
-        android:background="@color/pure_black"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:id="@+id/playing_song_toolbar"
-        android:elevation="4dp"
+        app:elevation="4dp"
+        android:background="@color/white"
         android:visibility="gone"
         android:transitionName="songBar">
 
@@ -34,7 +35,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:id="@+id/selected_album_cover"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@drawable/ic_action_ic_default_cover"/>
 
             <TextView
                 android:id="@+id/selected_track_title"
@@ -42,15 +43,17 @@
                 android:paddingStart="8dp"
                 android:layout_weight="1"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/white"
+                android:textColor="@color/pure_black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
 
             <ImageView
                 android:id="@+id/player_control"
                 android:layout_gravity="end"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_width="55dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="55dp"/>
 
         </LinearLayout>
 

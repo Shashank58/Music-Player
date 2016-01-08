@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -61,12 +62,12 @@ public class MusicPlayerHelper{
             mediaPlayer.pause();
             isPaused = true;
             if (playerController != null)
-                playerController.setImageResource(android.R.drawable.ic_media_play);
+                playerController.setImageResource(R.drawable.ic_play);
         } else {
             isPaused = false;
             mediaPlayer.start();
             if (playerController != null)
-                playerController.setImageResource(android.R.drawable.ic_media_pause);
+                playerController.setImageResource(R.drawable.ic_pause);
         }
     }
 

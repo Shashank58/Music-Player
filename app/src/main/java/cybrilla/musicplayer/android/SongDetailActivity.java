@@ -1,11 +1,15 @@
 package cybrilla.musicplayer.android;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -65,6 +69,11 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         });
         seekUpdation();
         completion();
+
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        Log.e("Song detail", "Network info: "+networkInfo.getExtraInfo());
     }
 
     private void completion(){
