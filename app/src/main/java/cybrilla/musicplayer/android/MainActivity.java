@@ -41,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
                 initTransitions();
             }
         });
+
+        albums.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(MainActivity.this, AlbumsActivity.class);
+                isStartAnimation = false;
+                initTransitions();
+            }
+        });
     }
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
@@ -83,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         isStartAnimation = true;
+        intent = null;
         initTransitions();
         super.onResume();
     }

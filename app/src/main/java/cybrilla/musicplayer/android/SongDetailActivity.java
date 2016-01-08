@@ -73,7 +73,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         ConnectivityManager cm = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        Log.e("Song detail", "Network info: "+networkInfo.getExtraInfo());
+        Log.e("Song detail", "Network info: " + networkInfo.getExtraInfo());
     }
 
     private void completion(){
@@ -110,10 +110,14 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()){
             case R.id.detail_controller:
                 MusicPlayerHelper.getInstance().toggleMusicPlayer(detailController);
-                if (MusicPlayerHelper.isPaused)
+                if (MusicPlayerHelper.isPaused) {
                     seekHandler.removeCallbacks(run);
-                else
+                    detailController.setImageResource(android.R.drawable.ic_media_play);
+                }
+                else {
                     seekUpdation();
+                    detailController.setImageResource(android.R.drawable.ic_media_pause);
+                }
                 break;
 
             case R.id.detail_fast_forward:

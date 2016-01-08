@@ -2,12 +2,12 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@drawable/blue_image"
+             android:background="@drawable/musical_image"
              tools:context="cybrilla.musicplayer.android.SongDetailActivity">
 
 
         <android.support.v7.widget.Toolbar
-            android:background="@color/white"
+            android:background="#FF7043"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:id="@+id/playing_song_detail_toolbar"
@@ -16,23 +16,16 @@
             android:alpha="0.8"
             android:transitionName="songBar">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_selected_track"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:textColor="@color/pure_black"/>
-
-            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 

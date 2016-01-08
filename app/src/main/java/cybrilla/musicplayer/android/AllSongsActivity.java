@@ -1,5 +1,6 @@
 package cybrilla.musicplayer.android;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -9,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +30,7 @@ public class AllSongsActivity extends AppCompatActivity{
     private static final String TAG = "AllSongsActivity";
     private Toolbar playingSongToolbar;
     private TextView selectedSongTrack;
-    private ImageView playerControl, selectedAlbumCover;
+    private ImageView playerControl, selectedAlbumCover, connect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +41,22 @@ public class AllSongsActivity extends AppCompatActivity{
         selectedSongTrack = (TextView) findViewById(R.id.selected_track_title);
         playerControl = (ImageView) findViewById(R.id.player_control);
         selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
+        connect = (ImageView) findViewById(R.id.connect);
 
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().hide();
 
         songList.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         songList.setLayoutManager(linearLayout);
         getSongList();
+
+        connect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AllSongsActivity.this, ConnectActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getSongList(){
