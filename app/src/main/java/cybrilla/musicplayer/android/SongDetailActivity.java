@@ -1,5 +1,7 @@
 package cybrilla.musicplayer.android;
 
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -7,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
@@ -42,7 +45,37 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
         musicSeeker.setMax(MusicPlayerHelper.mediaPlayer.getDuration());
+        musicSeeker.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser){
+                    MusicPlayerHelper.mediaPlayer.seekTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         seekUpdation();
+        completion();
+    }
+
+    private void completion(){
+        MusicPlayerHelper.mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                String title = MusicPlayerHelper.getInstance()
+                        .playNextSong(SongDetailActivity.this);
+                detailSelectedTrack.setText(title);
+            }
+        });
     }
 
     Runnable run = new Runnable() {

@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +42,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
     public static int selectedSongPosition;
+    private int lastPosition = -1;
 
     public SongAdapter(List<Song> allSongList, Activity activity){
         this.allSongList = new ArrayList<>(allSongList);
@@ -56,7 +59,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
 
         songSelected(view);
-
         return new SongViewHolder(view);
     }
 
@@ -115,7 +117,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
     private void animateSongPlayerLayout(){
-        //TransitionManager.beginDelayedTransition(songSelectedToolbar, new Fade());
         songSelectedToolbar.setVisibility(View.VISIBLE);
     }
 
@@ -137,8 +138,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             holder.songImage.setImageBitmap(art);
         } catch (Exception e) {
             holder.songImage.setImageResource(R.mipmap.ic_launcher);
+        } finally {
+            setAnimation(holder.songCard, position);
         }
+    }
 
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation
+                    (mActivity, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override

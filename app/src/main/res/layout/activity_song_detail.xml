@@ -56,12 +56,12 @@
                 android:id="@+id/music_seeker"/>
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:id="@+id/detail_controller"
                 android:src="@android:drawable/ic_media_play"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="22dp"/>
 
             <ImageView
                 android:layout_width="50dp"
@@ -73,8 +73,8 @@
                 android:layout_marginLeft="25dp"/>
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:id="@+id/detail_reverse"
                 android:src="@android:drawable/ic_media_rew"
                 android:layout_toLeftOf="@+id/detail_controller"
