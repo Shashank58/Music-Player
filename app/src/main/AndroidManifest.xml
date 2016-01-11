@@ -36,6 +36,8 @@
         </activity>
         <activity android:name=".android.ConnectActivity" >
         </activity>
+        <activity android:name=".android.AlbumSongsActivity" >
+        </activity>
     </application>
 
 </manifest>

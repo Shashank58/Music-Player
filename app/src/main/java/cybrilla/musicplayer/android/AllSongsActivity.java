@@ -1,26 +1,27 @@
 package cybrilla.musicplayer.android;
 
-import android.content.Intent;
+import android.Manifest.permission;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.adapter.SongAdapter;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class AllSongsActivity extends AppCompatActivity{
@@ -35,56 +36,69 @@ public class AllSongsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_songs);
-        songList = (RecyclerView) findViewById(R.id.songList);
-        playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
-        selectedSongTrack = (TextView) findViewById(R.id.selected_track_title);
-        playerControl = (ImageView) findViewById(R.id.player_control);
-        selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
-        connect = (ImageView) findViewById(R.id.connect);
-
-        getSupportActionBar().hide();
-
-        songList.setHasFixedSize(true);
-        LinearLayoutManager linearLayout = new LinearLayoutManager(this);
-        songList.setLayoutManager(linearLayout);
-        getSongList();
-
-        connect.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AllSongsActivity.this, ConnectActivity.class);
-                startActivity(intent);
-            }
-        });
+        if ( ContextCompat.checkSelfPermission(this,
+                permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            Log.e(TAG, "printing?");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permission.READ_EXTERNAL_STORAGE},
+                    Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }else {
+            setContentView(R.layout.activity_all_songs);
+            songList = (RecyclerView) findViewById(R.id.songList);
+            playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
+            selectedSongTrack = (TextView) findViewById(R.id.selected_track_title);
+            playerControl = (ImageView) findViewById(R.id.player_control);
+            selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
+            songList.setHasFixedSize(true);
+            LinearLayoutManager linearLayout = new LinearLayoutManager(this);
+            songList.setLayoutManager(linearLayout);
+            getSongList();
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                }
+            }
+        }
+    }
+
+
     private void getSongList(){
-        allSongsList = new ArrayList<>(MusicPlayerHelper.getInstance().getSongList(this));
-        mAdapter = new SongAdapter(allSongsList, this);
+        MusicPlayerHelper.getInstance().getSongList(this);
+        mAdapter = new SongAdapter(this);
         songList.setAdapter(mAdapter);
     }
 
     @Override
     protected void onResume() {
-        selectedSongTrack.setText(MusicPlayerHelper.getInstance().getSongTitle());
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        byte[] rawArt;
-        Bitmap art;
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
-        mmr.setDataSource(this, MusicPlayerHelper.getInstance().getSongUri());
-        try {
-            rawArt = mmr.getEmbeddedPicture();
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-            selectedAlbumCover.setImageBitmap(art);
-        } catch (Exception e) {
-            selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
-        }
-        if (MusicPlayerHelper.mediaPlayer != null) {
-            if (MusicPlayerHelper.mediaPlayer.isPlaying())
-                playerControl.setImageResource(R.drawable.ic_pause);
-            else
-                playerControl.setImageResource(R.drawable.ic_play);
+        if ( ContextCompat.checkSelfPermission(this,
+                permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            selectedSongTrack.setText(MusicPlayerHelper.getInstance().getSongTitle());
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            byte[] rawArt;
+            Bitmap art;
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            mmr.setDataSource(this, MusicPlayerHelper.getInstance().getSongUri());
+            try {
+                rawArt = mmr.getEmbeddedPicture();
+                art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
+                selectedAlbumCover.setImageBitmap(art);
+            } catch (Exception e) {
+                selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
+            }
+            if (MusicPlayerHelper.mediaPlayer != null) {
+                if (MusicPlayerHelper.mediaPlayer.isPlaying())
+                    playerControl.setImageResource(R.drawable.ic_pause);
+                else
+                    playerControl.setImageResource(R.drawable.ic_play);
+            }
         }
         super.onResume();
     }

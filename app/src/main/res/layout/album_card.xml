@@ -22,10 +22,11 @@
         <ImageView
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@drawable/ic_action_ic_default_cover"
+            android:src="@drawable/no_image"
             android:scaleType="fitXY"
             android:id="@+id/album_image"
-            android:background="#9E9E9E"/>
+            android:background="#9E9E9E"
+            android:transitionName="albumImage"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_alignParentBottom="true"
             android:textColor="@color/pure_black"
             android:gravity="center_horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>
 
     </LinearLayout>

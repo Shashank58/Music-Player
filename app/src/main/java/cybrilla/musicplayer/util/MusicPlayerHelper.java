@@ -24,7 +24,7 @@ public class MusicPlayerHelper{
     public static MediaPlayer mediaPlayer;
     private static MusicPlayerHelper instance;
     public static boolean isPaused = false;
-    private List<Song> allSongsList;
+    public static List<Song> allSongsList;
     private static int songPosition;
 
     public static MusicPlayerHelper getInstance(){
@@ -81,7 +81,7 @@ public class MusicPlayerHelper{
         }
     }
 
-    public List<Song> getSongList(Activity activity){
+    public void getSongList(Activity activity){
         allSongsList = new ArrayList<>();
         ContentResolver musicResolver = activity.getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -109,7 +109,6 @@ public class MusicPlayerHelper{
             } while (musicCursor.moveToNext());
             musicCursor.close();
         }
-        return allSongsList;
     }
 
     public String getSongTitle(){

@@ -3,10 +3,12 @@ package cybrilla.musicplayer.modle;
 import android.content.ContentUris;
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by shashankm on 03/01/16.
  */
-public class Song {
+public class Song implements Serializable{
     private long songId, songDuration;
     private String songTitle, songArtist, songAlbum;
 

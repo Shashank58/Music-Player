@@ -23,19 +23,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
  * Created by shashankm on 03/01/16.
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
-    private List<Song> allSongList;
     private Activity mActivity;
     private TextView selectedTractTitle;
     private ImageView playerController, selectedAlbumCover;
@@ -44,8 +41,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public static int selectedSongPosition;
     private int lastPosition = -1;
 
-    public SongAdapter(List<Song> allSongList, Activity activity){
-        this.allSongList = new ArrayList<>(allSongList);
+    public SongAdapter(Activity activity){
         this.mActivity = activity;
     }
 
@@ -102,10 +98,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, SongDetailActivity.class);
-                intent.putExtra(SongDetailActivity.TITLE_NAME,
+                intent.putExtra(Constants.TITLE_NAME,
                         selectedTractTitle.getText().toString());
-                intent.putExtra(SongDetailActivity.ALBUM_COVER,
-                        allSongList.get(selectedSongPosition).getUri().toString());
+                intent.putExtra(Constants.ALBUM_COVER,
+                        MusicPlayerHelper.allSongsList.get(selectedSongPosition).getUri().toString());
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation
                                 (mActivity, songSelectedToolbar
@@ -123,7 +119,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(SongAdapter.SongViewHolder holder, int position) {
         holder.songCard.setTag(position);
-        Song song = allSongList.get(position);
+        Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -154,7 +150,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @Override
     public int getItemCount() {
-        return allSongList.size();
+        return MusicPlayerHelper.allSongsList.size();
     }
 
     public static class SongViewHolder extends RecyclerView.ViewHolder{

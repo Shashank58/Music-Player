@@ -7,13 +7,12 @@
 
 
         <android.support.v7.widget.Toolbar
-            android:background="#FF7043"
+            android:background="#EF6C00"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:id="@+id/playing_song_detail_toolbar"
             android:elevation="4dp"
             android:visibility="visible"
-            android:alpha="0.8"
             android:transitionName="songBar">
 
                 <TextView
@@ -22,10 +21,10 @@
                     android:id="@+id/detail_selected_track"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:textSize="18sp"
-                    android:layout_gravity="center_horizontal"
+                    android:textSize="16sp"
+                    android:layout_gravity="start"
                     android:layout_marginTop="15dp"
-                    android:textColor="@color/pure_black"/>
+                    android:textColor="@color/white"/>
 
         </android.support.v7.widget.Toolbar>
 
