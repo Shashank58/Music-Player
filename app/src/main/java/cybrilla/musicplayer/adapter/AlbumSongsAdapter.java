@@ -7,8 +7,10 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,15 +32,22 @@ public class AlbumSongsAdapter extends
     }
 
     @Override
-    public AlbumSongsAdapter.AlbumSongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AlbumSongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
+
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Album song adapter", "Working");
+            }
+        });
 
         return new AlbumSongsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AlbumSongsAdapter.AlbumSongsViewHolder holder, int position) {
+    public void onBindViewHolder(AlbumSongsViewHolder holder, int position) {
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
         holder.songCard.setAlpha(1);

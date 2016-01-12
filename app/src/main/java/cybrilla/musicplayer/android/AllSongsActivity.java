@@ -80,12 +80,13 @@ public class AllSongsActivity extends AppCompatActivity{
     protected void onResume() {
         if ( ContextCompat.checkSelfPermission(this,
                 permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            selectedSongTrack.setText(MusicPlayerHelper.getInstance().getSongTitle());
+            int pos = MusicPlayerHelper.songPosition;
+            selectedSongTrack.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             byte[] rawArt;
             Bitmap art;
             BitmapFactory.Options bfo = new BitmapFactory.Options();
-            mmr.setDataSource(this, MusicPlayerHelper.getInstance().getSongUri());
+            mmr.setDataSource(this, MusicPlayerHelper.allSongsList.get(pos).getUri());
             try {
                 rawArt = mmr.getEmbeddedPicture();
                 art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
@@ -106,7 +107,6 @@ public class AllSongsActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         Log.e(TAG, "Destroy called");
-        MusicPlayerHelper.getInstance().releaseMediaPlayer();
         super.onDestroy();
     }
 }

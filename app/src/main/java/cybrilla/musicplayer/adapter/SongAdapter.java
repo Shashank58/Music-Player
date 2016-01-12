@@ -27,6 +27,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
@@ -62,13 +63,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (MusicPlayerHelper.mediaPlayer != null) {
+                    Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
+                    serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+                    mActivity.startService(serviceIntent);
+                }
                 selectedSongPosition = (int) v.getTag();
                 if (songSelectedToolbar.getVisibility() == View.GONE) {
                     animateSongPlayerLayout();
-                    selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
-                    playerController = (ImageView) mActivity.findViewById(R.id.player_control);
-                    selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 }
+                selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
+                playerController = (ImageView) mActivity.findViewById(R.id.player_control);
+                selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)

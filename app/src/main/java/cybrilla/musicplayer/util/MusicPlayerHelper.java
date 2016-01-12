@@ -25,7 +25,7 @@ public class MusicPlayerHelper{
     private static MusicPlayerHelper instance;
     public static boolean isPaused = false;
     public static List<Song> allSongsList;
-    private static int songPosition;
+    public static int songPosition;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
@@ -58,16 +58,20 @@ public class MusicPlayerHelper{
     }
 
     public void toggleMusicPlayer(ImageView playerController){
-        if (mediaPlayer.isPlaying()){
-            mediaPlayer.pause();
-            isPaused = true;
-            if (playerController != null)
-                playerController.setImageResource(R.drawable.ic_play);
-        } else {
-            isPaused = false;
-            mediaPlayer.start();
-            if (playerController != null)
-                playerController.setImageResource(R.drawable.ic_pause);
+        if (mediaPlayer == null)
+            initializeMediaPlayer(playerController);
+        else {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                isPaused = true;
+                if (playerController != null)
+                    playerController.setImageResource(R.drawable.ic_play);
+            } else {
+                isPaused = false;
+                mediaPlayer.start();
+                if (playerController != null)
+                    playerController.setImageResource(R.drawable.ic_pause);
+            }
         }
     }
 
@@ -111,14 +115,6 @@ public class MusicPlayerHelper{
         }
     }
 
-    public String getSongTitle(){
-        return allSongsList.get(songPosition).getSongTitle();
-    }
-
-    public Uri getSongUri() {
-        return allSongsList.get(songPosition).getUri();
-    }
-
     public String playNextSong(Activity activity){
         mediaPlayer.stop();
         mediaPlayer.reset();
@@ -132,4 +128,5 @@ public class MusicPlayerHelper{
         songPosition = songPosition - 1;
         return startMusic(songPosition, activity);
     }
+
 }

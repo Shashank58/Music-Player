@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         }, 500);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     @TargetApi(VERSION_CODES.LOLLIPOP)
     private void beginAllViewTransition(){
         TransitionManager.beginDelayedTransition(songCardStart, new Explode());
@@ -84,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     startActivity();
                 }
-            }, 150);
-
+            }, 100);
         }
     }
 
