@@ -20,6 +20,7 @@ import cybrilla.musicplayer.modle.Song;
 public class MediaPlayerService extends Service {
     Notification status;
     private RemoteViews views, bigViews;
+    private PendingIntent pendingIntent;
 
     @Nullable
     @Override
@@ -65,6 +66,12 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
             MusicPlayerHelper.isPaused = true;
+            status = new Notification.Builder(this).build();
+            status.contentView = views;
+            status.bigContentView = bigViews;
+            status.flags = Notification.FLAG_ONGOING_EVENT;
+            status.icon = R.drawable.no_image;
+            status.contentIntent = pendingIntent;
         } else {
             MusicPlayerHelper.mediaPlayer.start();
             Log.e("Music service", "Getting called");
@@ -73,7 +80,14 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_pause);
             MusicPlayerHelper.isPaused = false;
+            status = new Notification.Builder(this).build();
+            status.contentView = views;
+            status.bigContentView = bigViews;
+            status.flags = Notification.FLAG_ONGOING_EVENT;
+            status.icon = R.drawable.no_image;
+            status.contentIntent = pendingIntent;
         }
+        startForeground(Constants.FOREGROUND_SERVICE, status);
     }
 
     private void showNotification(){
@@ -91,7 +105,7 @@ public class MediaPlayerService extends Service {
         notificationIntent.setAction(Constants.MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+        pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
         Intent previousIntent = new Intent(this, MediaPlayerService.class);
@@ -125,19 +139,11 @@ public class MediaPlayerService extends Service {
 
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
         bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-
         toggleMusicFromNotification();
         Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
 
         setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
 
-        status = new Notification.Builder(this).build();
-        status.contentView = views;
-        status.bigContentView = bigViews;
-        status.flags = Notification.FLAG_ONGOING_EVENT;
-        status.icon = R.drawable.no_image;
-        status.contentIntent = pendingIntent;
-        startForeground(Constants.FOREGROUND_SERVICE, status);
     }
 
     private void setSongDetails(String title, String artist, String album){

@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -36,24 +38,32 @@ public class AllSongsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if ( ContextCompat.checkSelfPermission(this,
-                permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            Log.e(TAG, "printing?");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{permission.READ_EXTERNAL_STORAGE},
-                    Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        }else {
-            setContentView(R.layout.activity_all_songs);
-            songList = (RecyclerView) findViewById(R.id.songList);
-            playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
-            selectedSongTrack = (TextView) findViewById(R.id.selected_track_title);
-            playerControl = (ImageView) findViewById(R.id.player_control);
-            selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
-            songList.setHasFixedSize(true);
-            LinearLayoutManager linearLayout = new LinearLayoutManager(this);
-            songList.setLayoutManager(linearLayout);
-            getSongList();
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(TAG, "printing?");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{permission.READ_EXTERNAL_STORAGE},
+                        Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                getAllViews();
+            }
+        } else {
+            getAllViews();
         }
+    }
+
+    private void getAllViews(){
+        setContentView(R.layout.activity_all_songs);
+        songList = (RecyclerView) findViewById(R.id.songList);
+        playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
+        selectedSongTrack = (TextView) findViewById(R.id.selected_track_title);
+        playerControl = (ImageView) findViewById(R.id.player_control);
+        selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
+        songList.setHasFixedSize(true);
+        LinearLayoutManager linearLayout = new LinearLayoutManager(this);
+        songList.setLayoutManager(linearLayout);
+        getSongList();
     }
 
     @Override
@@ -64,6 +74,7 @@ public class AllSongsActivity extends AppCompatActivity{
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getAllViews();
                 }
             }
         }

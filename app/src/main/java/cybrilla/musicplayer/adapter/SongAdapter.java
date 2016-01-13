@@ -63,11 +63,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MusicPlayerHelper.mediaPlayer != null) {
-                    Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
-                    serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-                    mActivity.startService(serviceIntent);
-                }
                 selectedSongPosition = (int) v.getTag();
                 if (songSelectedToolbar.getVisibility() == View.GONE) {
                     animateSongPlayerLayout();
@@ -93,6 +88,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     }
                 });
                 selectedTractTitle.setText(title);
+                if (MusicPlayerHelper.mediaPlayer != null) {
+                    Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
+                    serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+                    mActivity.startService(serviceIntent);
+                }
             }
         });
         setToolBarListener();
