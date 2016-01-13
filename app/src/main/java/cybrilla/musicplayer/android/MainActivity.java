@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.album.AlbumsActivity;
+import cybrilla.musicplayer.allsongs.AllSongsActivity;
 
 public class MainActivity extends AppCompatActivity {
     private TextView allSongs, albums, artists;

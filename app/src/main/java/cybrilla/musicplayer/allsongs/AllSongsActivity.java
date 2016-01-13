@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.allsongs;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
@@ -21,7 +21,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapter.SongAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
@@ -33,7 +32,7 @@ public class AllSongsActivity extends AppCompatActivity{
     private static final String TAG = "AllSongsActivity";
     private Toolbar playingSongToolbar;
     private TextView selectedSongTrack;
-    private ImageView playerControl, selectedAlbumCover, connect;
+    private ImageView playerControl, selectedAlbumCover;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +105,14 @@ public class AllSongsActivity extends AppCompatActivity{
                 selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
             }
             if (MusicPlayerHelper.mediaPlayer != null) {
-                if (MusicPlayerHelper.mediaPlayer.isPlaying())
+                if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
+                    Log.e(TAG, "Getting called by any chance?");
                     playerControl.setImageResource(R.drawable.ic_pause);
-                else
+                }
+                else {
                     playerControl.setImageResource(R.drawable.ic_play);
+                    Log.e(TAG, "Getting called by any chance?");
+                }
             }
         }
         super.onResume();

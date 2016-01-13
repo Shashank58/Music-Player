@@ -13,7 +13,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -91,6 +93,18 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
+    protected void onPause() {
+        seekHandler.removeCallbacks(run);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        seekHandler.postDelayed(run, 1000);
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy() {
         seekHandler.removeCallbacks(run);
         super.onDestroy();
@@ -98,6 +112,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        Song song;
         switch (v.getId()){
             case R.id.detail_controller:
                 MusicPlayerHelper.getInstance().toggleMusicPlayer(detailController);
@@ -116,15 +131,21 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                 String title = MusicPlayerHelper.getInstance()
                         .playNextSong(SongDetailActivity.this);
                 detailSelectedTrack.setText(title);
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
                 musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                MediaPlayerService.setSongDetails(title, song.getSongArtist(),
+                        song.getSongAlbum());
                 break;
 
             case R.id.detail_reverse:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
                 String titleSong = MusicPlayerHelper.getInstance()
                                 .playPrevSong(SongDetailActivity.this);
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
                 detailSelectedTrack.setText(titleSong);
                 musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                MediaPlayerService.setSongDetails(titleSong, song.getSongArtist(),
+                        song.getSongAlbum());
                 break;
         }
     }

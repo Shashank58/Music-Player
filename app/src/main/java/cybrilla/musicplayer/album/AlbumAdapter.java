@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.adapter;
+package cybrilla.musicplayer.album;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.AlbumSongsActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 

@@ -40,7 +40,8 @@ public class MusicPlayerHelper{
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                toggleMusicPlayer(playerController);
+                mediaPlayer.start();
+                //toggleMusicPlayer(playerController);
             }
         });
     }
@@ -128,5 +129,4 @@ public class MusicPlayerHelper{
         songPosition = songPosition - 1;
         return startMusic(songPosition, activity);
     }
-
 }

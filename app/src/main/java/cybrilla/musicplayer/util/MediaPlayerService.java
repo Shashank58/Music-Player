@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.AllSongsActivity;
+import cybrilla.musicplayer.allsongs.AllSongsActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -19,7 +19,7 @@ import cybrilla.musicplayer.modle.Song;
  */
 public class MediaPlayerService extends Service {
     Notification status;
-    private RemoteViews views, bigViews;
+    private static RemoteViews views, bigViews;
     private PendingIntent pendingIntent;
 
     @Nullable
@@ -66,7 +66,8 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
             MusicPlayerHelper.isPaused = true;
-            status = new Notification.Builder(this).build();
+            if (status == null)
+                status = new Notification.Builder(this).build();
             status.contentView = views;
             status.bigContentView = bigViews;
             status.flags = Notification.FLAG_ONGOING_EVENT;
@@ -80,13 +81,17 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_pause);
             MusicPlayerHelper.isPaused = false;
-            status = new Notification.Builder(this).build();
+            if (status == null)
+                status = new Notification.Builder(this).build();
             status.contentView = views;
             status.bigContentView = bigViews;
             status.flags = Notification.FLAG_ONGOING_EVENT;
             status.icon = R.drawable.no_image;
             status.contentIntent = pendingIntent;
         }
+        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
+
+        setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
         startForeground(Constants.FOREGROUND_SERVICE, status);
     }
 
@@ -140,13 +145,9 @@ public class MediaPlayerService extends Service {
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
         bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
         toggleMusicFromNotification();
-        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
-
-        setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
-
     }
 
-    private void setSongDetails(String title, String artist, String album){
+    public static void setSongDetails(String title, String artist, String album){
         views.setTextViewText(R.id.status_bar_track_name, title);
         bigViews.setTextViewText(R.id.status_bar_track_name, title);
 

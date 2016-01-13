@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".android.AllSongsActivity"
+            android:name=".allsongs.AllSongsActivity"
             android:screenOrientation="portrait" >
         </activity>
 
@@ -33,9 +33,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".android.AlbumsActivity" >
+        <activity android:name=".album.AlbumsActivity" >
         </activity>
-        <activity android:name=".android.AlbumSongsActivity" >
+        <activity android:name=".album.AlbumSongsActivity" >
         </activity>
         <service
             android:name=".util.MediaPlayerService"

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.adapter;
+package cybrilla.musicplayer.album;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

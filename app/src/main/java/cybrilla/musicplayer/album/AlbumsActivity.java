@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.album;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapter.AlbumAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;

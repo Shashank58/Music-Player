@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.adapter;
+package cybrilla.musicplayer.allsongs;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -50,11 +50,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public SongAdapter.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
-        if (MusicPlayerHelper.mediaPlayer == null) {
-            MusicPlayerHelper.getInstance().initializeMediaPlayer(playerController);
-        }
-        songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
 
+        songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
         songSelected(view);
         return new SongViewHolder(view);
     }
@@ -70,6 +67,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
                 playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
+                if (MusicPlayerHelper.mediaPlayer == null)
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer(playerController);
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)
@@ -88,11 +87,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     }
                 });
                 selectedTractTitle.setText(title);
-                if (MusicPlayerHelper.mediaPlayer != null) {
-                    Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
-                    serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-                    mActivity.startService(serviceIntent);
-                }
+                Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
+                serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+                mActivity.startService(serviceIntent);
             }
         });
         setToolBarListener();

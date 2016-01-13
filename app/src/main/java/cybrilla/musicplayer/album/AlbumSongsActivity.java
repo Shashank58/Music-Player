@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.album;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapter.AlbumSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 
 public class AlbumSongsActivity extends AppCompatActivity {
