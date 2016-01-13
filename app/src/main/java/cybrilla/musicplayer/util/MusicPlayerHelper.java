@@ -34,23 +34,23 @@ public class MusicPlayerHelper{
         return instance;
     }
 
-    public void initializeMediaPlayer(final ImageView playerController){
+    public void initializeMediaPlayer(){
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer.start();
-                //toggleMusicPlayer(playerController);
+                isPaused = false;
             }
         });
     }
 
-    public String startMusic(int pos, Activity activity){
+    public String startMusic(int pos){
         songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {
-            mediaPlayer.setDataSource(activity, s.getUri());
+            mediaPlayer.setDataSource(s.getPath());
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class MusicPlayerHelper{
 
     public void toggleMusicPlayer(ImageView playerController){
         if (mediaPlayer == null)
-            initializeMediaPlayer(playerController);
+            initializeMediaPlayer();
         else {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
@@ -103,30 +103,45 @@ public class MusicPlayerHelper{
                     (Media.ALBUM);
             int durationColumn = musicCursor.getColumnIndex
                     (Media.DURATION);
-
+            int dataColumn = musicCursor.getColumnIndex
+                    (Media.DATA);
             do {
                 long id = musicCursor.getLong(idColumn);
                 String title = musicCursor.getString(titleColumn);
                 String artist = musicCursor.getString(artistColumn);
                 String album = musicCursor.getString(albumColumn);
                 long duration = musicCursor.getLong(durationColumn);
-                allSongsList.add(new Song(id, title, artist, duration, album));
+                String path = musicCursor.getString(dataColumn);
+                allSongsList.add(new Song(id, title, artist, duration, album, path));
             } while (musicCursor.moveToNext());
             musicCursor.close();
         }
     }
 
-    public String playNextSong(Activity activity){
+    public void playNextSong(){
         mediaPlayer.stop();
         mediaPlayer.reset();
         songPosition = songPosition + 1;
-        return startMusic(songPosition, activity);
+        Song s = allSongsList.get(songPosition);
+        try {
+            mediaPlayer.setDataSource(s.getPath());
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String playPrevSong(Activity activity){
+
+    public void playPrevSong(){
         mediaPlayer.stop();
         mediaPlayer.reset();
         songPosition = songPosition - 1;
-        return startMusic(songPosition, activity);
+        Song s = allSongsList.get(songPosition);
+        try {
+            mediaPlayer.setDataSource(s.getPath());
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

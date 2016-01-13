@@ -10,14 +10,16 @@ import java.io.Serializable;
  */
 public class Song implements Serializable{
     private long songId, songDuration;
-    private String songTitle, songArtist, songAlbum;
+    private String songTitle, songArtist, songAlbum, path;
 
-    public Song(long songId, String songTitle, String songArtist, long duration, String album) {
+    public Song(long songId, String songTitle, String songArtist, long duration, String album
+                , String path) {
         this.songId = songId;
         this.songTitle = songTitle;
         this.songArtist = songArtist;
         this.songDuration = duration;
         this.songAlbum = album;
+        this.path = path;
     }
 
     public long getSongId(){
@@ -32,6 +34,10 @@ public class Song implements Serializable{
         return songArtist;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public long getSongDuration(){
         return songDuration;
     }
@@ -41,7 +47,7 @@ public class Song implements Serializable{
         return songAlbum;
     }
 
-    public Uri getUri(){
+    public Uri getUri() {
         return ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
     }

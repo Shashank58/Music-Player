@@ -19,7 +19,7 @@ import cybrilla.musicplayer.modle.Song;
  */
 public class MediaPlayerService extends Service {
     Notification status;
-    private static RemoteViews views, bigViews;
+    private RemoteViews views, bigViews;
     private PendingIntent pendingIntent;
 
     @Nullable
@@ -43,10 +43,13 @@ public class MediaPlayerService extends Service {
                 break;
 
             case Constants.NEXT_ACTION:
-                //MusicPlayerHelper.getInstance().playNextSong(AllSongsActivity.class);
+                MusicPlayerHelper.getInstance().playNextSong();
+                startNotification();
                 break;
 
             case Constants.PREV_ACTION:
+                MusicPlayerHelper.getInstance().playPrevSong();
+                startNotification();
                 break;
 
             case Constants.STOPFOREGROUND_ACTION:
@@ -66,13 +69,7 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
             MusicPlayerHelper.isPaused = true;
-            if (status == null)
-                status = new Notification.Builder(this).build();
-            status.contentView = views;
-            status.bigContentView = bigViews;
-            status.flags = Notification.FLAG_ONGOING_EVENT;
-            status.icon = R.drawable.no_image;
-            status.contentIntent = pendingIntent;
+            startNotification();
         } else {
             MusicPlayerHelper.mediaPlayer.start();
             Log.e("Music service", "Getting called");
@@ -81,14 +78,18 @@ public class MediaPlayerService extends Service {
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_pause);
             MusicPlayerHelper.isPaused = false;
-            if (status == null)
-                status = new Notification.Builder(this).build();
-            status.contentView = views;
-            status.bigContentView = bigViews;
-            status.flags = Notification.FLAG_ONGOING_EVENT;
-            status.icon = R.drawable.no_image;
-            status.contentIntent = pendingIntent;
+            startNotification();
         }
+    }
+
+    private void startNotification(){
+        if (status == null)
+            status = new Notification.Builder(this).build();
+        status.contentView = views;
+        status.bigContentView = bigViews;
+        status.flags = Notification.FLAG_ONGOING_EVENT;
+        status.icon = R.drawable.no_image;
+        status.contentIntent = pendingIntent;
         Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
 
         setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
@@ -147,7 +148,7 @@ public class MediaPlayerService extends Service {
         toggleMusicFromNotification();
     }
 
-    public static void setSongDetails(String title, String artist, String album){
+    public void setSongDetails(String title, String artist, String album){
         views.setTextViewText(R.id.status_bar_track_name, title);
         bigViews.setTextViewText(R.id.status_bar_track_name, title);
 

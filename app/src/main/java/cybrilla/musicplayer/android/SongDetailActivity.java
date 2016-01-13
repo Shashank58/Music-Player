@@ -1,11 +1,13 @@
 package cybrilla.musicplayer.android;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -73,9 +75,10 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         MusicPlayerHelper.mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                String title = MusicPlayerHelper.getInstance()
-                        .playNextSong(SongDetailActivity.this);
-                detailSelectedTrack.setText(title);
+                MusicPlayerHelper.getInstance()
+                        .playNextSong();
+                detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
+                                get(MusicPlayerHelper.songPosition).getSongTitle());
             }
         });
     }
@@ -128,24 +131,23 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.detail_fast_forward:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
-                String title = MusicPlayerHelper.getInstance()
-                        .playNextSong(SongDetailActivity.this);
-                detailSelectedTrack.setText(title);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
-                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
-                MediaPlayerService.setSongDetails(title, song.getSongArtist(),
-                        song.getSongAlbum());
+                Log.e("Song detail activity", "Position: " + MusicPlayerHelper.songPosition);
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition+1);
+                Log.e("Song detail activity", "Position: " + MusicPlayerHelper.songPosition);
+                detailSelectedTrack.setText(song.getSongTitle());
+                Intent nextService = new Intent(this, MediaPlayerService.class);
+                nextService.setAction(Constants.NEXT_ACTION);
+                startService(nextService);
                 break;
 
             case R.id.detail_reverse:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
-                String titleSong = MusicPlayerHelper.getInstance()
-                                .playPrevSong(SongDetailActivity.this);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
-                detailSelectedTrack.setText(titleSong);
-                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
-                MediaPlayerService.setSongDetails(titleSong, song.getSongArtist(),
-                        song.getSongAlbum());
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition-1);
+                detailSelectedTrack.setText(song.getSongTitle());
+                //musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                Intent prevService = new Intent(this, MediaPlayerService.class);
+                prevService.setAction(Constants.PREV_ACTION);
+                startService(prevService);
                 break;
         }
     }

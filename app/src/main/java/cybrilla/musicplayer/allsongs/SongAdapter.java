@@ -68,7 +68,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 if (MusicPlayerHelper.mediaPlayer == null)
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer(playerController);
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)
@@ -79,7 +79,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     MusicPlayerHelper.mediaPlayer.reset();
                 }
                 int pos = (int) v.getTag();
-                String title = MusicPlayerHelper.getInstance().startMusic(pos, mActivity);
+                String title = MusicPlayerHelper.getInstance().startMusic(pos);
                 playerController.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
