@@ -1,6 +1,7 @@
 package cybrilla.musicplayer.allsongs;
 
 import android.Manifest.permission;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,21 +19,19 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class AllSongsActivity extends AppCompatActivity{
-    private List<Song> allSongsList;
     private RecyclerView songList;
     private SongAdapter mAdapter;
     private static final String TAG = "AllSongsActivity";
     private Toolbar playingSongToolbar;
     private TextView selectedSongTrack;
     private ImageView playerControl, selectedAlbumCover;
+    public static boolean newActivityStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +78,18 @@ public class AllSongsActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected void onPause() {
+        if ((MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
+                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) &&
+                !newActivityStarted){
+            Log.e(TAG, "What the hell this one?");
+            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startService(serviceIntent);
+        }
+        super.onPause();
+    }
 
     private void getSongList(){
         MusicPlayerHelper.getInstance().getSongList(this);
@@ -90,7 +101,14 @@ public class AllSongsActivity extends AppCompatActivity{
     protected void onResume() {
         if ( ContextCompat.checkSelfPermission(this,
                 permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            int pos = MusicPlayerHelper.songPosition;
+            if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
+                    MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+                Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+                serviceIntent.setAction(Constants.STOP_NOTIFICATION);
+                startService(serviceIntent);
+            }
+            newActivityStarted = false;
+            int pos = MusicPlayerHelper.getInstance().getSongPosition();
             selectedSongTrack.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             byte[] rawArt;
@@ -104,8 +122,8 @@ public class AllSongsActivity extends AppCompatActivity{
             } catch (Exception e) {
                 selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
             }
-            if (MusicPlayerHelper.mediaPlayer != null) {
-                if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
+            if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
+                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
                     Log.e(TAG, "Getting called by any chance?");
                     playerControl.setImageResource(R.drawable.ic_pause);
                 }
@@ -120,7 +138,12 @@ public class AllSongsActivity extends AppCompatActivity{
 
     @Override
     protected void onDestroy() {
-        Log.e(TAG, "Destroy called");
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
+                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startService(serviceIntent);
+        }
         super.onDestroy();
     }
 }

@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,6 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
@@ -67,16 +67,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
                 playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
-                if (MusicPlayerHelper.mediaPlayer == null)
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)
                     selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
                 playerController.setImageResource(R.drawable.ic_pause);
-                if (MusicPlayerHelper.mediaPlayer.isPlaying() || MusicPlayerHelper.isPaused) {
-                    MusicPlayerHelper.mediaPlayer.stop();
-                    MusicPlayerHelper.mediaPlayer.reset();
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
+                }
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
+                        MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                    Log.e("Song adapter", "Seriously this?");
+                    MusicPlayerHelper.getInstance().getMediaPlayer().stop();
+                    MusicPlayerHelper.getInstance().getMediaPlayer().reset();
                 }
                 int pos = (int) v.getTag();
                 MusicPlayerHelper.getInstance().startMusic(pos);
@@ -87,9 +90,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     }
                 });
                 selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
-                Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
-                serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-                mActivity.startService(serviceIntent);
             }
         });
         setToolBarListener();
@@ -110,6 +110,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                                 (mActivity, songSelectedToolbar
                                         , songSelectedToolbar.getTransitionName());
                 ActivityCompat.startActivity(mActivity, intent, options.toBundle());
+                AllSongsActivity.newActivityStarted = true;
             }
         });
     }

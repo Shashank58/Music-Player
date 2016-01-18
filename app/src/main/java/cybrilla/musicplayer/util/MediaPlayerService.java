@@ -18,7 +18,7 @@ import cybrilla.musicplayer.modle.Song;
  * Created by shashankm on 12/01/16.
  */
 public class MediaPlayerService extends Service {
-    Notification status;
+    private Notification status;
     private RemoteViews views, bigViews;
     private PendingIntent pendingIntent;
 
@@ -52,6 +52,11 @@ public class MediaPlayerService extends Service {
                 startNotification();
                 break;
 
+            case Constants.STOP_NOTIFICATION:
+                stopForeground(true);
+                stopSelf();
+                break;
+
             case Constants.STOPFOREGROUND_ACTION:
                 stopForeground(true);
                 MusicPlayerHelper.getInstance().releaseMediaPlayer();
@@ -62,35 +67,50 @@ public class MediaPlayerService extends Service {
     }
 
     private void toggleMusicFromNotification(){
-        if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
-            MusicPlayerHelper.mediaPlayer.pause();
-            views.setImageViewResource(R.id.status_bar_play,
-                    android.R.drawable.ic_media_play);
-            bigViews.setImageViewResource(R.id.status_bar_play,
-                    android.R.drawable.ic_media_play);
-            MusicPlayerHelper.isPaused = true;
-            startNotification();
-        } else {
-            MusicPlayerHelper.mediaPlayer.start();
-            Log.e("Music service", "Getting called");
-            views.setImageViewResource(R.id.status_bar_play,
-                    android.R.drawable.ic_media_pause);
-            bigViews.setImageViewResource(R.id.status_bar_play,
-                    android.R.drawable.ic_media_pause);
-            MusicPlayerHelper.isPaused = false;
-            startNotification();
-        }
+//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            if (!MusicPlayerHelper.getInstance().getisPaused()) {
+                Log.e("Media Player service", "Paused");
+                MusicPlayerHelper.getInstance().getMediaPlayer().pause();
+                views.setImageViewResource(R.id.status_bar_play,
+                        android.R.drawable.ic_media_play);
+                bigViews.setImageViewResource(R.id.status_bar_play,
+                        android.R.drawable.ic_media_play);
+                MusicPlayerHelper.getInstance().setIsPaused(true);
+                startNotification();
+            } else {
+                Log.e("Media player service", "Playing");
+                MusicPlayerHelper.getInstance().getMediaPlayer().start();
+                views.setImageViewResource(R.id.status_bar_play,
+                        android.R.drawable.ic_media_pause);
+                bigViews.setImageViewResource(R.id.status_bar_play,
+                        android.R.drawable.ic_media_pause);
+                MusicPlayerHelper.getInstance().setIsPaused(false);
+                startNotification();
+            }
+//        } else {
+//            MusicPlayerHelper.getInstance().getMediaPlayer().start();
+//            Log.e("Music service", "Getting called");
+//            views.setImageViewResource(R.id.status_bar_play,
+//                    android.R.drawable.ic_media_pause);
+//            bigViews.setImageViewResource(R.id.status_bar_play,
+//                    android.R.drawable.ic_media_pause);
+//            MusicPlayerHelper.getInstance().setIsPaused(false);
+//            startNotification();
+//        }
     }
 
     private void startNotification(){
-        if (status == null)
+        if (status == null) {
             status = new Notification.Builder(this).build();
+            Log.e("Media player service", "Status created");
+        }
         status.contentView = views;
         status.bigContentView = bigViews;
         status.flags = Notification.FLAG_ONGOING_EVENT;
         status.icon = R.drawable.no_image;
         status.contentIntent = pendingIntent;
-        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition);
+        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
+                                        .getSongPosition());
 
         setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
         startForeground(Constants.FOREGROUND_SERVICE, status);
@@ -145,7 +165,19 @@ public class MediaPlayerService extends Service {
 
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
         bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-        toggleMusicFromNotification();
+        if (MusicPlayerHelper.getInstance().getisPaused()) {
+            views.setImageViewResource(R.id.status_bar_play,
+                    android.R.drawable.ic_media_play);
+            bigViews.setImageViewResource(R.id.status_bar_play,
+                    android.R.drawable.ic_media_play);
+            startNotification();
+        } else {
+            views.setImageViewResource(R.id.status_bar_play,
+                    android.R.drawable.ic_media_pause);
+            bigViews.setImageViewResource(R.id.status_bar_play,
+                    android.R.drawable.ic_media_pause);
+            startNotification();
+        }
     }
 
     public void setSongDetails(String title, String artist, String album){

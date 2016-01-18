@@ -1,5 +1,6 @@
 package cybrilla.musicplayer.android;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -38,20 +40,21 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailReverse = (ImageView) findViewById(R.id.detail_reverse);
         musicSeeker = (SeekBar) findViewById(R.id.music_seeker);
 
-        if (MusicPlayerHelper.mediaPlayer.isPlaying()) {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         }
         detailSelectedTrack.setText(getIntent().getStringExtra(Constants.TITLE_NAME));
         detailController.setOnClickListener(this);
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
-        musicSeeker.setMax(MusicPlayerHelper.mediaPlayer.getDuration());
+        musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
         musicSeeker.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser){
-                    MusicPlayerHelper.mediaPlayer.seekTo(progress);
-                    musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                    MusicPlayerHelper.getInstance().getMediaPlayer().seekTo(progress);
+                    musicSeeker.setProgress(MusicPlayerHelper.getInstance()
+                            .getMediaPlayer().getCurrentPosition());
                 }
             }
 
@@ -70,13 +73,15 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void completion(){
-        MusicPlayerHelper.mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+        MusicPlayerHelper.getInstance().getMediaPlayer().
+                setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 MusicPlayerHelper.getInstance()
                         .playNextSong();
                 detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
-                                get(MusicPlayerHelper.songPosition).getSongTitle());
+                                get(MusicPlayerHelper.getInstance().getSongPosition())
+                                .getSongTitle());
             }
         });
     }
@@ -89,24 +94,42 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     };
 
     private void seekUpdation(){
-        musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+        musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+                .getCurrentPosition());
         seekHandler.postDelayed(run, 1000);
     }
 
     @Override
     protected void onPause() {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startService(serviceIntent);
+        }
         seekHandler.removeCallbacks(run);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+            serviceIntent.setAction(Constants.STOP_NOTIFICATION);
+            startService(serviceIntent);
+        }
+        musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+                        .getCurrentPosition());
         seekHandler.postDelayed(run, 1000);
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startService(serviceIntent);
+        }
         seekHandler.removeCallbacks(run);
         super.onDestroy();
     }
@@ -116,8 +139,8 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         Song song;
         switch (v.getId()){
             case R.id.detail_controller:
-                MusicPlayerHelper.getInstance().toggleMusicPlayer(detailController);
-                if (MusicPlayerHelper.isPaused) {
+                MusicPlayerHelper.getInstance().toggleMusicPlayer(null);
+                if (MusicPlayerHelper.getInstance().getisPaused()) {
                     seekHandler.removeCallbacks(run);
                     detailController.setImageResource(android.R.drawable.ic_media_play);
                 }
@@ -129,20 +152,24 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.detail_fast_forward:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
-                Log.e("Song detail activity", "Position: " + MusicPlayerHelper.songPosition);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition+1);
-                Log.e("Song detail activity", "Position: " + MusicPlayerHelper.songPosition);
+                Log.e("Song detail activity", "Position: " + MusicPlayerHelper
+                                        .getInstance().getSongPosition());
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
+                                        .getSongPosition()+1);
                 detailSelectedTrack.setText(song.getSongTitle());
                 MusicPlayerHelper.getInstance().playNextSong();
-                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+                                    .getCurrentPosition());
                 break;
 
             case R.id.detail_reverse:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition-1);
+                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
+                                    .getInstance().getSongPosition()-1);
                 detailSelectedTrack.setText(song.getSongTitle());
                 MusicPlayerHelper.getInstance().playPrevSong();
-                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
+                musicSeeker.setProgress(MusicPlayerHelper.getInstance()
+                                    .getMediaPlayer().getCurrentPosition());
                 break;
         }
     }

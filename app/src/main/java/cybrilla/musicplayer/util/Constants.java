@@ -17,6 +17,7 @@ public class Constants {
     public static final String PREV_ACTION = "cybrilla.musicplayer.action.prev";
     public static final String PLAY_ACTION = "cybrilla.musicplayer.action.play";
     public static final String NEXT_ACTION = "cybrilla.musicplayer.action.next";
+    public static final String STOP_NOTIFICATION = "cybrilla.musicplayer.action.stopnotification";
     public static final String STARTFOREGROUND_ACTION = "cybrilla.musicplayer.action.startforeground";
     public static final String STOPFOREGROUND_ACTION = "cybrilla.musicplayer.action.stopforeground";
     public static final int FOREGROUND_SERVICE = 101;
@@ -26,8 +27,8 @@ public class Constants {
         try {
             bm = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.no_image, options);
-        } catch (Error ee) {
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return bm;
     }
