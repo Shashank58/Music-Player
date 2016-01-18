@@ -1,6 +1,5 @@
 package cybrilla.musicplayer.android;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -135,19 +133,16 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                 song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition+1);
                 Log.e("Song detail activity", "Position: " + MusicPlayerHelper.songPosition);
                 detailSelectedTrack.setText(song.getSongTitle());
-                Intent nextService = new Intent(this, MediaPlayerService.class);
-                nextService.setAction(Constants.NEXT_ACTION);
-                startService(nextService);
+                MusicPlayerHelper.getInstance().playNextSong();
+                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
                 break;
 
             case R.id.detail_reverse:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
                 song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.songPosition-1);
                 detailSelectedTrack.setText(song.getSongTitle());
-                //musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
-                Intent prevService = new Intent(this, MediaPlayerService.class);
-                prevService.setAction(Constants.PREV_ACTION);
-                startService(prevService);
+                MusicPlayerHelper.getInstance().playPrevSong();
+                musicSeeker.setProgress(MusicPlayerHelper.mediaPlayer.getCurrentPosition());
                 break;
         }
     }

@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -35,18 +36,20 @@ public class MusicPlayerHelper{
     }
 
     public void initializeMediaPlayer(){
+        Log.e("Music player helper", "shouldn't start");
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer.start();
+                Log.e("Music player helper", "Starting song");
                 isPaused = false;
             }
         });
     }
 
-    public String startMusic(int pos){
+    public void startMusic(int pos){
         songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {
@@ -55,7 +58,6 @@ public class MusicPlayerHelper{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return s.getSongTitle();
     }
 
     public void toggleMusicPlayer(ImageView playerController){
@@ -105,6 +107,8 @@ public class MusicPlayerHelper{
                     (Media.DURATION);
             int dataColumn = musicCursor.getColumnIndex
                     (Media.DATA);
+            int albumIdColumn = musicCursor.getColumnIndex
+                    (Media.ALBUM_ID);
             do {
                 long id = musicCursor.getLong(idColumn);
                 String title = musicCursor.getString(titleColumn);
@@ -112,36 +116,27 @@ public class MusicPlayerHelper{
                 String album = musicCursor.getString(albumColumn);
                 long duration = musicCursor.getLong(durationColumn);
                 String path = musicCursor.getString(dataColumn);
-                allSongsList.add(new Song(id, title, artist, duration, album, path));
+                long albumId = musicCursor.getShort(albumIdColumn);
+                allSongsList.add(new Song(id, title, artist, duration, album, path, albumId));
             } while (musicCursor.moveToNext());
             musicCursor.close();
         }
     }
 
     public void playNextSong(){
+        Log.e("Music player helper", "Value of media Player: "+mediaPlayer.isPlaying());
         mediaPlayer.stop();
         mediaPlayer.reset();
         songPosition = songPosition + 1;
-        Song s = allSongsList.get(songPosition);
-        try {
-            mediaPlayer.setDataSource(s.getPath());
-            mediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        startMusic(songPosition);
     }
 
 
     public void playPrevSong(){
+        Log.e("Music player helper", "Value of media Player: "+mediaPlayer.isPlaying());
         mediaPlayer.stop();
         mediaPlayer.reset();
         songPosition = songPosition - 1;
-        Song s = allSongsList.get(songPosition);
-        try {
-            mediaPlayer.setDataSource(s.getPath());
-            mediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        startMusic(songPosition);
     }
 }

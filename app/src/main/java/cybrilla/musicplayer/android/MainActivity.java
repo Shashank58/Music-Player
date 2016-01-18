@@ -6,6 +6,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.transition.Explode;
 import android.transition.TransitionManager;
 import android.view.View;
@@ -18,7 +19,8 @@ import cybrilla.musicplayer.album.AlbumsActivity;
 import cybrilla.musicplayer.allsongs.AllSongsActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView allSongs, albums, artists;
+    private CardView allSongs, albums, artists;
+    private TextView songsText, albumsText, artistText;
     private static boolean isStartAnimation = true;
     private ViewGroup songCardStart;
     private Intent intent;
@@ -30,12 +32,15 @@ public class MainActivity extends AppCompatActivity {
         isStartAnimation = true;
         initTransitions();
 
-        allSongs = (TextView) findViewById(R.id.all_songs);
-        albums = (TextView) findViewById(R.id.albums);
-        artists = (TextView) findViewById(R.id.artists);
-        songCardStart = (ViewGroup) findViewById(R.id.songCardStart);
+        allSongs = (CardView) findViewById(R.id.songCardAllSongs);
+        albums = (CardView) findViewById(R.id.songCardAlbums);
+        artists = (CardView) findViewById(R.id.songCardArtist);
+        songCardStart = (ViewGroup) findViewById(R.id.parentLayout);
+        songsText = (TextView) findViewById(R.id.all_songs);
+        albumsText = (TextView) findViewById(R.id.albums);
+        artistText = (TextView) findViewById(R.id.artists);
 
-        allSongs.setOnClickListener(new OnClickListener() {
+        songsText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, AllSongsActivity.class);
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        albums.setOnClickListener(new OnClickListener() {
+        albumsText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, AlbumsActivity.class);
@@ -91,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     startActivity();
                 }
-            }, 100);
+            }, 50);
         }
     }
 

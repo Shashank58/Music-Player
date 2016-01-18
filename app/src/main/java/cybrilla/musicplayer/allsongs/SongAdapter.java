@@ -79,14 +79,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     MusicPlayerHelper.mediaPlayer.reset();
                 }
                 int pos = (int) v.getTag();
-                String title = MusicPlayerHelper.getInstance().startMusic(pos);
+                MusicPlayerHelper.getInstance().startMusic(pos);
                 playerController.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
                     }
                 });
-                selectedTractTitle.setText(title);
+                selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
                 Intent serviceIntent = new Intent(mActivity, MediaPlayerService.class);
                 serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
                 mActivity.startService(serviceIntent);

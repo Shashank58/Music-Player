@@ -12,69 +12,11 @@
         android:background="@drawable/song_image"
         android:alpha="0.9">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:id="@+id/all_songs"
-            android:text="All Songs"
-            android:visibility="invisible"
-            android:alpha="0.75"
-            android:clickable="true"
-            android:textColor="@color/pure_black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:foreground="?android:attr/selectableItemBackground"/>
 
-        <TextView
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:id="@+id/albums"
-            android:alpha="0.75"
-            android:visibility="invisible"
-            android:layout_below="@+id/all_songs"
-            android:clickable="true"
-            android:textColor="@color/pure_black"
-            android:text="Albums"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:foreground="?android:attr/selectableItemBackground"/>
 
-        <TextView
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:id="@+id/artists"
-            android:visibility="invisible"
-            android:alpha="0.75"
-            android:layout_below="@+id/all_songs"
-            android:layout_toRightOf="@+id/albums"
-            android:clickable="true"
-            android:textColor="@color/pure_black"
-            android:text="Artists"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:foreground="?android:attr/selectableItemBackground"/>
+
+
+
 
     </RelativeLayout>
 

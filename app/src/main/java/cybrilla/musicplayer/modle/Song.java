@@ -9,21 +9,26 @@ import java.io.Serializable;
  * Created by shashankm on 03/01/16.
  */
 public class Song implements Serializable{
-    private long songId, songDuration;
+    private long songId, songDuration, albumId;
     private String songTitle, songArtist, songAlbum, path;
 
     public Song(long songId, String songTitle, String songArtist, long duration, String album
-                , String path) {
+                , String path, long albumId) {
         this.songId = songId;
         this.songTitle = songTitle;
         this.songArtist = songArtist;
         this.songDuration = duration;
         this.songAlbum = album;
         this.path = path;
+        this.albumId = albumId;
     }
 
     public long getSongId(){
         return songId;
+    }
+
+    public long getAlbumId(){
+        return albumId;
     }
 
     public String getSongTitle(){

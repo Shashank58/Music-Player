@@ -21,15 +21,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:showDividers="middle"
-        android:dividerPadding="12.0dip">
+        android:dividerPadding="12dp">
 
         <ImageButton
             android:id="@+id/status_bar_prev"
             android:background="?android:selectableItemBackground"
-            android:padding="10.0dip"
-            android:layout_width="0.0dip"
+            android:padding="10dp"
+            android:layout_width="0dp"
             android:layout_height="@dimen/play_controls_notification"
-            android:src="@android:drawable/ic_media_next"
+            android:src="@android:drawable/ic_media_previous"
             android:scaleType="fitCenter"
             android:layout_weight="1.0" />
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/parentLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +8,101 @@
     android:background="@drawable/song_image"
     tools:context="cybrilla.musicplayer.android.MainActivity">
 
-    <include layout="@layout/all_songs_card"/>
+    <android.support.v7.widget.CardView
+        android:id="@+id/songCardAllSongs"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:alpha="0.75"
+        android:background="@color/white"
+        android:visibility="invisible"
+        app:cardElevation="5dp">
+
+        <TextView
+            android:id="@+id/all_songs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:fontFamily="sans-serif-condensed"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="All Songs"
+            android:textColor="@color/pure_black"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/songCardAllSongs">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/songCardAlbums"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:alpha="0.75"
+            android:background="@color/white"
+            android:visibility="invisible"
+            app:cardElevation="5dp">
+
+            <TextView
+                android:id="@+id/albums"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:fontFamily="sans-serif-condensed"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="Albums"
+                android:textColor="@color/pure_black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"/>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/songCardArtist"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/songCardAlbums"
+            android:alpha="0.75"
+            android:background="@color/white"
+            android:visibility="invisible"
+            app:cardElevation="5dp">
+
+            <TextView
+                android:id="@+id/artists"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-condensed"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="Artists"
+                android:textColor="@color/pure_black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"/>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -4,13 +4,12 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:id="@+id/songCard"
-    app:cardElevation="1dp"
+    app:cardElevation="4dp"
     app:cardCornerRadius="5dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:alpha="0.7">
+    android:layout_marginBottom="3dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
