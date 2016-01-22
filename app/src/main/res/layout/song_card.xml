@@ -20,7 +20,6 @@
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:src="@mipmap/ic_launcher"
             android:id="@+id/song_image"
             android:padding="10dp"/>
 

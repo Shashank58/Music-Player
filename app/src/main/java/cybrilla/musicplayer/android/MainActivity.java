@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -83,10 +84,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResumeFragments() {
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
-                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
+                    || MusicPlayerHelper.getInstance().getIsPaused())) {
             if (playingSongToolbar.getVisibility() == View.GONE) {
                 playingSongToolbar.setVisibility(View.VISIBLE);
             }
+            Log.e("Main acitvity", "Even when song paused");
             Song song = MusicPlayerHelper.allSongsList.get(
                     MusicPlayerHelper.getInstance().getSongPosition());
             selectedTrackTitle.setText(song.getSongTitle());
@@ -127,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AllSongsFragment(), "All Songs");
-        adapter.addFragment(new AlbumFragment(), "Albums");
+        adapter.addFragment(new AllSongsFragment());
+        adapter.addFragment(new AlbumFragment());
         //adapter.addFragment(threeFragment, "Artists");
         viewPager.setAdapter(adapter);
     }
@@ -151,9 +154,8 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment) {
             mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
         }
 
         @Override

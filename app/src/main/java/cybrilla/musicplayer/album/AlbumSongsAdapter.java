@@ -49,7 +49,9 @@ public class AlbumSongsAdapter extends
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
-                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
+                        || MusicPlayerHelper.getInstance().getIsPaused()){
+                    Log.e("Album Song Adapter", "When song is paused And blah");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
                 }

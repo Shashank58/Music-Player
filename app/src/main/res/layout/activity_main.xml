@@ -21,7 +21,7 @@
                 android:id="@+id/toolbarTop"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="#F44336"
+                android:background="#B71C1C"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <TextView
@@ -40,7 +40,7 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#F44336"
+                android:background="#B71C1C"
                 app:elevation="8dp"
                 app:tabGravity="fill"
                 app:tabIndicatorHeight="4dp"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_alignParentBottom="true"
-                android:background="#F44336"
+                android:background="#B71C1C"
                 android:transitionName="songBar"
                 android:visibility="gone"
                 app:elevation="4dp">

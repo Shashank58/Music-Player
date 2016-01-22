@@ -24,6 +24,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
@@ -42,21 +44,21 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public static int selectedSongPosition;
     private int lastPosition = -1;
 
-    public SongAdapter(Activity activity){
+    public SongAdapter(Activity activity) {
         this.mActivity = activity;
     }
 
     @Override
     public SongAdapter.SongViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.song_card, parent, false);
+                .inflate(R.layout.song_card, parent, false);
 
         songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
         songSelected(view);
         return new SongViewHolder(view);
     }
 
-    private void songSelected(View view){
+    private void songSelected(View view) {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,11 +74,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 if (bitmapDrawable != null)
                     selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
                 playerController.setImageResource(R.drawable.ic_pause);
-                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
-                        MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                        (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
+                                || MusicPlayerHelper.getInstance().getIsPaused())) {
                     Log.e("Song adapter", "Seriously this?");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
@@ -95,7 +98,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         setToolBarListener();
     }
 
-    private void setToolBarListener(){
+    private void setToolBarListener() {
         songSelectedToolbar.setOnClickListener(new OnClickListener() {
             @TargetApi(VERSION_CODES.LOLLIPOP)
             @Override
@@ -115,7 +118,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     @TargetApi(VERSION_CODES.LOLLIPOP)
-    private void animateSongPlayerLayout(){
+    private void animateSongPlayerLayout() {
         songSelectedToolbar.setVisibility(View.VISIBLE);
     }
 
@@ -131,14 +134,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         BitmapFactory.Options bfo = new BitmapFactory.Options();
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        try {
+        if (mmr.getEmbeddedPicture() != null) {
             rawArt = mmr.getEmbeddedPicture();
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-            holder.songImage.setImageBitmap(art);
-        } catch (Exception e) {
-            holder.songImage.setImageResource(R.drawable.ic_action_ic_default_cover);
-        } finally {
-            setAnimation(holder.songCard, position);
+            Glide.with(mActivity).load(rawArt)
+                    .asBitmap().into(holder.songImage);
+        } else {
+            Glide.with(mActivity).load(R.drawable.no_image)
+                    .asBitmap().into(holder.songImage);
         }
     }
 
@@ -156,7 +158,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return MusicPlayerHelper.allSongsList.size();
     }
 
-    public static class SongViewHolder extends RecyclerView.ViewHolder{
+    public static class SongViewHolder extends RecyclerView.ViewHolder {
         protected TextView songTitle, songArtist;
         protected CardView songCard;
         protected ImageView songImage;

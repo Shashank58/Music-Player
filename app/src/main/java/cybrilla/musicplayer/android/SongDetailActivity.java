@@ -1,6 +1,5 @@
 package cybrilla.musicplayer.android;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -99,40 +97,40 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         seekHandler.postDelayed(run, 1000);
     }
 
-    @Override
-    protected void onPause() {
-        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-            startService(serviceIntent);
-        }
-        seekHandler.removeCallbacks(run);
-        super.onPause();
-    }
+//    @Override
+//    protected void onPause() {
+//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+//            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+//            startService(serviceIntent);
+//        }
+//        seekHandler.removeCallbacks(run);
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+//            serviceIntent.setAction(Constants.STOP_NOTIFICATION);
+//            startService(serviceIntent);
+//        }
+//        musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+//                        .getCurrentPosition());
+//        seekHandler.postDelayed(run, 1000);
+//        super.onResume();
+//    }
 
-    @Override
-    protected void onResume() {
-        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-            serviceIntent.setAction(Constants.STOP_NOTIFICATION);
-            startService(serviceIntent);
-        }
-        musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
-                        .getCurrentPosition());
-        seekHandler.postDelayed(run, 1000);
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-            startService(serviceIntent);
-        }
-        seekHandler.removeCallbacks(run);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
+//            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
+//            startService(serviceIntent);
+//        }
+//        seekHandler.removeCallbacks(run);
+//        super.onDestroy();
+//    }
 
     @Override
     public void onClick(View v) {

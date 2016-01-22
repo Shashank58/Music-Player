@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.MainActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -111,12 +112,12 @@ public class MediaPlayerService extends Service {
         bigViews.setImageViewBitmap(R.id.status_bar_album_art,
                 Constants.getDefaultAlbumArt(this));
 
-//        Intent notificationIntent = new Intent(this, AllSongsActivity.class);
-//        notificationIntent.setAction(Constants.MAIN_ACTION);
-//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-//                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        pendingIntent = PendingIntent.getActivity(this, 0,
-//                notificationIntent, 0);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setAction(Constants.MAIN_ACTION);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
 
         Intent previousIntent = new Intent(this, MediaPlayerService.class);
         previousIntent.setAction(Constants.PREV_ACTION);
