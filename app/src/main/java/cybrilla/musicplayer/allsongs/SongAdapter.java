@@ -3,8 +3,6 @@ package cybrilla.musicplayer.allsongs;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -59,6 +57,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     private void songSelected(View view) {
+        playerController = (ImageView) mActivity.findViewById(R.id.player_control);
+        selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +66,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 if (songSelectedToolbar.getVisibility() == View.GONE) {
                     animateSongPlayerLayout();
                 }
-                selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
-                playerController = (ImageView) mActivity.findViewById(R.id.player_control);
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
@@ -86,15 +84,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 }
                 int pos = (int) v.getTag();
                 MusicPlayerHelper.getInstance().startMusic(pos);
-                playerController.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
-                    }
-                });
                 selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
             }
         });
+
+        playerController.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
+            }
+        });
+
         setToolBarListener();
     }
 
@@ -130,8 +130,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         holder.songArtist.setText(song.getSongArtist());
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
-        Bitmap art;
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
         if (mmr.getEmbeddedPicture() != null) {

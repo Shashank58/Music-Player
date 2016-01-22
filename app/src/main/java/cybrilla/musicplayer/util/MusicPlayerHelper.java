@@ -65,6 +65,10 @@ public class MusicPlayerHelper{
         isPaused = pausedValue;
     }
 
+    public void setSongPosition(int pos){
+        songPosition = pos;
+    }
+
     public int getSongPosition(){
         return songPosition;
     }
@@ -95,6 +99,12 @@ public class MusicPlayerHelper{
                 if (playerController != null)
                     playerController.setImageResource(R.drawable.ic_pause);
             }
+        } else {
+            Log.e("Music Player Helper", "Yay song starting");
+            initializeMediaPlayer();
+            startMusic(songPosition);
+            if (playerController != null)
+                playerController.setImageResource(R.drawable.ic_pause);
         }
     }
 
@@ -147,9 +157,7 @@ public class MusicPlayerHelper{
         mediaPlayer.stop();
         mediaPlayer.reset();
 
-        Log.e("Music Player Helper", "Is music player playing? " + mediaPlayer.isPlaying());
         songPosition = songPosition + 1;
-        Log.e("Song detail activity", "Position after next: " + songPosition);
         startMusic(songPosition);
     }
 

@@ -2,8 +2,6 @@ package cybrilla.musicplayer.album;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
@@ -15,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.android.SongDetailActivity;
@@ -56,6 +56,7 @@ public class AlbumSongsAdapter extends
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
                 }
                 MusicPlayerHelper.getInstance().startMusic(pos);
+                MusicPlayerHelper.getInstance().setIsPaused(false);
                 Intent intent = new Intent(mActivity, SongDetailActivity.class);
                 intent.putExtra(Constants.TITLE_NAME, song.getSongTitle());
                 mActivity.startActivity(intent);
@@ -71,16 +72,15 @@ public class AlbumSongsAdapter extends
         holder.songCard.setAlpha(1);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
-        Bitmap art;
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        try {
+        if (mmr.getEmbeddedPicture() != null){
             rawArt = mmr.getEmbeddedPicture();
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-            holder.songImage.setImageBitmap(art);
-        } catch (Exception e) {
-            holder.songImage.setImageResource(R.drawable.ic_action_ic_default_cover);
+            Glide.with(mActivity).load(rawArt)
+                    .asBitmap().into(holder.songImage);
+        } else {
+            Glide.with(mActivity).load(R.drawable.no_image)
+                    .asBitmap().into(holder.songImage);
         }
     }
 

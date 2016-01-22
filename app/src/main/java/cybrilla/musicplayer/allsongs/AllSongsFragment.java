@@ -2,6 +2,8 @@ package cybrilla.musicplayer.allsongs;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -19,9 +21,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 /**
  * Created by shashankm on 21/01/16.
@@ -40,14 +46,15 @@ public class AllSongsFragment extends Fragment {
 
     private void getAllViews(View view){
         songList = (RecyclerView) view.findViewById(R.id.songList);
-        playingSongToolbar = (Toolbar) view.findViewById(R.id.playing_song_toolbar);
-//        selectedSongTrack = (TextView) view.findViewById(R.id.selected_track_title);
-//        playerControl = (ImageView) view.findViewById(R.id.player_control);
-//        selectedAlbumCover = (ImageView) view.findViewById(R.id.selected_album_cover);
+        playingSongToolbar = (Toolbar) getActivity().findViewById(R.id.playing_song_toolbar);
+        selectedSongTrack = (TextView) getActivity().findViewById(R.id.selected_track_title);
+        playerControl = (ImageView) getActivity().findViewById(R.id.player_control);
+        selectedAlbumCover = (ImageView) getActivity().findViewById(R.id.selected_album_cover);
         songList.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
         songList.setLayoutManager(linearLayout);
         getSongList();
+        setSongToLastPlayed();
     }
 
     private void getSongList(){
@@ -56,6 +63,26 @@ public class AllSongsFragment extends Fragment {
         songList.setAdapter(mAdapter);
     }
 
+    private void setSongToLastPlayed(){
+        int position = SharedPreferenceHandler.getInstance().getSongPosition(getActivity());
+        MusicPlayerHelper.getInstance().setSongPosition(position);
+        Song song = MusicPlayerHelper.allSongsList.get(position);
+        Log.e("All Songs Fragment", "Song title: "+song.getSongTitle());
+        selectedSongTrack.setText(song.getSongTitle());
+        playerControl.setImageResource(R.drawable.ic_play);
+        byte[] rawArt;
+        Uri uri = song.getUri();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(getActivity(), uri);
+        if (mmr.getEmbeddedPicture() != null){
+            rawArt = mmr.getEmbeddedPicture();
+            Glide.with(this).load(rawArt)
+                    .asBitmap().into(selectedAlbumCover);
+        } else {
+            Glide.with(this).load(R.drawable.no_image)
+                    .asBitmap().into(selectedAlbumCover);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

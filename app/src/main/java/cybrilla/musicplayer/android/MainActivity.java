@@ -27,6 +27,7 @@ import cybrilla.musicplayer.album.AlbumFragment;
 import cybrilla.musicplayer.allsongs.AllSongsFragment;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
@@ -79,6 +80,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setUpTabIcon();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
+            if (MusicPlayerHelper.getInstance().getIsPaused() ||
+                    MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                SharedPreferenceHandler.getInstance().setSongPosition(this,
+                        MusicPlayerHelper.getInstance().getSongPosition());
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
+            if (MusicPlayerHelper.getInstance().getIsPaused() ||
+                    MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                SharedPreferenceHandler.getInstance().setSongPosition(this,
+                        MusicPlayerHelper.getInstance().getSongPosition());
+            }
+        }
     }
 
     @Override

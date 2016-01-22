@@ -17,6 +17,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 public class SongDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView detailSelectedTrack;
@@ -37,8 +38,9 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailFastForward = (ImageView) findViewById(R.id.detail_fast_forward);
         detailReverse = (ImageView) findViewById(R.id.detail_reverse);
         musicSeeker = (SeekBar) findViewById(R.id.music_seeker);
-
-        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+        Log.e("Song detail activity", "Is the music playing? "+MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying());
+        if (!MusicPlayerHelper.getInstance().getIsPaused()) {
+            Log.e("Song Detail Activity", "Pause button being set");
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         }
         detailSelectedTrack.setText(getIntent().getStringExtra(Constants.TITLE_NAME));
@@ -70,18 +72,27 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         completion();
     }
 
+    @Override
+    protected void onRestart() {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            Log.e("Song Detail Activity", "Pause button being set");
+            detailController.setImageResource(android.R.drawable.ic_media_pause);
+        }
+        super.onRestart();
+    }
+
     private void completion(){
         MusicPlayerHelper.getInstance().getMediaPlayer().
                 setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                MusicPlayerHelper.getInstance()
-                        .playNextSong();
-                detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        MusicPlayerHelper.getInstance()
+                                .playNextSong();
+                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
                                 get(MusicPlayerHelper.getInstance().getSongPosition())
                                 .getSongTitle());
-            }
-        });
+                    }
+                });
     }
 
     Runnable run = new Runnable() {
@@ -97,40 +108,25 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         seekHandler.postDelayed(run, 1000);
     }
 
-//    @Override
-//    protected void onPause() {
-//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-//            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-//            startService(serviceIntent);
-//        }
-//        seekHandler.removeCallbacks(run);
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-//            serviceIntent.setAction(Constants.STOP_NOTIFICATION);
-//            startService(serviceIntent);
-//        }
-//        musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
-//                        .getCurrentPosition());
-//        seekHandler.postDelayed(run, 1000);
-//        super.onResume();
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (MusicPlayerHelper.getInstance().getIsPaused() ||
+                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            SharedPreferenceHandler.getInstance().setSongPosition(this,
+                    MusicPlayerHelper.getInstance().getSongPosition());
+        }
+    }
 
-//    @Override
-//    protected void onDestroy() {
-//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
-//            Intent serviceIntent = new Intent(this, MediaPlayerService.class);
-//            serviceIntent.setAction(Constants.STARTFOREGROUND_ACTION);
-//            startService(serviceIntent);
-//        }
-//        seekHandler.removeCallbacks(run);
-//        super.onDestroy();
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (MusicPlayerHelper.getInstance().getIsPaused() ||
+                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            SharedPreferenceHandler.getInstance().setSongPosition(this,
+                    MusicPlayerHelper.getInstance().getSongPosition());
+        }
+    }
 
     @Override
     public void onClick(View v) {
