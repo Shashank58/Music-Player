@@ -23,47 +23,5 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:id="@+id/playing_song_toolbar"
-        app:elevation="4dp"
-        android:background="#EF6C00"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:transitionName="songBar">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:id="@+id/selected_album_cover"
-                android:src="@drawable/ic_action_ic_default_cover"/>
-
-            <TextView
-                android:id="@+id/selected_track_title"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:layout_weight="1"
-                android:layout_marginTop="15dp"
-                android:textColor="@color/white"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:id="@+id/player_control"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="5dp"/>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

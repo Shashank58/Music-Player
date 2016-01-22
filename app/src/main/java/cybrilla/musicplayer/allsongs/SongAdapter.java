@@ -110,7 +110,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                                 (mActivity, songSelectedToolbar
                                         , songSelectedToolbar.getTransitionName());
                 ActivityCompat.startActivity(mActivity, intent, options.toBundle());
-                AllSongsActivity.newActivityStarted = true;
             }
         });
     }

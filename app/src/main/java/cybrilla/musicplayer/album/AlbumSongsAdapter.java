@@ -1,6 +1,7 @@
 package cybrilla.musicplayer.album;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -16,7 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
  * Created by shashankm on 11/01/16.
@@ -39,10 +43,22 @@ public class AlbumSongsAdapter extends
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Album song adapter", "Working");
+                Log.e("Album Songs Adapter", "Contains? "+MusicPlayerHelper.allSongsList.contains(song));
+                int pos = MusicPlayerHelper.allSongsList.indexOf(song);
+                Log.e("Album Songs Adapter", "Position: "+pos);
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
+                }
+                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()){
+                    MusicPlayerHelper.getInstance().getMediaPlayer().stop();
+                    MusicPlayerHelper.getInstance().getMediaPlayer().reset();
+                }
+                MusicPlayerHelper.getInstance().startMusic(pos);
+                Intent intent = new Intent(mActivity, SongDetailActivity.class);
+                intent.putExtra(Constants.TITLE_NAME, song.getSongTitle());
+                mActivity.startActivity(intent);
             }
         });
-
         return new AlbumSongsViewHolder(view);
     }
 

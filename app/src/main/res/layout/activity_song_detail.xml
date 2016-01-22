@@ -7,7 +7,7 @@
 
 
         <android.support.v7.widget.Toolbar
-            android:background="#EF6C00"
+            android:background="#F44336"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:id="@+id/playing_song_detail_toolbar"

@@ -6,12 +6,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.allsongs.AllSongsActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -67,9 +65,7 @@ public class MediaPlayerService extends Service {
     }
 
     private void toggleMusicFromNotification(){
-//        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
-            if (!MusicPlayerHelper.getInstance().getisPaused()) {
-                Log.e("Media Player service", "Paused");
+            if (!MusicPlayerHelper.getInstance().getIsPaused()) {
                 MusicPlayerHelper.getInstance().getMediaPlayer().pause();
                 views.setImageViewResource(R.id.status_bar_play,
                         android.R.drawable.ic_media_play);
@@ -78,7 +74,6 @@ public class MediaPlayerService extends Service {
                 MusicPlayerHelper.getInstance().setIsPaused(true);
                 startNotification();
             } else {
-                Log.e("Media player service", "Playing");
                 MusicPlayerHelper.getInstance().getMediaPlayer().start();
                 views.setImageViewResource(R.id.status_bar_play,
                         android.R.drawable.ic_media_pause);
@@ -87,22 +82,11 @@ public class MediaPlayerService extends Service {
                 MusicPlayerHelper.getInstance().setIsPaused(false);
                 startNotification();
             }
-//        } else {
-//            MusicPlayerHelper.getInstance().getMediaPlayer().start();
-//            Log.e("Music service", "Getting called");
-//            views.setImageViewResource(R.id.status_bar_play,
-//                    android.R.drawable.ic_media_pause);
-//            bigViews.setImageViewResource(R.id.status_bar_play,
-//                    android.R.drawable.ic_media_pause);
-//            MusicPlayerHelper.getInstance().setIsPaused(false);
-//            startNotification();
-//        }
     }
 
     private void startNotification(){
         if (status == null) {
             status = new Notification.Builder(this).build();
-            Log.e("Media player service", "Status created");
         }
         status.contentView = views;
         status.bigContentView = bigViews;
@@ -127,12 +111,12 @@ public class MediaPlayerService extends Service {
         bigViews.setImageViewBitmap(R.id.status_bar_album_art,
                 Constants.getDefaultAlbumArt(this));
 
-        Intent notificationIntent = new Intent(this, AllSongsActivity.class);
-        notificationIntent.setAction(Constants.MAIN_ACTION);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+//        Intent notificationIntent = new Intent(this, AllSongsActivity.class);
+//        notificationIntent.setAction(Constants.MAIN_ACTION);
+//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        pendingIntent = PendingIntent.getActivity(this, 0,
+//                notificationIntent, 0);
 
         Intent previousIntent = new Intent(this, MediaPlayerService.class);
         previousIntent.setAction(Constants.PREV_ACTION);
@@ -165,7 +149,7 @@ public class MediaPlayerService extends Service {
 
         views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
         bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-        if (MusicPlayerHelper.getInstance().getisPaused()) {
+        if (MusicPlayerHelper.getInstance().getIsPaused()) {
             views.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
             bigViews.setImageViewResource(R.id.status_bar_play,

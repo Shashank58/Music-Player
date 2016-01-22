@@ -140,7 +140,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()){
             case R.id.detail_controller:
                 MusicPlayerHelper.getInstance().toggleMusicPlayer(null);
-                if (MusicPlayerHelper.getInstance().getisPaused()) {
+                if (MusicPlayerHelper.getInstance().getIsPaused()) {
                     seekHandler.removeCallbacks(run);
                     detailController.setImageResource(android.R.drawable.ic_media_play);
                 }

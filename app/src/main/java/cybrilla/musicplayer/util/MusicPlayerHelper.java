@@ -29,20 +29,25 @@ public class MusicPlayerHelper{
     private static int songPosition;
 
     public static MusicPlayerHelper getInstance(){
-        if (instance == null || mediaPlayer == null){
+        if (instance == null){
+            Log.e("Music player helper", "Creating new instance");
             instance = new MusicPlayerHelper();
         }
         return instance;
     }
 
     public void initializeMediaPlayer(){
-        mediaPlayer = new MediaPlayer();
+        if (mediaPlayer == null) {
+            Log.e("Music player helper", "Creating new media player");
+            mediaPlayer = new MediaPlayer();
+        }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer.start();
-                Log.e("Music player helper", "Starting song");
+                Log.e("Music player helper", "Is it looping? " + mediaPlayer.isLooping());
+                Log.e("Music player helper", "Is song starting? "+mediaPlayer.isPlaying());
                 isPaused = false;
             }
         });
@@ -52,7 +57,7 @@ public class MusicPlayerHelper{
         return mediaPlayer;
     }
 
-    public boolean getisPaused(){
+    public boolean getIsPaused(){
         return isPaused;
     }
 
@@ -70,6 +75,7 @@ public class MusicPlayerHelper{
         try {
             mediaPlayer.setDataSource(s.getPath());
             mediaPlayer.prepareAsync();
+            Log.e("Music player helper", "Path is: " + s.getPath());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,6 +146,8 @@ public class MusicPlayerHelper{
     public void playNextSong(){
         mediaPlayer.stop();
         mediaPlayer.reset();
+
+        Log.e("Music Player Helper", "Is music player playing? " + mediaPlayer.isPlaying());
         songPosition = songPosition + 1;
         Log.e("Song detail activity", "Position after next: " + songPosition);
         startMusic(songPosition);

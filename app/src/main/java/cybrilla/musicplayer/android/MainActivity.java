@@ -1,114 +1,164 @@
 package cybrilla.musicplayer.android;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.os.Build.VERSION_CODES;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.transition.Explode;
-import android.transition.TransitionManager;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.album.AlbumsActivity;
-import cybrilla.musicplayer.allsongs.AllSongsActivity;
+import cybrilla.musicplayer.album.AlbumFragment;
+import cybrilla.musicplayer.allsongs.AllSongsFragment;
+import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class MainActivity extends AppCompatActivity {
-    private CardView allSongs, albums, artists;
-    private TextView songsText, albumsText, artistText;
-    private static boolean isStartAnimation = true;
-    private ViewGroup songCardStart;
-    private Intent intent;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private Toolbar toolBarTop, playingSongToolbar;
+    private TextView tabTitle, selectedTrackTitle;
+    private ImageView selectedAlbumCover, playerControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isStartAnimation = true;
-        initTransitions();
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        toolBarTop = (Toolbar) findViewById(R.id.toolbarTop);
+        tabTitle = (TextView) findViewById(R.id.tabTitle);
+        playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
+        selectedTrackTitle = (TextView) findViewById(R.id.selected_track_title);
+        selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
+        playerControl = (ImageView) findViewById(R.id.player_control);
 
-        allSongs = (CardView) findViewById(R.id.songCardAllSongs);
-        albums = (CardView) findViewById(R.id.songCardAlbums);
-        artists = (CardView) findViewById(R.id.songCardArtist);
-        songCardStart = (ViewGroup) findViewById(R.id.parentLayout);
-        songsText = (TextView) findViewById(R.id.all_songs);
-        albumsText = (TextView) findViewById(R.id.albums);
-        artistText = (TextView) findViewById(R.id.artists);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
 
-        songsText.setOnClickListener(new OnClickListener() {
+        tabTitle.setText("All Songs");
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        toolBarTop.setCollapsible(true);
+
+        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                intent = new Intent(MainActivity.this, AllSongsActivity.class);
-                isStartAnimation = false;
-                initTransitions();
-            }
-        });
-
-        albumsText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(MainActivity.this, AlbumsActivity.class);
-                isStartAnimation = false;
-                initTransitions();
-            }
-        });
-    }
-
-    @TargetApi(VERSION_CODES.LOLLIPOP)
-    private void initTransitions() {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                beginAllViewTransition();
-            }
-        }, 500);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @TargetApi(VERSION_CODES.LOLLIPOP)
-    private void beginAllViewTransition(){
-        TransitionManager.beginDelayedTransition(songCardStart, new Explode());
-        toggleVisibility(allSongs, albums, artists);
-    }
-
-    private void toggleVisibility(View... views){
-        if (isStartAnimation) {
-            for (View view : views) {
-                view.setVisibility(View.VISIBLE);
-            }
-        } else {
-            for (View view : views) {
-                view.setVisibility(View.INVISIBLE);
-            }
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                int pos = tabLayout.getSelectedTabPosition();
+                if (pos == 0 && (!"All Songs".equals(tabTitle.getText().toString()))) {
+                    tabTitle.setText("All Songs");
+                } else if (pos == 1 && (!"Albums".equals(tabTitle.getText().toString()))) {
+                    tabTitle.setText("Albums");
                 }
-            }, 50);
-        }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        setUpTabIcon();
     }
 
     @Override
-    protected void onResume() {
-        isStartAnimation = true;
-        intent = null;
-        initTransitions();
-        super.onResume();
+    protected void onResumeFragments() {
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
+                MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            if (playingSongToolbar.getVisibility() == View.GONE) {
+                playingSongToolbar.setVisibility(View.VISIBLE);
+            }
+            Song song = MusicPlayerHelper.allSongsList.get(
+                    MusicPlayerHelper.getInstance().getSongPosition());
+            selectedTrackTitle.setText(song.getSongTitle());
+            if (MusicPlayerHelper.getInstance().getIsPaused()) {
+                playerControl.setImageResource(R.drawable.ic_play);
+            } else {
+                playerControl.setImageResource(R.drawable.ic_pause);
+            }
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            byte[] rawArt;
+            Bitmap art;
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            Uri uri = song.getUri();
+            mmr.setDataSource(this, uri);
+            try {
+                rawArt = mmr.getEmbeddedPicture();
+                art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
+                selectedAlbumCover.setImageBitmap(art);
+            } catch (Exception e) {
+                selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
+            }
+
+        }
+        super.onResumeFragments();
     }
 
-    private void startActivity(){
-        startActivity(intent);
+    private void setUpTabIcon() {
+        TextView tabOne = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.custom_tab, null);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_all_songs, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.custom_tab, null);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_album, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new AllSongsFragment(), "All Songs");
+        adapter.addFragment(new AlbumFragment(), "Albums");
+        //adapter.addFragment(threeFragment, "Artists");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return null;
+        }
     }
 }

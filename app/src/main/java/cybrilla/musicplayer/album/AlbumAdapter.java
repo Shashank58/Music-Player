@@ -48,8 +48,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                 int pos = (int) v.getTag();
                 Song song = MusicPlayerHelper.allSongsList.get(pos);
                 ImageView imageStart = (ImageView) v.findViewById(R.id.album_image);
-                Intent intent = new Intent(mActivity, AlbumSongsActivity.class);
-                intent.putExtra("Song", song);
+                Intent intent = new Intent(mActivity, AlbumSongActivity.class);
+                intent.putExtra("SongPosition", pos);
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation
                         (mActivity,imageStart, imageStart.getTransitionName());

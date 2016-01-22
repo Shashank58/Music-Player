@@ -1,108 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     android:id="@+id/parentLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/song_image"
     tools:context="cybrilla.musicplayer.android.MainActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/songCardAllSongs"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:alpha="0.75"
-        android:background="@color/white"
-        android:visibility="invisible"
-        app:cardElevation="5dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-        <TextView
-            android:id="@+id/all_songs"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarTop"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#F44336"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <TextView
+                    android:id="@+id/tabTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            </android.support.v7.widget.Toolbar>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F44336"
+                app:elevation="8dp"
+                app:tabGravity="fill"
+                app:tabIndicatorHeight="4dp"
+                app:tabIndicatorColor="#ffffff"
+                app:tabTextColor="#EEEEEE"
+                app:tabMaxWidth="0dp"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="#ffffff"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:fontFamily="sans-serif-condensed"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:text="All Songs"
-            android:textColor="@color/pure_black"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:layout_below="@+id/appToolBar"
+            android:layout_marginTop="2dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </android.support.v7.widget.CardView>
+        </android.support.v4.view.ViewPager>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/songCardAllSongs">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/songCardAlbums"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:alpha="0.75"
-            android:background="@color/white"
-            android:visibility="invisible"
-            app:cardElevation="5dp">
-
-            <TextView
-                android:id="@+id/albums"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/playing_song_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:fontFamily="sans-serif-condensed"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center"
-                android:text="Albums"
-                android:textColor="@color/pure_black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="visible"/>
+                android:layout_height="70dp"
+                android:layout_alignParentBottom="true"
+                android:background="#F44336"
+                android:transitionName="songBar"
+                android:visibility="gone"
+                app:elevation="4dp">
 
-        </android.support.v7.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/songCardArtist"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/songCardAlbums"
-            android:alpha="0.75"
-            android:background="@color/white"
-            android:visibility="invisible"
-            app:cardElevation="5dp">
+                    <ImageView
+                        android:id="@+id/selected_album_cover"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center_vertical"/>
 
-            <TextView
-                android:id="@+id/artists"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="sans-serif-condensed"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center"
-                android:text="Artists"
-                android:textColor="@color/pure_black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="visible"/>
+                    <TextView
+                        android:id="@+id/selected_track_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:paddingLeft="8dp"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/white"/>
 
-        </android.support.v7.widget.CardView>
+                    <ImageView
+                        android:id="@+id/player_control"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"/>
 
-    </LinearLayout>
+                </LinearLayout>
 
-</RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+
+        </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

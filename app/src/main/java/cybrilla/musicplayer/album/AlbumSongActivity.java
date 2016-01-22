@@ -12,8 +12,13 @@ import android.widget.ImageView;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.MusicPlayerHelper;
 
-public class AlbumSongsActivity extends AppCompatActivity {
+/**
+ * Created by shashankm on 22/01/16.
+ */
+
+public class AlbumSongActivity extends AppCompatActivity{
     private RecyclerView albumSongList;
     private ImageView albumSongImage;
     private AlbumSongsAdapter mAdapter;
@@ -32,7 +37,8 @@ public class AlbumSongsActivity extends AppCompatActivity {
     }
 
     private void setUpAlbum(){
-        Song song = (Song) getIntent().getSerializableExtra("Song");
+        int pos = getIntent().getIntExtra("SongPosition", -1);
+        Song song = MusicPlayerHelper.allSongsList.get(pos);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
         Bitmap art;
