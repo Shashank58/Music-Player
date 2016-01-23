@@ -67,9 +67,16 @@ public class AllSongsFragment extends Fragment {
         int position = SharedPreferenceHandler.getInstance().getSongPosition(getActivity());
         MusicPlayerHelper.getInstance().setSongPosition(position);
         Song song = MusicPlayerHelper.allSongsList.get(position);
-        Log.e("All Songs Fragment", "Song title: "+song.getSongTitle());
+        Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
         selectedSongTrack.setText(song.getSongTitle());
-        playerControl.setImageResource(R.drawable.ic_play);
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
+            if (MusicPlayerHelper.getInstance().getIsPaused())
+                playerControl.setImageResource(R.drawable.ic_play);
+            else
+                playerControl.setImageResource(R.drawable.ic_pause);
+        } else {
+            playerControl.setImageResource(R.drawable.ic_play);
+        }
         byte[] rawArt;
         Uri uri = song.getUri();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();

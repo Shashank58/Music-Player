@@ -27,6 +27,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.album.AlbumFragment;
 import cybrilla.musicplayer.allsongs.AllSongsFragment;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                         MusicPlayerHelper.getInstance().getSongPosition());
             }
             Intent intent = new Intent(this, MediaPlayerService.class);
-            //intent.setAction(Constants.STARTFOREGROUND_ACTION);
             startService(intent);
         }
     }
@@ -116,16 +116,20 @@ public class MainActivity extends AppCompatActivity {
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
                 (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
                     || MusicPlayerHelper.getInstance().getIsPaused())) {
+            Intent intent = new Intent(this, MediaPlayerService.class);
+            intent.setAction(Constants.STOP_NOTIFICATION);
+            startService(intent);
             if (playingSongToolbar.getVisibility() == View.GONE) {
                 playingSongToolbar.setVisibility(View.VISIBLE);
             }
-            Log.e("Main acitvity", "Even when song paused");
             Song song = MusicPlayerHelper.allSongsList.get(
                     MusicPlayerHelper.getInstance().getSongPosition());
             selectedTrackTitle.setText(song.getSongTitle());
+            Log.e("Main Activity", "Song state: "+MusicPlayerHelper.getInstance().getIsPaused());
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
                 playerControl.setImageResource(R.drawable.ic_play);
             } else {
+                Log.e("Main Activity", "Getting set to pause");
                 playerControl.setImageResource(R.drawable.ic_pause);
             }
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();

@@ -87,6 +87,12 @@ public class MediaPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent.getAction();
+        if (Constants.STOP_NOTIFICATION.equals(action)){
+            unregisterReceiver(broadcastReceiver);
+            stopForeground(true);
+            stopSelf();
+        }
 
         return START_STICKY;
     }
@@ -121,7 +127,7 @@ public class MediaPlayerService extends Service {
         views.setViewVisibility(R.id.status_bar_icon, View.VISIBLE);
         views.setViewVisibility(R.id.status_bar_album_art, View.GONE);
         bigViews.setImageViewBitmap(R.id.status_bar_album_art,
-                Constants.getDefaultAlbumArt(this));
+                Constants.getAlbumArt(this));
 
         Song s = MusicPlayerHelper.allSongsList.get(
                 MusicPlayerHelper.getInstance().getSongPosition());

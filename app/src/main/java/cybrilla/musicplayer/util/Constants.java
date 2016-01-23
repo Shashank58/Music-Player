@@ -20,8 +20,9 @@ public class Constants {
     public static final String ALBUM_COVER = "ALBUM_COVER";
     public static final String SONG_KEY = "Song Position Key";
     public static final String SONG_NUMBER = "Song Number";
+    public static final String STOP_NOTIFICATION = "cybrilla.musicplayer.action.stopnotification";
 
-    public static Bitmap getDefaultAlbumArt(Context context) {
+    public static Bitmap getAlbumArt(Context context) {
         Bitmap bm = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();

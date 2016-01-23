@@ -159,16 +159,19 @@ public class MusicPlayerHelper{
     }
 
     public void playNextSong(){
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-
+        if (mediaPlayer.isPlaying() || isPaused) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
         songPosition = songPosition + 1;
         startMusic(songPosition);
     }
 
     public void playPrevSong(){
-        mediaPlayer.stop();
-        mediaPlayer.reset();
+        if (mediaPlayer.isPlaying() || isPaused) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
         songPosition = songPosition - 1;
         startMusic(songPosition);
     }
