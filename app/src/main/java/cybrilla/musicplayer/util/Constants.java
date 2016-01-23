@@ -3,8 +3,11 @@ package cybrilla.musicplayer.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.modle.Song;
 
 /**
  * Created by shashankm on 11/01/16.
@@ -17,22 +20,27 @@ public class Constants {
     public static final String ALBUM_COVER = "ALBUM_COVER";
     public static final String SONG_KEY = "Song Position Key";
     public static final String SONG_NUMBER = "Song Number";
-    public static final String MAIN_ACTION = "cybrilla.musicplayer.action.allSongs";
-    public static final String PREV_ACTION = "cybrilla.musicplayer.action.prev";
-    public static final String PLAY_ACTION = "cybrilla.musicplayer.action.play";
-    public static final String NEXT_ACTION = "cybrilla.musicplayer.action.next";
-    public static final String STOP_NOTIFICATION = "cybrilla.musicplayer.action.stopnotification";
-    public static final String STARTFOREGROUND_ACTION = "cybrilla.musicplayer.action.startforeground";
-    public static final String STOPFOREGROUND_ACTION = "cybrilla.musicplayer.action.stopforeground";
 
     public static Bitmap getDefaultAlbumArt(Context context) {
         Bitmap bm = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        try {
-            bm = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.no_image, options);
-        } catch (Exception e) {
-            e.printStackTrace();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        byte[] rawArt;
+        Song song = MusicPlayerHelper.allSongsList.get(
+                MusicPlayerHelper.getInstance().getSongPosition());
+        Uri uri = song.getUri();
+        mmr.setDataSource(context, uri);
+        if (mmr.getEmbeddedPicture() != null) {
+            rawArt = mmr.getEmbeddedPicture();
+            bm = BitmapFactory.decodeByteArray(rawArt, 0,
+                    rawArt.length, options);
+        } else {
+            try {
+                bm = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.no_image, options);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return bm;
     }

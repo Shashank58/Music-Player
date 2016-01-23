@@ -47,12 +47,6 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/cd_play" />
 
-    <ImageButton
-        android:id="@+id/status_bar_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/cd_next"
-        android:src="@android:drawable/ic_media_next" />
 
     <ImageButton
         android:id="@+id/status_bar_collapse"

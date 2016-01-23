@@ -115,7 +115,14 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                 MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
             SharedPreferenceHandler.getInstance().setSongPosition(this,
                     MusicPlayerHelper.getInstance().getSongPosition());
+            seekHandler.removeCallbacks(run);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        seekUpdation();
     }
 
     @Override
@@ -125,6 +132,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                 MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
             SharedPreferenceHandler.getInstance().setSongPosition(this,
                     MusicPlayerHelper.getInstance().getSongPosition());
+            seekHandler.removeCallbacks(run);
         }
     }
 
@@ -146,8 +154,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.detail_fast_forward:
                 detailController.setImageResource(android.R.drawable.ic_media_pause);
-                Log.e("Song detail activity", "Position: " + MusicPlayerHelper
-                                        .getInstance().getSongPosition());
                 song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
                                         .getSongPosition()+1);
                 detailSelectedTrack.setText(song.getSongTitle());

@@ -1,5 +1,6 @@
 package cybrilla.musicplayer.android;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -26,6 +27,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.album.AlbumFragment;
 import cybrilla.musicplayer.allsongs.AllSongsFragment;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
@@ -91,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferenceHandler.getInstance().setSongPosition(this,
                         MusicPlayerHelper.getInstance().getSongPosition());
             }
+            Intent intent = new Intent(this, MediaPlayerService.class);
+            //intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startService(intent);
         }
     }
 

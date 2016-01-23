@@ -1,11 +1,16 @@
 package cybrilla.musicplayer.util;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -17,9 +22,11 @@ import cybrilla.musicplayer.modle.Song;
  * Created by shashankm on 12/01/16.
  */
 public class MediaPlayerService extends Service {
-    private Notification status;
+    private Notification notification;
     private RemoteViews views, bigViews;
-    private PendingIntent pendingIntent;
+    private PendingIntent pendingIntent, quitPendingIntent, previousPendingIntent;
+    private PendingIntent playpausePendingIntent, nextPendingIntent;
+    private NotificationManager mNotificationManager;
 
     @Nullable
     @Override
@@ -28,150 +35,127 @@ public class MediaPlayerService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        switch (intent.getAction()){
-            case Constants.STARTFOREGROUND_ACTION:
-                showNotification();
-                break;
+    public void onCreate() {
+        mNotificationManager = (NotificationManager)getSystemService
+                (Context.NOTIFICATION_SERVICE);
+        Log.e("Media Player Service", "Starting service");
 
-            case Constants.MAIN_ACTION:
-                break;
+        // Initialize pending intents
+        quitPendingIntent = PendingIntent.getBroadcast(this, 0,
+                new Intent("cybrilla.musicplayer.util.quit"), 0);
+        previousPendingIntent = PendingIntent.getBroadcast(this, 0,
+                new Intent("cybrilla.musicplayer.util.previous"), 0);
+        playpausePendingIntent = PendingIntent.getBroadcast(this, 0,
+                new Intent("cybrilla.musicplayer.util.playpause"), 0);
+        nextPendingIntent = PendingIntent.getBroadcast(this, 0,
+                new Intent("cybrilla.musicplayer.util.next"), 0);
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+                        MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-            case Constants.PLAY_ACTION:
-                toggleMusicFromNotification();
-                break;
+        setUpNotification();
 
-            case Constants.NEXT_ACTION:
-                MusicPlayerHelper.getInstance().playNextSong();
-                startNotification();
-                break;
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("cybrilla.musicplayer.util.quit");
+        intentFilter.addAction("cybrilla.musicplayer.util.previous");
+        intentFilter.addAction("cybrilla.musicplayer.util.previousNoRestart");
+        intentFilter.addAction("cybrilla.musicplayer.util.playpause");
+        intentFilter.addAction("cybrilla.musicplayer.util.next");
 
-            case Constants.PREV_ACTION:
-                MusicPlayerHelper.getInstance().playPrevSong();
-                startNotification();
-                break;
+        registerReceiver(broadcastReceiver, intentFilter);
+        startForeground(Constants.FOREGROUND_SERVICE, notification);
+    }
 
-            case Constants.STOP_NOTIFICATION:
-                stopForeground(true);
-                stopSelf();
-                break;
+    public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action){
+                case "cybrilla.musicplayer.util.quit":
+                    MusicPlayerHelper.getInstance().releaseMediaPlayer();
+                    unregisterReceiver(broadcastReceiver);
+                    stopSelf();
+                    break;
 
-            case Constants.STOPFOREGROUND_ACTION:
-                stopForeground(true);
-                MusicPlayerHelper.getInstance().releaseMediaPlayer();
-                stopSelf();
-                break;
+                case "cybrilla.musicplayer.util.playpause":
+                    toggleMusic();
+                    Log.e("Media Player Service", "Play pause working");
+                    break;
+            }
         }
+    };
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
         return START_STICKY;
     }
 
-    private void toggleMusicFromNotification(){
-            if (!MusicPlayerHelper.getInstance().getIsPaused()) {
-                MusicPlayerHelper.getInstance().getMediaPlayer().pause();
-                views.setImageViewResource(R.id.status_bar_play,
-                        android.R.drawable.ic_media_play);
-                bigViews.setImageViewResource(R.id.status_bar_play,
-                        android.R.drawable.ic_media_play);
-                MusicPlayerHelper.getInstance().setIsPaused(true);
-                startNotification();
-            } else {
-                MusicPlayerHelper.getInstance().getMediaPlayer().start();
-                views.setImageViewResource(R.id.status_bar_play,
-                        android.R.drawable.ic_media_pause);
-                bigViews.setImageViewResource(R.id.status_bar_play,
-                        android.R.drawable.ic_media_pause);
-                MusicPlayerHelper.getInstance().setIsPaused(false);
-                startNotification();
-            }
-    }
-
-    private void startNotification(){
-        if (status == null) {
-            status = new Notification.Builder(this).build();
+    private void toggleMusic(){
+        if (MusicPlayerHelper.getInstance().getIsPaused()){
+            MusicPlayerHelper.getInstance().getMediaPlayer().start();
+            MusicPlayerHelper.getInstance().setIsPaused(false);
+        } else {
+            MusicPlayerHelper.getInstance().setIsPaused(true);
+            MusicPlayerHelper.getInstance().getMediaPlayer().pause();
         }
-        status.contentView = views;
-        status.bigContentView = bigViews;
-        status.flags = Notification.FLAG_ONGOING_EVENT;
-        status.icon = R.drawable.no_image;
-        status.contentIntent = pendingIntent;
-        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
-                                        .getSongPosition());
-
-        setSongDetails(song.getSongTitle(), song.getSongArtist(), song.getSongAlbum());
-        startForeground(Constants.FOREGROUND_SERVICE, status);
+        setUpNotification();
+        updateNotification();
     }
 
-    private void showNotification(){
-        views = new RemoteViews(getPackageName(),
-                R.layout.status_bar);
-        bigViews = new RemoteViews(getPackageName(),
-                R.layout.status_bar_expanded);
+    private void setUpNotification(){
+        if (views == null || bigViews == null) {
+            views = new RemoteViews(getPackageName(),
+                    R.layout.status_bar);
+            bigViews = new RemoteViews(getPackageName(),
+                    R.layout.status_bar_expanded);
+            views.setOnClickPendingIntent(R.id.status_bar_play, playpausePendingIntent);
+            bigViews.setOnClickPendingIntent(R.id.status_bar_play, playpausePendingIntent);
 
+            views.setOnClickPendingIntent(R.id.status_bar_collapse, quitPendingIntent);
+            bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, quitPendingIntent);
+        }
+
+        mNotificationManager = (NotificationManager) getSystemService
+                (Context.NOTIFICATION_SERVICE);
         views.setViewVisibility(R.id.status_bar_icon, View.VISIBLE);
         views.setViewVisibility(R.id.status_bar_album_art, View.GONE);
         bigViews.setImageViewBitmap(R.id.status_bar_album_art,
                 Constants.getDefaultAlbumArt(this));
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setAction(Constants.MAIN_ACTION);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+        Song s = MusicPlayerHelper.allSongsList.get(
+                MusicPlayerHelper.getInstance().getSongPosition());
 
-        Intent previousIntent = new Intent(this, MediaPlayerService.class);
-        previousIntent.setAction(Constants.PREV_ACTION);
-        PendingIntent ppreviousIntent = PendingIntent.getService(this, 0,
-                previousIntent, 0);
+        String songTitle = s.getSongTitle();
+        String songArtist = s.getSongArtist();
+        String songAlbum = s.getSongAlbum();
 
-        Intent playIntent = new Intent(this, MediaPlayerService.class);
-        playIntent.setAction(Constants.PLAY_ACTION);
-        PendingIntent pplayIntent = PendingIntent.getService(this, 0,
-                playIntent, 0);
+        bigViews.setTextViewText(R.id.status_bar_track_name, songTitle);
+        views.setTextViewText(R.id.status_bar_track_name, songTitle);
 
-        Intent nextIntent = new Intent(this, MediaPlayerService.class);
-        nextIntent.setAction(Constants.NEXT_ACTION);
-        PendingIntent pnextIntent = PendingIntent.getService(this, 0,
-                nextIntent, 0);
-
-        Intent closeIntent = new Intent(this, MediaPlayerService.class);
-        closeIntent.setAction(Constants.STOPFOREGROUND_ACTION);
-        PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
-                closeIntent, 0);
-
-        views.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_next, pnextIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_next, pnextIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_prev, ppreviousIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_prev, ppreviousIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
+        bigViews.setTextViewText(R.id.status_bar_album_name, songAlbum);
+        bigViews.setTextViewText(R.id.status_bar_artist_name, songArtist);
         if (MusicPlayerHelper.getInstance().getIsPaused()) {
             views.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_play);
-            startNotification();
         } else {
             views.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_pause);
             bigViews.setImageViewResource(R.id.status_bar_play,
                     android.R.drawable.ic_media_pause);
-            startNotification();
         }
+        Notification.Builder notificationBuilder =
+                    new Notification.Builder(this).setOngoing(true).setAutoCancel(false);
+        notification = notificationBuilder.build();
+        notification.contentIntent = pendingIntent;
+        notification.contentView = views;
+        notification.bigContentView = bigViews;
+        notification.icon = R.drawable.no_image;
     }
 
-    public void setSongDetails(String title, String artist, String album){
-        views.setTextViewText(R.id.status_bar_track_name, title);
-        bigViews.setTextViewText(R.id.status_bar_track_name, title);
-
-        views.setTextViewText(R.id.status_bar_artist_name, artist);
-        bigViews.setTextViewText(R.id.status_bar_artist_name, artist);
-
-        bigViews.setTextViewText(R.id.status_bar_album_name, album);
+    private void updateNotification(){
+        mNotificationManager.notify(Constants.FOREGROUND_SERVICE, notification);
     }
 }
