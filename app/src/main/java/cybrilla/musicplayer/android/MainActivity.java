@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private Toolbar toolBarTop, playingSongToolbar;
-    private TextView tabTitle, selectedTrackTitle;
+    private TextView tabTitle, selectedTrackTitle, selectedTrackArtist;
     private ImageView selectedAlbumCover, playerControl;
 
     @Override
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         selectedTrackTitle = (TextView) findViewById(R.id.selected_track_title);
         selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
         playerControl = (ImageView) findViewById(R.id.player_control);
+        selectedTrackArtist = (TextView) findViewById(R.id.selected_track_artist);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -125,12 +126,13 @@ public class MainActivity extends AppCompatActivity {
             Song song = MusicPlayerHelper.allSongsList.get(
                     MusicPlayerHelper.getInstance().getSongPosition());
             selectedTrackTitle.setText(song.getSongTitle());
+            selectedTrackArtist.setText(song.getSongArtist());
             Log.e("Main Activity", "Song state: "+MusicPlayerHelper.getInstance().getIsPaused());
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                playerControl.setImageResource(R.drawable.ic_play);
+                playerControl.setImageResource(android.R.drawable.ic_media_play);
             } else {
                 Log.e("Main Activity", "Getting set to pause");
-                playerControl.setImageResource(R.drawable.ic_pause);
+                playerControl.setImageResource(android.R.drawable.ic_media_pause);
             }
             MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             byte[] rawArt;

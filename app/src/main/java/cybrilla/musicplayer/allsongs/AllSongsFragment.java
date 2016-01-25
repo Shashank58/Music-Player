@@ -35,7 +35,7 @@ import cybrilla.musicplayer.util.SharedPreferenceHandler;
 public class AllSongsFragment extends Fragment {
     private static final String TAG = "All Songs Fragment";
     private Toolbar playingSongToolbar;
-    private TextView selectedSongTrack;
+    private TextView selectedSongTrack, selectedSongArtist;
     private ImageView playerControl, selectedAlbumCover;
     private RecyclerView songList;
     private SongAdapter mAdapter;
@@ -50,6 +50,8 @@ public class AllSongsFragment extends Fragment {
         selectedSongTrack = (TextView) getActivity().findViewById(R.id.selected_track_title);
         playerControl = (ImageView) getActivity().findViewById(R.id.player_control);
         selectedAlbumCover = (ImageView) getActivity().findViewById(R.id.selected_album_cover);
+        selectedSongArtist = (TextView) getActivity().findViewById(R.id.selected_track_artist);
+
         songList.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
         songList.setLayoutManager(linearLayout);
@@ -69,13 +71,14 @@ public class AllSongsFragment extends Fragment {
         Song song = MusicPlayerHelper.allSongsList.get(position);
         Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
         selectedSongTrack.setText(song.getSongTitle());
+        selectedSongArtist.setText(song.getSongArtist());
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(R.drawable.ic_play);
+                playerControl.setImageResource(android.R.drawable.ic_media_play);
             else
-                playerControl.setImageResource(R.drawable.ic_pause);
+                playerControl.setImageResource(android.R.drawable.ic_media_pause);
         } else {
-            playerControl.setImageResource(R.drawable.ic_play);
+            playerControl.setImageResource(android.R.drawable.ic_media_play);
         }
         byte[] rawArt;
         Uri uri = song.getUri();

@@ -15,18 +15,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 
 /**
  * Created by shashankm on 05/01/16.
  */
 public class MusicPlayerHelper{
-    private static MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private static MusicPlayerHelper instance;
-    private static boolean isPaused = false;
+    private boolean isPaused = false;
     public static List<Song> allSongsList;
-    private static int songPosition;
+    private int songPosition;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
@@ -42,14 +41,6 @@ public class MusicPlayerHelper{
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                mediaPlayer.start();
-//                Log.e("Music player helper", "Is song starting? "+mediaPlayer.isPlaying());
-//                isPaused = false;
-//            }
-//        });
     }
 
     public MediaPlayer getMediaPlayer(){
@@ -73,17 +64,19 @@ public class MusicPlayerHelper{
     }
 
     public void startMusic(int pos){
-        songPosition = pos;
-        if (mediaPlayer.isPlaying()){
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
+        this.songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {
             mediaPlayer.setDataSource(s.getPath());
             mediaPlayer.prepare();
-            mediaPlayer.start();
-            isPaused = false;
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
+                    isPaused = false;
+                }
+            });
             Log.e("Music player helper", "Path is: " + s.getPath());
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,20 +89,20 @@ public class MusicPlayerHelper{
                 mediaPlayer.pause();
                 isPaused = true;
                 if (playerController != null) {
-                    playerController.setImageResource(R.drawable.ic_play);
+                    playerController.setImageResource(android.R.drawable.ic_media_play);
                 }
             } else {
                 isPaused = false;
                 mediaPlayer.start();
                 if (playerController != null)
-                    playerController.setImageResource(R.drawable.ic_pause);
+                    playerController.setImageResource(android.R.drawable.ic_media_pause);
             }
         } else {
             Log.e("Music Player Helper", "Yay song starting");
             initializeMediaPlayer();
             startMusic(songPosition);
             if (playerController != null)
-                playerController.setImageResource(R.drawable.ic_pause);
+                playerController.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
@@ -160,10 +153,11 @@ public class MusicPlayerHelper{
 
     public void playNextSong(){
         if (mediaPlayer.isPlaying() || isPaused) {
+            Log.e("Music Player Helper", "Music player is stopping and resetting");
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
-        songPosition = songPosition + 1;
+        songPosition += 1;
         startMusic(songPosition);
     }
 
@@ -172,7 +166,7 @@ public class MusicPlayerHelper{
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
-        songPosition = songPosition - 1;
+        songPosition -= 1;
         startMusic(songPosition);
     }
 }

@@ -35,11 +35,10 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
  */
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private Activity mActivity;
-    private TextView selectedTractTitle;
+    private TextView selectedTractTitle, selectedTrackArtist;
     private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
-    public static int selectedSongPosition;
     private int lastPosition = -1;
 
     public SongAdapter(Activity activity) {
@@ -59,19 +58,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private void songSelected(View view) {
         playerController = (ImageView) mActivity.findViewById(R.id.player_control);
         selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
+        selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedSongPosition = (int) v.getTag();
-                if (songSelectedToolbar.getVisibility() == View.GONE) {
-                    animateSongPlayerLayout();
-                }
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
                 if (bitmapDrawable != null)
                     selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
-                playerController.setImageResource(R.drawable.ic_pause);
+                playerController.setImageResource(android.R.drawable.ic_media_pause);
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
@@ -84,6 +80,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 }
                 int pos = (int) v.getTag();
                 MusicPlayerHelper.getInstance().startMusic(pos);
+                selectedTrackArtist.setText(MusicPlayerHelper.allSongsList.get(pos).getSongArtist());
                 selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
             }
         });
@@ -106,8 +103,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 Intent intent = new Intent(mActivity, SongDetailActivity.class);
                 intent.putExtra(Constants.TITLE_NAME,
                         selectedTractTitle.getText().toString());
-                intent.putExtra(Constants.ALBUM_COVER,
-                        MusicPlayerHelper.allSongsList.get(selectedSongPosition).getUri().toString());
+                intent.putExtra(Constants.SONG_ARTIST,
+                        selectedTrackArtist.getText().toString());
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation
                                 (mActivity, songSelectedToolbar
@@ -115,11 +112,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 ActivityCompat.startActivity(mActivity, intent, options.toBundle());
             }
         });
-    }
-
-    @TargetApi(VERSION_CODES.LOLLIPOP)
-    private void animateSongPlayerLayout() {
-        songSelectedToolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
