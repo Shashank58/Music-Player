@@ -71,12 +71,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
-                if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
-                        (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
-                                || MusicPlayerHelper.getInstance().getIsPaused())) {
+                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
+                                || MusicPlayerHelper.getInstance().getIsPaused()) {
                     Log.e("Song adapter", "Seriously this?");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
                 int pos = (int) v.getTag();
                 MusicPlayerHelper.getInstance().startMusic(pos);

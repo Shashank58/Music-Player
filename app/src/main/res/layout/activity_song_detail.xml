@@ -1,9 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/musical_image"
-                tools:context="cybrilla.musicplayer.android.SongDetailActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="cybrilla.musicplayer.android.SongDetailActivity">
 
 
     <android.support.v7.widget.Toolbar
@@ -11,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:background="#212121"
-        android:elevation="4dp"
-        android:transitionName="songBar"
+        app:elevation="4dp"
+        android:alpha="0.8"
         android:visibility="visible">
 
         <RelativeLayout
@@ -55,6 +56,12 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="songBar"
+        android:layout_below="@+id/playing_song_detail_toolbar"
+        android:background="@drawable/card_song_background"/>
 
     <RelativeLayout
         android:id="@+id/detail_controls_layout"

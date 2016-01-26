@@ -26,6 +26,7 @@ import java.util.List;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.album.AlbumFragment;
 import cybrilla.musicplayer.allsongs.AllSongsFragment;
+import cybrilla.musicplayer.artist.ArtistFragment;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MediaPlayerService;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                     tabTitle.setText("All Songs");
                 } else if (pos == 1 && (!"Albums".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Albums");
+                } else if (pos == 2 && (!"Artists".equals(tabTitle.getText().toString()))){
+                    tabTitle.setText("Artists");
                 }
             }
 
@@ -162,13 +165,18 @@ public class MainActivity extends AppCompatActivity {
                 .inflate(R.layout.custom_tab, null);
         tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_album, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.custom_tab, null);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_brush, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new AllSongsFragment());
         adapter.addFragment(new AlbumFragment());
-        //adapter.addFragment(threeFragment, "Artists");
+        adapter.addFragment(new ArtistFragment());
         viewPager.setAdapter(adapter);
     }
 

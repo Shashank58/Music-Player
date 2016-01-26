@@ -5,21 +5,30 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.modle.Song;
 
 /**
  * Created by shashankm on 22/01/16.
  */
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder> {
     private Activity mActivity;
+    private HashMap<String, ArrayList<Song>> allArtistList;
+    Iterator myVeryOwnIterator;
 
-    public ArtistAdapter(Activity activity){
+    public ArtistAdapter(HashMap<String, ArrayList<Song>> allArtistList, Activity activity){
+        this.allArtistList = new HashMap<>(allArtistList);
         mActivity = activity;
+        myVeryOwnIterator = this.allArtistList.keySet().iterator();
     }
 
     @Override
@@ -27,17 +36,34 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_card, parent, false);
 
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView artistName = (TextView) v.findViewById(R.id.song_title);
+                ArrayList<Song> songs = allArtistList.get(artistName.getText().toString());
+
+            }
+        });
         return new ArtistViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ArtistAdapter.ArtistViewHolder holder, int position) {
-
+        holder.songImage.setImageResource(R.drawable.no_image);
+        if (myVeryOwnIterator.hasNext()){
+            String artist = (String) myVeryOwnIterator.next();
+            holder.songTitle.setText(artist);
+            String size = String.valueOf(allArtistList.get(artist).size());
+            if ("1".equals(size))
+                holder.songArtist.setText(size+" song");
+            else
+                holder.songArtist.setText(size+" songs");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return MusicPlayerHelper.allSongsList.size();
+        return allArtistList.size();
     }
 
     public static class ArtistViewHolder extends RecyclerView.ViewHolder{

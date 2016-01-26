@@ -5,19 +5,18 @@
     android:layout_width="match_parent"
     android:id="@+id/songCard"
     app:cardElevation="4dp"
-    android:layout_marginTop="1dp"
-    android:layout_marginBottom="1dp">
+    android:layout_marginTop="0.5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:id="@+id/song_container"
         android:background="@drawable/card_song_background"
         android:alpha="0.8">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:id="@+id/song_image"
             android:padding="10dp"
             android:layout_margin="10dp"/>
@@ -27,6 +26,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/song_title"
             android:textSize="18sp"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:layout_toRightOf="@+id/song_image"
             android:layout_toEndOf="@+id/song_image"
@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/song_artist"
+            android:maxLines="1"
             android:textSize="12sp"
             android:textColor="@color/white"
             android:layout_below="@+id/song_title"

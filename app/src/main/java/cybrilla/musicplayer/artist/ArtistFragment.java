@@ -5,11 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
@@ -43,9 +48,23 @@ public class ArtistFragment extends Fragment {
     }
 
     private void getArtistList(){
+        HashMap<String, ArrayList<Song>> hashMap = new HashMap<>();
         if (MusicPlayerHelper.allSongsList == null)
             MusicPlayerHelper.getInstance().getSongList(getActivity());
-        mAdapter = new ArtistAdapter(getActivity());
+        for (Song song : MusicPlayerHelper.allSongsList){
+            if (hashMap.get(song.getSongArtist()) == null) {
+                ArrayList<Song> songsForArtist = new ArrayList<>();
+                songsForArtist.add(song);
+                hashMap.put(song.getSongArtist(), songsForArtist);
+            }
+            else {
+                ArrayList<Song> song1 = new ArrayList<>(hashMap.get(song.getSongArtist()));
+                song1.add(song);
+                Log.e("Artist Fragment", "Size of artist growing?: "+song1.size());
+                hashMap.put(song.getSongArtist(), song1);
+            }
+        }
+        mAdapter = new ArtistAdapter(hashMap, getActivity());
         artistList.setAdapter(mAdapter);
     }
 }

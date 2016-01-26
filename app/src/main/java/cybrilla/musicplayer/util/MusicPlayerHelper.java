@@ -41,6 +41,14 @@ public class MusicPlayerHelper{
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+                Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
+                isPaused = false;
+            }
+        });
     }
 
     public MediaPlayer getMediaPlayer(){
@@ -68,15 +76,7 @@ public class MusicPlayerHelper{
         Song s = allSongsList.get(songPosition);
         try {
             mediaPlayer.setDataSource(s.getPath());
-            mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                    Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
-                    isPaused = false;
-                }
-            });
+            mediaPlayer.prepareAsync();
             Log.e("Music player helper", "Path is: " + s.getPath());
         } catch (IOException e) {
             e.printStackTrace();
@@ -156,6 +156,7 @@ public class MusicPlayerHelper{
             Log.e("Music Player Helper", "Music player is stopping and resetting");
             mediaPlayer.stop();
             mediaPlayer.reset();
+            initializeMediaPlayer();
         }
         songPosition += 1;
         startMusic(songPosition);
@@ -165,6 +166,7 @@ public class MusicPlayerHelper{
         if (mediaPlayer.isPlaying() || isPaused) {
             mediaPlayer.stop();
             mediaPlayer.reset();
+            initializeMediaPlayer();
         }
         songPosition -= 1;
         startMusic(songPosition);
