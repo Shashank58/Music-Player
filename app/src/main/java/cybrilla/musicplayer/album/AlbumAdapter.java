@@ -77,8 +77,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
             holder.albumImage.setImageBitmap(art);
         } catch (Exception e) {
             holder.albumImage.setImageResource(R.drawable.no_image);
-        } finally {
-            setAnimation(holder.albumCard, position);
         }
     }
 

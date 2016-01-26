@@ -3,7 +3,6 @@ package cybrilla.musicplayer.allsongs;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
@@ -55,7 +54,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return new SongViewHolder(view);
     }
 
-    private void songSelected(View view) {
+    private void songSelected(final View view) {
         playerController = (ImageView) mActivity.findViewById(R.id.player_control);
         selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
@@ -63,22 +62,30 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             @Override
             public void onClick(View v) {
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
-                ImageView songImage = (ImageView) v.findViewById(R.id.song_image);
-                BitmapDrawable bitmapDrawable = ((BitmapDrawable) songImage.getDrawable());
-                if (bitmapDrawable != null)
-                    selectedAlbumCover.setImageBitmap(bitmapDrawable.getBitmap());
+                int pos = (int) v.getTag();
+                Song song = MusicPlayerHelper.allSongsList.get(pos);
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                byte[] rawArt;
+                Uri uri = song.getUri();
+                mmr.setDataSource(mActivity, uri);
+                if (mmr.getEmbeddedPicture() != null) {
+                    rawArt = mmr.getEmbeddedPicture();
+                    Glide.with(mActivity).load(rawArt)
+                            .asBitmap().into(selectedAlbumCover);
+                } else {
+                    Glide.with(mActivity).load(R.drawable.no_image)
+                            .asBitmap().into(selectedAlbumCover);
+                }
                 playerController.setImageResource(android.R.drawable.ic_media_pause);
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
                 if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
                                 || MusicPlayerHelper.getInstance().getIsPaused()) {
-                    Log.e("Song adapter", "Seriously this?");
+                    Log.e("Song adapter", "Seriously this should be called");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
-                int pos = (int) v.getTag();
                 MusicPlayerHelper.getInstance().startMusic(pos);
                 selectedTrackArtist.setText(MusicPlayerHelper.allSongsList.get(pos).getSongArtist());
                 selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());

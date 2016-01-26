@@ -34,7 +34,7 @@ public class AlbumFragment extends Fragment {
 
         albumList = (RecyclerView) view.findViewById(R.id.albumList);
         albumList.setHasFixedSize(true);
-        albumList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        albumList.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         getAlbumList();
         return view;

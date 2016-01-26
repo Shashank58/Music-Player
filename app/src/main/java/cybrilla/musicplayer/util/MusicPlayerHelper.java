@@ -21,7 +21,7 @@ import cybrilla.musicplayer.modle.Song;
  * Created by shashankm on 05/01/16.
  */
 public class MusicPlayerHelper{
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = null;
     private static MusicPlayerHelper instance;
     private boolean isPaused = false;
     public static List<Song> allSongsList;
@@ -41,14 +41,14 @@ public class MusicPlayerHelper{
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.start();
-                Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
-                isPaused = false;
-            }
-        });
+//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mediaPlayer.start();
+//                Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
+//                isPaused = false;
+//            }
+//        });
     }
 
     public MediaPlayer getMediaPlayer(){
@@ -75,8 +75,12 @@ public class MusicPlayerHelper{
         this.songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(s.getPath());
-            mediaPlayer.prepareAsync();
+            mediaPlayer.prepare();
+            mediaPlayer.seekTo(0);
+            mediaPlayer.start();
+            isPaused = false;
             Log.e("Music player helper", "Path is: " + s.getPath());
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,9 +112,9 @@ public class MusicPlayerHelper{
 
     public void releaseMediaPlayer(){
         if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
+            Log.e("Music Player Helper", "Media Player releasing");
+            mediaPlayer.stop();
+            mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }
@@ -156,7 +160,6 @@ public class MusicPlayerHelper{
             Log.e("Music Player Helper", "Music player is stopping and resetting");
             mediaPlayer.stop();
             mediaPlayer.reset();
-            initializeMediaPlayer();
         }
         songPosition += 1;
         startMusic(songPosition);
@@ -166,7 +169,6 @@ public class MusicPlayerHelper{
         if (mediaPlayer.isPlaying() || isPaused) {
             mediaPlayer.stop();
             mediaPlayer.reset();
-            initializeMediaPlayer();
         }
         songPosition -= 1;
         startMusic(songPosition);

@@ -2,8 +2,6 @@ package cybrilla.musicplayer.android;
 
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -122,17 +120,17 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void completion() {
-        MusicPlayerHelper.getInstance().getMediaPlayer().
-                setOnCompletionListener(new OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        MusicPlayerHelper.getInstance()
-                                .playNextSong();
-                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
-                                get(MusicPlayerHelper.getInstance().getSongPosition())
-                                .getSongTitle());
-                    }
-                });
+//        MusicPlayerHelper.getInstance().getMediaPlayer().
+//                setOnCompletionListener(new OnCompletionListener() {
+//                    @Override
+//                    public void onCompletion(MediaPlayer mp) {
+//                        MusicPlayerHelper.getInstance()
+//                                .playNextSong(SongDetailActivity.this);
+//                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
+//                                get(MusicPlayerHelper.getInstance().getSongPosition())
+//                                .getSongTitle());
+//                    }
+//                });
     }
 
     Runnable run = new Runnable() {
@@ -192,7 +190,8 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                     musicSeeker.setMax(MusicPlayerHelper.getInstance()
                                 .getMediaPlayer().getDuration());
                 } else {
-                    MusicPlayerHelper.getInstance().toggleMusicPlayer(null);
+                    MusicPlayerHelper.getInstance().toggleMusicPlayer
+                            (null);
                 }
                 if (MusicPlayerHelper.getInstance().getIsPaused()) {
                     seekHandler.removeCallbacks(run);

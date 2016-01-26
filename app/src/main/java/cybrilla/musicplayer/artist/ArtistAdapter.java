@@ -1,6 +1,7 @@
 package cybrilla.musicplayer.artist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +42,9 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
             public void onClick(View v) {
                 TextView artistName = (TextView) v.findViewById(R.id.song_title);
                 ArrayList<Song> songs = allArtistList.get(artistName.getText().toString());
-
+                Intent intent = new Intent(mActivity, ArtistSongsActivity.class);
+                intent.putExtra("Songs", songs);
+                mActivity.startActivity(intent);
             }
         });
         return new ArtistViewHolder(view);

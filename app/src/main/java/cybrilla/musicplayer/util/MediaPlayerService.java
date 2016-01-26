@@ -72,6 +72,7 @@ public class MediaPlayerService extends Service {
             String action = intent.getAction();
             switch (action){
                 case "cybrilla.musicplayer.util.quit":
+                    MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().releaseMediaPlayer();
                     unregisterReceiver(broadcastReceiver);
                     stopSelf();

@@ -84,6 +84,7 @@ public class AllSongsFragment extends Fragment {
         Uri uri = song.getUri();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(getActivity(), uri);
+        Log.e("All songs Fragment", "Are you the freaking reason?");
         if (mmr.getEmbeddedPicture() != null){
             rawArt = mmr.getEmbeddedPicture();
             Glide.with(this).load(rawArt)
