@@ -39,6 +39,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
     private int lastPosition = -1;
+    private int selectedSong = -1;
 
     public SongAdapter(Activity activity) {
         this.mActivity = activity;
@@ -63,6 +64,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             public void onClick(View v) {
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 int pos = (int) v.getTag();
+                if (selectedSong != -1){
+                      v.getRootView().findViewWithTag(selectedSong).setAlpha(0.6f);
+                }
+                selectedSong = pos;
+                v.getRootView().findViewWithTag(pos).setAlpha(1);
                 Song song = MusicPlayerHelper.allSongsList.get(pos);
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 byte[] rawArt;
@@ -98,7 +104,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
             }
         });
-
         setToolBarListener();
     }
 
@@ -124,6 +129,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(SongAdapter.SongViewHolder holder, int position) {
         holder.songCard.setTag(position);
+        if (position == selectedSong)
+            holder.songCard.setAlpha(1);
+        else
+            holder.songCard.setAlpha(0.6f);
         Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
