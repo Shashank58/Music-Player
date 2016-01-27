@@ -78,6 +78,18 @@ public class MediaPlayerService extends Service {
                     stopSelf();
                     break;
 
+                case "cybrilla.musicplayer.util.next":
+                    MusicPlayerHelper.getInstance().playNextSong();
+                    setUpNotification();
+                    updateNotification();
+                    break;
+
+                case "cybrilla.musicplayer.util.previous":
+                    MusicPlayerHelper.getInstance().playPrevSong();
+                    setUpNotification();
+                    updateNotification();
+                    break;
+
                 case "cybrilla.musicplayer.util.playpause":
                     toggleMusic();
                     Log.e("Media Player Service", "Play pause working");
@@ -121,6 +133,9 @@ public class MediaPlayerService extends Service {
 
             views.setOnClickPendingIntent(R.id.status_bar_collapse, quitPendingIntent);
             bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, quitPendingIntent);
+
+            bigViews.setOnClickPendingIntent(R.id.status_bar_next, nextPendingIntent);
+            bigViews.setOnClickPendingIntent(R.id.status_bar_previous, previousPendingIntent);
         }
 
         mNotificationManager = (NotificationManager) getSystemService

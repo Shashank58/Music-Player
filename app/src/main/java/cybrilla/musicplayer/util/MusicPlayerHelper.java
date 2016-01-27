@@ -26,6 +26,7 @@ public class MusicPlayerHelper{
     private boolean isPaused = false;
     public static List<Song> allSongsList;
     private int songPosition;
+    private boolean musicStartedOnce = false;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
@@ -71,7 +72,12 @@ public class MusicPlayerHelper{
         return songPosition;
     }
 
+    public boolean getMusicStartedOnce(){
+        return musicStartedOnce;
+    }
+
     public void startMusic(int pos){
+        musicStartedOnce = true;
         this.songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {

@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     MusicPlayerHelper.getInstance().getSongPosition());
             selectedTrackTitle.setText(song.getSongTitle());
             selectedTrackArtist.setText(song.getSongArtist());
-            Log.e("Main Activity", "Song state: " + MusicPlayerHelper.getInstance().getIsPaused());
+            Log.e("Main Activity", "Song playing: " + song.getSongTitle());
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
                 playerControl.setImageResource(android.R.drawable.ic_media_play);
             } else {

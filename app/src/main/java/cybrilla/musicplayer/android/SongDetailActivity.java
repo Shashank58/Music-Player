@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -30,7 +29,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     private ImageView detailController, detailFastForward, detailReverse, detailSelectedCover;
     private SeekBar musicSeeker;
     Handler seekHandler = new Handler();
-    private static boolean songStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
             detailController.setImageResource(android.R.drawable.ic_media_play);
         } else if (!MusicPlayerHelper.getInstance().getIsPaused()) {
-            songStarted = true;
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         } else {
             detailController.setImageResource(android.R.drawable.ic_media_play);
@@ -61,17 +58,14 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
         if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
-            Log.e("Sog Detail Activity", "Getting initialized");
             MusicPlayerHelper.getInstance().initializeMediaPlayer();
-            musicSeeker.setMax(0);
         } else {
             if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
-                songStarted = true;
                 musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
                 seekUpdation();
                 completion();
-            } else if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                songStarted = true;
+            } else if (MusicPlayerHelper.getInstance().getIsPaused() &&
+                    MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                 musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
                 completion();
                 musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
@@ -111,7 +105,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onRestart() {
         if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
-            Log.e("Song Detail Activity", "Pause button being set");
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         }
         super.onRestart();
@@ -182,10 +175,6 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
             seekUpdation();
         }
-        if (!songStarted){
-            Log.e("Song detail activity", "Seriously song has not started");
-            musicSeeker.setMax(0);
-        }
     }
 
     @Override
@@ -204,9 +193,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         Song song;
         switch (v.getId()) {
             case R.id.detail_controller:
-                songStarted = true;
-                if (musicSeeker.getMax() == 0) {
-                    Log.e("Song Detail Activity", "Get max is zero");
+                if (!MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                     MusicPlayerHelper.getInstance().startMusic(
                             MusicPlayerHelper.getInstance().getSongPosition());
                     musicSeeker.setMax(MusicPlayerHelper.getInstance()

@@ -56,7 +56,10 @@ public class AllSongsFragment extends Fragment {
         LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
         songList.setLayoutManager(linearLayout);
         getSongList();
-        setSongToLastPlayed();
+        if (!MusicPlayerHelper.getInstance().getMusicStartedOnce() ||
+                 MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
+            setSongToLastPlayed();
+        }
     }
 
     private void getSongList(){
