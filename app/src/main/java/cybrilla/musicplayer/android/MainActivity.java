@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     tabTitle.setText("All Songs");
                 } else if (pos == 1 && (!"Albums".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Albums");
-                } else if (pos == 2 && (!"Artists".equals(tabTitle.getText().toString()))){
+                } else if (pos == 2 && (!"Artists".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Artists");
                 }
             }
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(this, MediaPlayerService.class);
             startService(intent);
+
         }
     }
 
@@ -119,18 +119,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResumeFragments() {
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
                 (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
-                    || MusicPlayerHelper.getInstance().getIsPaused())) {
+                        || MusicPlayerHelper.getInstance().getIsPaused())) {
             Intent intent = new Intent(this, MediaPlayerService.class);
             intent.setAction(Constants.STOP_NOTIFICATION);
             startService(intent);
-            if (playingSongToolbar.getVisibility() == View.GONE) {
-                playingSongToolbar.setVisibility(View.VISIBLE);
-            }
             Song song = MusicPlayerHelper.allSongsList.get(
                     MusicPlayerHelper.getInstance().getSongPosition());
             selectedTrackTitle.setText(song.getSongTitle());
             selectedTrackArtist.setText(song.getSongArtist());
-            Log.e("Main Activity", "Song state: "+MusicPlayerHelper.getInstance().getIsPaused());
+            Log.e("Main Activity", "Song state: " + MusicPlayerHelper.getInstance().getIsPaused());
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
                 playerControl.setImageResource(android.R.drawable.ic_media_play);
             } else {

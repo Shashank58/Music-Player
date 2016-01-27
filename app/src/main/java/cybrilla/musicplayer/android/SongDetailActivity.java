@@ -2,6 +2,8 @@ package cybrilla.musicplayer.android;
 
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     private ImageView detailController, detailFastForward, detailReverse, detailSelectedCover;
     private SeekBar musicSeeker;
     Handler seekHandler = new Handler();
+    private static boolean songStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,10 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailSelectedCover = (ImageView) findViewById(R.id.detail_selected_cover);
         detailSelectedArtist = (TextView) findViewById(R.id.detail_selected_artist);
 
-        if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
+        if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
             detailController.setImageResource(android.R.drawable.ic_media_play);
         } else if (!MusicPlayerHelper.getInstance().getIsPaused()) {
-            Log.e("Song Detail Activity", "Pause button being set");
+            songStarted = true;
             detailController.setImageResource(android.R.drawable.ic_media_pause);
         } else {
             detailController.setImageResource(android.R.drawable.ic_media_play);
@@ -58,12 +61,22 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
         if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
+            Log.e("Sog Detail Activity", "Getting initialized");
             MusicPlayerHelper.getInstance().initializeMediaPlayer();
             musicSeeker.setMax(0);
-        }else {
-            musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
-            seekUpdation();
-            completion();
+        } else {
+            if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+                songStarted = true;
+                musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
+                seekUpdation();
+                completion();
+            } else if (MusicPlayerHelper.getInstance().getIsPaused()) {
+                songStarted = true;
+                musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer().getDuration());
+                completion();
+                musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+                        .getCurrentPosition());
+            }
         }
         musicSeeker.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
@@ -87,12 +100,12 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void setSongData(){
+    private void setSongData() {
         Song song = MusicPlayerHelper.allSongsList.get(
                 MusicPlayerHelper.getInstance().getSongPosition());
         setAlbumCover(song);
-        detailSelectedArtist.setText(getIntent().getStringExtra(Constants.SONG_ARTIST));
-        detailSelectedTrack.setText(getIntent().getStringExtra(Constants.TITLE_NAME));
+        detailSelectedArtist.setText(song.getSongArtist());
+        detailSelectedTrack.setText(song.getSongTitle());
     }
 
     @Override
@@ -104,7 +117,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         super.onRestart();
     }
 
-    private void setAlbumCover(Song song){
+    private void setAlbumCover(Song song) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
         Uri uri = song.getUri();
@@ -120,17 +133,17 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void completion() {
-//        MusicPlayerHelper.getInstance().getMediaPlayer().
-//                setOnCompletionListener(new OnCompletionListener() {
-//                    @Override
-//                    public void onCompletion(MediaPlayer mp) {
-//                        MusicPlayerHelper.getInstance()
-//                                .playNextSong(SongDetailActivity.this);
-//                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
-//                                get(MusicPlayerHelper.getInstance().getSongPosition())
-//                                .getSongTitle());
-//                    }
-//                });
+        MusicPlayerHelper.getInstance().getMediaPlayer().
+                setOnCompletionListener(new OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        MusicPlayerHelper.getInstance()
+                                .playNextSong();
+                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
+                                get(MusicPlayerHelper.getInstance().getSongPosition())
+                                .getSongTitle());
+                    }
+                });
     }
 
     Runnable run = new Runnable() {
@@ -156,7 +169,8 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(this, MediaPlayerService.class);
             startService(intent);
         }
-        seekHandler.removeCallbacks(run);
+        if (!MusicPlayerHelper.getInstance().getIsPaused())
+            seekHandler.removeCallbacks(run);
     }
 
     @Override
@@ -165,7 +179,13 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         Intent intent = new Intent(this, MediaPlayerService.class);
         intent.setAction(Constants.STOP_NOTIFICATION);
         startService(intent);
-        seekUpdation();
+        if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()) {
+            seekUpdation();
+        }
+        if (!songStarted){
+            Log.e("Song detail activity", "Seriously song has not started");
+            musicSeeker.setMax(0);
+        }
     }
 
     @Override
@@ -184,11 +204,13 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         Song song;
         switch (v.getId()) {
             case R.id.detail_controller:
-                if (musicSeeker.getMax() == 0){
+                songStarted = true;
+                if (musicSeeker.getMax() == 0) {
+                    Log.e("Song Detail Activity", "Get max is zero");
                     MusicPlayerHelper.getInstance().startMusic(
-                        MusicPlayerHelper.getInstance().getSongPosition());
+                            MusicPlayerHelper.getInstance().getSongPosition());
                     musicSeeker.setMax(MusicPlayerHelper.getInstance()
-                                .getMediaPlayer().getDuration());
+                            .getMediaPlayer().getDuration());
                 } else {
                     MusicPlayerHelper.getInstance().toggleMusicPlayer
                             (null);

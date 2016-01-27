@@ -141,6 +141,7 @@ public class MusicPlayerHelper{
                     (Media.DATA);
             int albumIdColumn = musicCursor.getColumnIndex
                     (Media.ALBUM_ID);
+            int songPosition = 0;
             do {
                 long id = musicCursor.getLong(idColumn);
                 String title = musicCursor.getString(titleColumn);
@@ -149,7 +150,9 @@ public class MusicPlayerHelper{
                 long duration = musicCursor.getLong(durationColumn);
                 String path = musicCursor.getString(dataColumn);
                 long albumId = musicCursor.getShort(albumIdColumn);
-                allSongsList.add(new Song(id, title, artist, duration, album, path, albumId));
+                allSongsList.add(new Song(id, title, artist, duration, album, path
+                        , albumId, songPosition));
+                songPosition++;
             } while (musicCursor.moveToNext());
             musicCursor.close();
         }

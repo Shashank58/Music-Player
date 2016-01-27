@@ -10,10 +10,11 @@ import java.io.Serializable;
  */
 public class Song implements Serializable{
     private long songId, songDuration, albumId;
+    private int songPosition;
     private String songTitle, songArtist, songAlbum, path;
 
     public Song(long songId, String songTitle, String songArtist, long duration, String album
-                , String path, long albumId) {
+                , String path, long albumId, int songPosition) {
         this.songId = songId;
         this.songTitle = songTitle;
         this.songArtist = songArtist;
@@ -21,6 +22,11 @@ public class Song implements Serializable{
         this.songAlbum = album;
         this.path = path;
         this.albumId = albumId;
+        this.songPosition = songPosition;
+    }
+
+    public int getSongPosition(){
+        return  songPosition;
     }
 
     public long getSongId(){

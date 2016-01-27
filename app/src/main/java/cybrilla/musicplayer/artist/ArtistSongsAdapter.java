@@ -1,33 +1,64 @@
 package cybrilla.musicplayer.artist;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
  * Created by shashankm on 26/01/16.
  */
 public class ArtistSongsAdapter extends RecyclerView.Adapter<ArtistSongsAdapter
             .ArtistSongsViewHolder> {
-    private ArrayList<Song> artistSongs;
+    private List<Song> artistSongs;
+    private Activity mActivity;
 
-    public ArtistSongsAdapter(ArrayList<Song> artistSongs){
+    public ArtistSongsAdapter(Activity activity, List<Song> artistSongs){
         this.artistSongs = new ArrayList<>(artistSongs);
+        mActivity = activity;
     }
 
     @Override
     public ArtistSongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.song_card, parent, false);
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = (int) v.getTag();
+                Song song = artistSongs.get(pos);
+                int position = song.getSongPosition();
+                Log.e("Album Songs Adapter", "Position: "+position);
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
+                }
+                if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
+                        || MusicPlayerHelper.getInstance().getIsPaused()){
+                    Log.e("Album Song Adapter", "When song is paused And blah");
+                    MusicPlayerHelper.getInstance().getMediaPlayer().stop();
+                    MusicPlayerHelper.getInstance().getMediaPlayer().reset();
+                }
+                MusicPlayerHelper.getInstance().startMusic(position);
+                MusicPlayerHelper.getInstance().setIsPaused(false);
+                Intent intent = new Intent(mActivity, SongDetailActivity.class);
+                mActivity.startActivity(intent);
+            }
+        });
 
         return new ArtistSongsViewHolder(view);
     }

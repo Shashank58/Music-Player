@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/playing_song_detail_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="70dp"
         android:background="#212121"
         app:elevation="4dp"
         android:alpha="0.8"
@@ -21,8 +21,8 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:id="@+id/detail_selected_cover"
                 android:layout_marginTop="8dp"/>
 
@@ -49,7 +49,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_toRightOf="@+id/detail_selected_cover"/>
 
         </RelativeLayout>
@@ -60,8 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionName="songBar"
-        android:layout_below="@+id/playing_song_detail_toolbar"
-        android:background="@drawable/card_song_background"/>
+        android:background="@drawable/musical_image"
+        android:layout_below="@+id/playing_song_detail_toolbar"/>
 
     <RelativeLayout
         android:id="@+id/detail_controls_layout"

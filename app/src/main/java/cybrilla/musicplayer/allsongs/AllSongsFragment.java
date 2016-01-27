@@ -68,6 +68,7 @@ public class AllSongsFragment extends Fragment {
     private void setSongToLastPlayed(){
         int position = SharedPreferenceHandler.getInstance().getSongPosition(getActivity());
         MusicPlayerHelper.getInstance().setSongPosition(position);
+        MusicPlayerHelper.getInstance().setIsPaused(true);
         Song song = MusicPlayerHelper.allSongsList.get(position);
         Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
         selectedSongTrack.setText(song.getSongTitle());

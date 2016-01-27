@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
@@ -21,9 +22,8 @@ public class ArtistSongsActivity extends AppCompatActivity {
         artistSongsList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         artistSongsList.setLayoutManager(linearLayoutManager);
-        ArrayList<Song> songs = new ArrayList<>
-                ((ArrayList<Song>) getIntent().getExtras().get("Songs"));
-        ArtistSongsAdapter adapter = new ArtistSongsAdapter(songs);
+        List<Song> songs = ((ArrayList<Song>) getIntent().getExtras().get("Songs"));
+        ArtistSongsAdapter adapter = new ArtistSongsAdapter(this, songs);
         artistSongsList.setAdapter(adapter);
     }
 }
