@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.artist;
+package cybrilla.musicplayer.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.ArtistSongsActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**

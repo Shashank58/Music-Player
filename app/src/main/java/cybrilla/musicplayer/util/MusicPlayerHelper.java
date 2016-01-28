@@ -18,8 +18,10 @@ import java.util.List;
 import cybrilla.musicplayer.modle.Song;
 
 /**
- * Created by shashankm on 05/01/16.
- */
+ * Main class responsible for playing song, getting all songs from user's phone.
+ * In charge of all functions with respect to media player.
+ **/
+
 public class MusicPlayerHelper{
     private MediaPlayer mediaPlayer = null;
     private static MusicPlayerHelper instance;
@@ -42,14 +44,6 @@ public class MusicPlayerHelper{
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                mediaPlayer.start();
-//                Log.e("Music player helper", "Is song starting? " + mediaPlayer.isPlaying());
-//                isPaused = false;
-//            }
-//        });
     }
 
     public MediaPlayer getMediaPlayer(){

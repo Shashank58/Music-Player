@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.artist;
+package cybrilla.musicplayer.android;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.adapters.ArtistAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 

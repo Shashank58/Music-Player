@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:transitionName="songBar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="cybrilla.musicplayer.android.SongDetailActivity">
 
@@ -59,7 +60,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transitionName="songBar"
         android:background="@drawable/musical_image"
         android:layout_below="@+id/playing_song_detail_toolbar"/>
 
@@ -78,25 +78,31 @@
 
         <ImageView
             android:id="@+id/detail_controller"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="63dp"
+            android:layout_height="63dp"
+            android:padding="3dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="22dp"
+            android:background="?android:selectableItemBackground"
             android:src="@android:drawable/ic_media_play"/>
 
         <ImageView
             android:id="@+id/detail_fast_forward"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="3dp"
             android:layout_marginLeft="25dp"
+            android:background="?android:selectableItemBackground"
             android:layout_marginTop="30dp"
             android:layout_toRightOf="@+id/detail_controller"
             android:src="@android:drawable/ic_media_ff"/>
 
         <ImageView
             android:id="@+id/detail_reverse"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="3dp"
+            android:background="?android:selectableItemBackground"
             android:layout_marginRight="25dp"
             android:layout_marginTop="30dp"
             android:layout_toLeftOf="@+id/detail_controller"

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.allsongs;
+package cybrilla.musicplayer.adapters;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -16,8 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,15 +28,16 @@ import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
- * Created by shashankm on 03/01/16.
+ * Sets all songs recycler view and plays song when a song is selected.
+ * Also brings up SongDetailActivity when selected song toolbar is clicked.
  */
+
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private Activity mActivity;
     private TextView selectedTractTitle, selectedTrackArtist;
     private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
-    private int lastPosition = -1;
     private int selectedSong = -1;
 
     public SongAdapter(Activity activity) {
@@ -65,6 +64,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 int pos = (int) v.getTag();
                 if (selectedSong != -1){
+                    if (v.getRootView().findViewWithTag(selectedSong) != null)
                       v.getRootView().findViewWithTag(selectedSong).setAlpha(0.6f);
                 }
                 selectedSong = pos;
@@ -147,15 +147,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         } else {
             Glide.with(mActivity).load(R.drawable.no_image)
                     .asBitmap().into(holder.songImage);
-        }
-    }
-
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation
-                    (mActivity, android.R.anim.slide_in_left);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
         }
     }
 

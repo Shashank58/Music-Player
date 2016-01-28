@@ -1,10 +1,8 @@
-package cybrilla.musicplayer.album;
+package cybrilla.musicplayer.adapters;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
@@ -16,18 +14,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.android.AlbumSongActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
- * Created by shashankm on 08/01/16.
+ * Sets up all albums.
  */
+
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
     private Activity mActivity;
     private int lastPosition = -1;
@@ -46,7 +46,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
             @Override
             public void onClick(View v) {
                 int pos = (int) v.getTag();
-                Song song = MusicPlayerHelper.allSongsList.get(pos);
                 ImageView imageStart = (ImageView) v.findViewById(R.id.album_image);
                 Intent intent = new Intent(mActivity, AlbumSongActivity.class);
                 intent.putExtra("SongPosition", pos);
@@ -67,27 +66,18 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         holder.albumName.setText(song.getSongAlbum());
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
-        Bitmap art;
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        try {
+        if (mmr.getEmbeddedPicture() != null) {
             rawArt = mmr.getEmbeddedPicture();
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-            holder.albumImage.setImageBitmap(art);
-        } catch (Exception e) {
-            holder.albumImage.setImageResource(R.drawable.no_image);
+            Glide.with(mActivity).load(rawArt)
+                    .asBitmap().into(holder.albumImage);
+        } else {
+            Glide.with(mActivity).load(R.drawable.no_image)
+                    .asBitmap().into(holder.albumImage);
         }
     }
 
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation
-                    (mActivity, android.R.anim.slide_in_left);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
-        }
-    }
 
     @Override
     public int getItemCount() {

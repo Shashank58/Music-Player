@@ -1,21 +1,23 @@
-package cybrilla.musicplayer.album;
+package cybrilla.musicplayer.android;
 
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.adapters.AlbumSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
@@ -34,7 +36,9 @@ public class AlbumSongActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_songs);
 
-        getSupportActionBar().hide();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.hide();
 
         if (VERSION.SDK_INT >= 21){
             getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -55,16 +59,15 @@ public class AlbumSongActivity extends AppCompatActivity{
         Song song = MusicPlayerHelper.allSongsList.get(pos);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
-        Bitmap art;
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
         Uri uri = song.getUri();
         mmr.setDataSource(this, uri);
-        try {
+        if (mmr.getEmbeddedPicture() != null) {
             rawArt = mmr.getEmbeddedPicture();
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-            albumSongImage.setImageBitmap(art);
-        } catch (Exception e) {
-            albumSongImage.setImageResource(R.drawable.no_image);
+            Glide.with(this).load(rawArt)
+                    .asBitmap().into(albumSongImage);
+        } else {
+            Glide.with(this).load(R.drawable.no_image)
+                    .asBitmap().into(albumSongImage);
         }
         mAdapter = new AlbumSongsAdapter(song, this);
         albumSongList.setAdapter(mAdapter);

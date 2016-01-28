@@ -19,8 +19,10 @@ import cybrilla.musicplayer.android.MainActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
- * Created by shashankm on 12/01/16.
+ * Service responsible for displaying notification and all functionality.
+ * All functions related to notification is handled here.
  */
+
 public class MediaPlayerService extends Service {
     private Notification notification;
     private RemoteViews views, bigViews;

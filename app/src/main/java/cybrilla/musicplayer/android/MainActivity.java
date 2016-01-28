@@ -23,19 +23,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.album.AlbumFragment;
-import cybrilla.musicplayer.allsongs.AllSongsFragment;
-import cybrilla.musicplayer.artist.ArtistFragment;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MediaPlayerService;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
+/**
+ * Set up view pager and tab icons. Sets up playing song tool bar and saves song
+ * position when destroyed or paused.
+ */
+
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Toolbar toolBarTop, playingSongToolbar;
+    private Toolbar toolBarTop;
     private TextView tabTitle, selectedTrackTitle, selectedTrackArtist;
     private ImageView selectedAlbumCover, playerControl;
 
@@ -47,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         toolBarTop = (Toolbar) findViewById(R.id.toolbarTop);
         tabTitle = (TextView) findViewById(R.id.tabTitle);
-        playingSongToolbar = (Toolbar) findViewById(R.id.playing_song_toolbar);
         selectedTrackTitle = (TextView) findViewById(R.id.selected_track_title);
         selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
         playerControl = (ImageView) findViewById(R.id.player_control);
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         toolBarTop.setCollapsible(true);
-
+        //Change actionbar text with tab change
         viewPager.addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         setUpTabIcon();
     }
 
+    //Save last played song to show when app is opened again
     @Override
     protected void onPause() {
         super.onPause();
@@ -99,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(this, MediaPlayerService.class);
             startService(intent);
-
         }
     }
 
@@ -114,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Set selected track toolbar with playing song and stop notification if running.
+     */
 
     @Override
     protected void onResumeFragments() {
@@ -179,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);

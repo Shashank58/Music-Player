@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.allsongs;
+package cybrilla.musicplayer.android;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +23,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.adapters.SongAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 /**
- * Created by shashankm on 21/01/16.
+ * Displays all the songs of user. Fetches song position from shared preference
+ * and sets it in selected song tool bar if no song is playing. Also checks for
+ * user permissions.
  */
+
 public class AllSongsFragment extends Fragment {
     private static final String TAG = "All Songs Fragment";
-    private Toolbar playingSongToolbar;
     private TextView selectedSongTrack, selectedSongArtist;
     private ImageView playerControl, selectedAlbumCover;
     private RecyclerView songList;
@@ -46,7 +48,6 @@ public class AllSongsFragment extends Fragment {
 
     private void getAllViews(View view){
         songList = (RecyclerView) view.findViewById(R.id.songList);
-        playingSongToolbar = (Toolbar) getActivity().findViewById(R.id.playing_song_toolbar);
         selectedSongTrack = (TextView) getActivity().findViewById(R.id.selected_track_title);
         playerControl = (ImageView) getActivity().findViewById(R.id.player_control);
         selectedAlbumCover = (ImageView) getActivity().findViewById(R.id.selected_album_cover);

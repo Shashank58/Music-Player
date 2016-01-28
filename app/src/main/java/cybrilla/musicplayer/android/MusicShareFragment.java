@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.musicshare;
+package cybrilla.musicplayer.android;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,8 +23,8 @@ public class MusicShareFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
-
 }

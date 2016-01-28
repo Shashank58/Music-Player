@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".album.AlbumSongActivity">
+        <activity android:name=".android.AlbumSongActivity">
         </activity>
 
         <service
@@ -39,7 +39,7 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".artist.ArtistSongsActivity">
+        <activity android:name=".android.ArtistSongsActivity">
         </activity>
     </application>
 

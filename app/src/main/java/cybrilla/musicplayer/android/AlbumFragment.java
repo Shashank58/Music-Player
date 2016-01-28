@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.album;
+package cybrilla.musicplayer.android;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.adapters.AlbumAdapter;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
  * Created by shashankm on 21/01/16.
  */
+
 public class AlbumFragment extends Fragment {
     private RecyclerView albumList;
     private AlbumAdapter mAdapter;
@@ -34,7 +36,7 @@ public class AlbumFragment extends Fragment {
 
         albumList = (RecyclerView) view.findViewById(R.id.albumList);
         albumList.setHasFixedSize(true);
-        albumList.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        albumList.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         getAlbumList();
         return view;
