@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cybrilla.musicplayer.modle.Song;
 
@@ -29,6 +30,9 @@ public class MusicPlayerHelper{
     public static List<Song> allSongsList;
     private int songPosition;
     private boolean musicStartedOnce = false;
+    private boolean shuffleOn = false;
+    private boolean repeatOn = false;
+    private Random random;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
@@ -62,12 +66,28 @@ public class MusicPlayerHelper{
         songPosition = pos;
     }
 
+    public void setShuffleOn(boolean value){
+        shuffleOn = value;
+    }
+
+    public void setRepeatOn(boolean value){
+        repeatOn = value;
+    }
+
     public int getSongPosition(){
         return songPosition;
     }
 
     public boolean getMusicStartedOnce(){
         return musicStartedOnce;
+    }
+
+    public boolean getShuffleOn(){
+        return shuffleOn;
+    }
+
+    public boolean getRepeatOn(){
+        return repeatOn;
     }
 
     public void startMusic(int pos){
@@ -164,8 +184,23 @@ public class MusicPlayerHelper{
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
-        songPosition += 1;
+        if (!shuffleOn) {
+            if (songPosition < allSongsList.size()) {
+                songPosition += 1;
+            } else if (songPosition == allSongsList.size()) {
+                songPosition = 0;
+            }
+        } else {
+            playRandomSong();
+        }
         startMusic(songPosition);
+    }
+
+    private void playRandomSong(){
+        if (random == null){
+            random = new Random();
+        }
+        songPosition = random.nextInt(allSongsList.size());
     }
 
     public void playPrevSong(){
@@ -173,7 +208,15 @@ public class MusicPlayerHelper{
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
-        songPosition -= 1;
+        if (!shuffleOn) {
+            if (songPosition > 0) {
+                songPosition -= 1;
+            } else if (songPosition == 0) {
+                songPosition = allSongsList.size();
+            }
+        } else {
+            playRandomSong();
+        }
         startMusic(songPosition);
     }
 }

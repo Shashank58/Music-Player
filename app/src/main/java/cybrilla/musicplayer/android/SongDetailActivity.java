@@ -28,6 +28,7 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
     private TextView detailSelectedTrack, detailSelectedArtist;
     private ImageView detailController, detailFastForward, detailReverse, detailSelectedCover;
     private SeekBar musicSeeker;
+    private ImageView shuffle, repeat;
     Handler seekHandler = new Handler();
 
     @Override
@@ -45,6 +46,8 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         musicSeeker = (SeekBar) findViewById(R.id.music_seeker);
         detailSelectedCover = (ImageView) findViewById(R.id.detail_selected_cover);
         detailSelectedArtist = (TextView) findViewById(R.id.detail_selected_artist);
+        shuffle = (ImageView) findViewById(R.id.shuffle);
+        repeat = (ImageView) findViewById(R.id.repeat);
 
         if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
             detailController.setImageResource(android.R.drawable.ic_media_play);
@@ -57,6 +60,17 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
         detailController.setOnClickListener(this);
         detailFastForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
+        shuffle.setOnClickListener(this);
+        repeat.setOnClickListener(this);
+
+        if (MusicPlayerHelper.getInstance().getShuffleOn()){
+            shuffle.setImageResource(R.drawable.ic_shuffle_selected);
+        }
+
+        if (MusicPlayerHelper.getInstance().getRepeatOn()){
+            repeat.setImageResource(R.drawable.ic_repeat_selected);
+        }
+
         if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
             MusicPlayerHelper.getInstance().initializeMediaPlayer();
         } else {
@@ -130,11 +144,18 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                 setOnCompletionListener(new OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
-                        MusicPlayerHelper.getInstance()
-                                .playNextSong();
-                        detailSelectedTrack.setText(MusicPlayerHelper.allSongsList.
-                                get(MusicPlayerHelper.getInstance().getSongPosition())
-                                .getSongTitle());
+                        if (!MusicPlayerHelper.getInstance().getRepeatOn()) {
+                            MusicPlayerHelper.getInstance()
+                                    .playNextSong();
+                            Song song = MusicPlayerHelper.allSongsList.get
+                                    (MusicPlayerHelper.getInstance().getSongPosition());
+                            detailSelectedTrack.setText(song.getSongTitle());
+                            detailSelectedArtist.setText(song.getSongArtist());
+                            setAlbumCover(song);
+                        } else {
+                            MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                                .getInstance().getSongPosition());
+                        }
                     }
                 });
     }
@@ -237,6 +258,26 @@ public class SongDetailActivity extends AppCompatActivity implements View.OnClic
                         .getMediaPlayer().getDuration());
                 musicSeeker.setProgress(MusicPlayerHelper.getInstance()
                         .getMediaPlayer().getCurrentPosition());
+                break;
+
+            case R.id.shuffle:
+                if (MusicPlayerHelper.getInstance().getShuffleOn()){
+                    shuffle.setImageResource(R.drawable.ic_shuffle_not_slected);
+                    MusicPlayerHelper.getInstance().setShuffleOn(false);
+                } else {
+                    shuffle.setImageResource(R.drawable.ic_shuffle_selected);
+                    MusicPlayerHelper.getInstance().setShuffleOn(true);
+                }
+                break;
+
+            case R.id.repeat:
+                if (MusicPlayerHelper.getInstance().getRepeatOn()){
+                    repeat.setImageResource(R.drawable.ic_repeat_not_selected);
+                    MusicPlayerHelper.getInstance().setRepeatOn(false);
+                } else {
+                    repeat.setImageResource(R.drawable.ic_repeat_selected);
+                    MusicPlayerHelper.getInstance().setRepeatOn(true);
+                }
                 break;
         }
     }

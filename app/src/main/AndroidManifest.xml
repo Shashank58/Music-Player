@@ -24,14 +24,18 @@
             android:label="@string/title_activity_song_detail"
             android:theme="@style/FullscreenTheme">
         </activity>
-        <activity android:name=".android.MainActivity">
+        <activity
+            android:name=".android.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".android.AlbumSongActivity">
+        <activity
+            android:name=".android.AlbumSongActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <service
@@ -39,7 +43,9 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".android.ArtistSongsActivity">
+        <activity
+            android:name=".android.ArtistSongsActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

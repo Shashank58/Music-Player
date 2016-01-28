@@ -57,7 +57,6 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/appToolBar"
             android:background="@drawable/card_song_background"
-            android:layout_marginTop="2dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         </android.support.v4.view.ViewPager>
