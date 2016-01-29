@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +39,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
     private Toolbar songSelectedToolbar;
-    private int selectedSong = -1;
+    private int previouslySelectedSong;
 
     public SongAdapter(Activity activity) {
         this.mActivity = activity;
@@ -58,17 +59,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         playerController = (ImageView) mActivity.findViewById(R.id.player_control);
         selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
+        previouslySelectedSong = MusicPlayerHelper.getInstance().getSongPosition();
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 int pos = (int) v.getTag();
-                if (selectedSong != -1){
-                    if (v.getRootView().findViewWithTag(selectedSong) != null)
-                      v.getRootView().findViewWithTag(selectedSong).setAlpha(0.6f);
+                if (v.getRootView().findViewWithTag(previouslySelectedSong) != null) {
+                    Log.e(TAG, "Working?");
+                    v.getRootView().findViewWithTag(previouslySelectedSong).setAlpha(0.6f);
                 }
-                selectedSong = pos;
-                v.getRootView().findViewWithTag(pos).setAlpha(1);
+                previouslySelectedSong = pos;
+                v.findViewById(R.id.songCard).setAlpha(1);
                 Song song = MusicPlayerHelper.allSongsList.get(pos);
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 byte[] rawArt;
@@ -127,13 +129,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     @Override
-    public void onBindViewHolder(SongAdapter.SongViewHolder holder, int position) {
+    public void onBindViewHolder(final SongAdapter.SongViewHolder holder, int position) {
         holder.songCard.setTag(position);
-        if (position == selectedSong)
+        if (position == MusicPlayerHelper.getInstance().getSongPosition()) {
             holder.songCard.setAlpha(1);
-        else
+        }
+        else {
             holder.songCard.setAlpha(0.6f);
-        Song song = MusicPlayerHelper.allSongsList.get(position);
+        }
+        final Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -159,6 +163,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         protected TextView songTitle, songArtist;
         protected CardView songCard;
         protected ImageView songImage;
+        protected RelativeLayout songContainer;
 
         public SongViewHolder(View itemView) {
             super(itemView);
@@ -166,6 +171,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             songArtist = (TextView) itemView.findViewById(R.id.song_artist);
             songCard = (CardView) itemView.findViewById(R.id.songCard);
             songImage = (ImageView) itemView.findViewById(R.id.song_image);
+            songContainer = (RelativeLayout) itemView.findViewById(R.id.song_container);
         }
     }
 }

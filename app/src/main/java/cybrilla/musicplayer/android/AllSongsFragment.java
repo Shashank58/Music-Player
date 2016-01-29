@@ -41,12 +41,13 @@ public class AllSongsFragment extends Fragment {
     private ImageView playerControl, selectedAlbumCover;
     private RecyclerView songList;
     private SongAdapter mAdapter;
+    private View view;
 
     public AllSongsFragment(){
 
     }
 
-    private void getAllViews(View view){
+    private void getAllViews(){
         songList = (RecyclerView) view.findViewById(R.id.songList);
         selectedSongTrack = (TextView) getActivity().findViewById(R.id.selected_track_title);
         playerControl = (ImageView) getActivity().findViewById(R.id.player_control);
@@ -65,6 +66,7 @@ public class AllSongsFragment extends Fragment {
 
     private void getSongList(){
         MusicPlayerHelper.getInstance().getSongList(getActivity());
+        Log.e(TAG, "This is bull");
         mAdapter = new SongAdapter(getActivity());
         songList.setAdapter(mAdapter);
     }
@@ -103,6 +105,13 @@ public class AllSongsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_all_songs, container, false);
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
                     permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -110,17 +119,13 @@ public class AllSongsFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{permission.READ_EXTERNAL_STORAGE},
                         Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            } else {
+                getAllViews();
             }
+        } else {
+            getAllViews();
         }
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_all_songs, container, false);
-        getAllViews(view);
-        getSongList();
         return view;
     }
 
@@ -132,7 +137,7 @@ public class AllSongsFragment extends Fragment {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getSongList();
+                    getAllViews();
                 }
             }
         }

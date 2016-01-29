@@ -93,7 +93,15 @@ public class MediaPlayerService extends Service {
                     break;
 
                 case "cybrilla.musicplayer.util.playpause":
-                    toggleMusic();
+                    if (MusicPlayerHelper.getInstance().getMusicStartedOnce())
+                        toggleMusic();
+                    else {
+                        MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                                .getInstance().getSongPosition());
+                        MusicPlayerHelper.getInstance().getMediaPlayer().pause();
+                        MusicPlayerHelper.getInstance().setIsPaused(true);
+                        toggleMusic();
+                    }
                     Log.e("Media Player Service", "Play pause working");
                     break;
             }

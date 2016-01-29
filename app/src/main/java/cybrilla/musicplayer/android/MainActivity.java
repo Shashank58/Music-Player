@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolBarTop;
     private TextView tabTitle, selectedTrackTitle, selectedTrackArtist;
-    private ImageView selectedAlbumCover, playerControl;
+    private ImageView selectedAlbumCover, playerControl, menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         selectedAlbumCover = (ImageView) findViewById(R.id.selected_album_cover);
         playerControl = (ImageView) findViewById(R.id.player_control);
         selectedTrackArtist = (TextView) findViewById(R.id.selected_track_artist);
+        menuItem = (ImageView) findViewById(R.id.menuItem);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -68,10 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 int pos = tabLayout.getSelectedTabPosition();
                 if (pos == 0 && (!"All Songs".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("All Songs");
+                    menuItem.setImageResource(android.R.drawable.ic_menu_search);
                 } else if (pos == 1 && (!"Albums".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Albums");
+                    menuItem.setImageResource(android.R.drawable.ic_menu_search);
                 } else if (pos == 2 && (!"Artists".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Artists");
+                    menuItem.setImageResource(android.R.drawable.ic_menu_search);
+                } else if (pos == 3 && (!"Playlist".equals(tabTitle.getText().toString()))){
+                    tabTitle.setText("Playlist");
+                    menuItem.setImageResource(R.drawable.ic_add_playlist);
                 }
             }
 
@@ -172,6 +179,11 @@ public class MainActivity extends AppCompatActivity {
                 .inflate(R.layout.custom_tab, null);
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_brush, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.custom_tab, null);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_playlist, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -179,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new AllSongsFragment());
         adapter.addFragment(new AlbumFragment());
         adapter.addFragment(new ArtistFragment());
+        adapter.addFragment(new PlaylistFragment());
         viewPager.setAdapter(adapter);
     }
 
