@@ -13,4 +13,9 @@
     <string name="cd_previous">Skip backwards</string>
     <string name="cd_play">Play and pause</string>
     <string name="cd_next">Skip forwards</string>
+
+    <string name="action_hide">Hide Panel</string>
+    <string name="action_show">Show Panel</string>
+    <string name="action_anchor_enable">Enable Anchor Point</string>
+    <string name="action_anchor_disable">Disable Anchor Point</string>
 </resources>

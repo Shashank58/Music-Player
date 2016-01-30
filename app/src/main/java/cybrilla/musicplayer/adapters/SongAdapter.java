@@ -1,13 +1,8 @@
 package cybrilla.musicplayer.adapters;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Build.VERSION_CODES;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,9 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
@@ -110,22 +103,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     }
 
     private void setToolBarListener() {
-        songSelectedToolbar.setOnClickListener(new OnClickListener() {
-            @TargetApi(VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, SongDetailActivity.class);
-                intent.putExtra(Constants.TITLE_NAME,
-                        selectedTractTitle.getText().toString());
-                intent.putExtra(Constants.SONG_ARTIST,
-                        selectedTrackArtist.getText().toString());
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation
-                                (mActivity, songSelectedToolbar
-                                        , songSelectedToolbar.getTransitionName());
-                ActivityCompat.startActivity(mActivity, intent, options.toBundle());
-            }
-        });
+//        songSelectedToolbar.setOnClickListener(new OnClickListener() {
+//            @TargetApi(VERSION_CODES.LOLLIPOP)
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(mActivity, SongDetailActivity.class);
+//                intent.putExtra(Constants.TITLE_NAME,
+//                        selectedTractTitle.getText().toString());
+//                intent.putExtra(Constants.SONG_ARTIST,
+//                        selectedTrackArtist.getText().toString());
+//                ActivityOptionsCompat options =
+//                        ActivityOptionsCompat.makeSceneTransitionAnimation
+//                                (mActivity, songSelectedToolbar
+//                                        , songSelectedToolbar.getTransitionName());
+//                ActivityCompat.startActivity(mActivity, intent, options.toBundle());
+//            }
+//        });
     }
 
     @Override

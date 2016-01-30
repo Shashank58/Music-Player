@@ -9,73 +9,93 @@
     tools:context="cybrilla.musicplayer.android.MainActivity">
 
     <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appToolBar"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoDragView="@+id/dragView"
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoParallaxOffset="100dp"
+        sothree:umanoScrollableView="@+id/list"
+        sothree:umanoShadowHeight="4dp">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#212121">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarTop"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/tabTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="All Songs"
-                        android:fontFamily="Roboto bold"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/menuItem"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="10dp"
-                        android:background="?android:selectableItemBackground"
-                        android:layout_marginRight="15dp"/>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.Toolbar>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appToolBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:elevation="8dp"
-                app:tabGravity="fill"
-                app:tabIndicatorHeight="4dp"
-                app:tabIndicatorColor="#ffffff"
-                app:tabTextColor="#EEEEEE"
-                app:tabMaxWidth="0dp"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="#ffffff"/>
+                android:background="#212121">
 
-        </android.support.design.widget.AppBarLayout>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbarTop"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:layout_scrollFlags="scroll|enterAlways">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/appToolBar"
-            android:background="@drawable/card_song_background"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-        </android.support.v4.view.ViewPager>
+                        <TextView
+                            android:id="@+id/tabTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="Roboto bold"
+                            android:text="All Songs"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <ImageView
+                            android:id="@+id/menuItem"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="10dp"
+                            android:background="?android:selectableItemBackground"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.Toolbar>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:elevation="8dp"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="#ffffff"
+                    app:tabIndicatorHeight="4dp"
+                    app:tabMaxWidth="0dp"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="#ffffff"
+                    app:tabTextColor="#EEEEEE"/>
+
+            </android.support.design.widget.AppBarLayout>
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appToolBar"
+                android:background="@drawable/card_song_background"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </android.support.v4.view.ViewPager>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,67 +105,138 @@
                 android:id="@+id/playing_song_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_alignParentBottom="true"
                 android:background="#212121"
-                android:transitionName="songBar"
                 android:visibility="visible"
                 app:elevation="4dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="60dp">
 
                     <ImageView
                         android:id="@+id/selected_album_cover"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:background="#ffffff"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_gravity="center_vertical"
+                        android:background="#ffffff"/>
 
                     <TextView
                         android:id="@+id/selected_track_title"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@+id/selected_album_cover"
                         android:maxLines="1"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:paddingLeft="8dp"
                         android:paddingStart="8dp"
-                        android:layout_toRightOf="@+id/selected_album_cover"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
 
                     <TextView
+                        android:id="@+id/selected_track_artist"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/selected_track_artist"
+                        android:layout_below="@+id/selected_track_title"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
+                        android:layout_toRightOf="@+id/selected_album_cover"
                         android:maxLines="1"
                         android:paddingLeft="8dp"
                         android:paddingStart="8dp"
-                        android:layout_toRightOf="@+id/selected_album_cover"
-                        android:layout_below="@+id/selected_track_title"/>
+                        android:textColor="@color/white"
+                        android:textSize="12sp"/>
 
                     <ImageButton
                         android:id="@+id/player_control"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:padding="5dp"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
-                        android:background="?android:selectableItemBackground"
-                        android:layout_marginEnd="10dp"
-                        android:scaleType="fitXY"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="5dp"/>
+                        android:background="@drawable/ripple_effect"
+                        android:clickable="true"
+                        android:elevation="5dp"
+                        android:scaleType="center"/>
 
                 </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/playing_song_toolbar"
+                android:background="@drawable/musical_image"/>
+
+            <RelativeLayout
+                android:id="@+id/detail_controls_layout"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_alignParentBottom="true"
+                android:alpha="0.8"
+                android:background="@color/pure_black">
+
+                <SeekBar
+                    android:id="@+id/music_seeker"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+
+                <ImageView
+                    android:id="@+id/detail_controller"
+                    android:layout_width="63dp"
+                    android:layout_height="63dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="22dp"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="3dp"
+                    android:src="@android:drawable/ic_media_play"/>
+
+                <ImageView
+                    android:id="@+id/detail_fast_forward"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toRightOf="@+id/detail_controller"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="3dp"
+                    android:src="@android:drawable/ic_media_ff"/>
+
+                <ImageView
+                    android:id="@+id/detail_reverse"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toLeftOf="@+id/detail_controller"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="3dp"
+                    android:src="@android:drawable/ic_media_rew"/>
+
+                <ImageView
+                    android:id="@+id/shuffle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/music_seeker"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_toRightOf="@+id/detail_fast_forward"
+                    android:src="@drawable/ic_shuffle_not_slected"/>
+
+                <ImageView
+                    android:id="@+id/repeat"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/music_seeker"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_toLeftOf="@+id/detail_reverse"
+                    android:src="@drawable/ic_repeat_not_selected"/>
+
+            </RelativeLayout>
+
         </RelativeLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:id="@+id/songCard"
-    app:cardElevation="4dp"
+    app:cardElevation="5dp"
+    android:background="?android:selectableItemBackground"
     android:alpha="0.6"
     android:layout_marginTop="0.25dp">
 

@@ -6,23 +6,22 @@
     android:id="@+id/albumCard"
     app:cardElevation="4dp"
     app:cardCornerRadius="5dp"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:alpha="0.7">
 
     <LinearLayout
-        android:layout_width="160dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:id="@+id/album_container"
-        android:background="@color/white"
+        android:background="@color/black"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="165dp"
             android:src="@drawable/no_image"
             android:scaleType="fitXY"
             android:id="@+id/album_image"
-            android:background="#9E9E9E"
             android:transitionName="albumImage"/>
 
         <TextView
@@ -32,7 +31,7 @@
             android:textSize="16sp"
             android:singleLine="true"
             android:layout_alignParentBottom="true"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>

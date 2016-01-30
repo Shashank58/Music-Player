@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="cybrilla.musicplayer.album.AlbumSongsActivity">
 
     <ImageView
@@ -19,6 +18,7 @@
         android:layout_height="match_parent"
         android:id="@+id/album_song_list"
         android:layout_marginTop="10dp"
+        android:background="@color/song_card_black"
         android:layout_below="@+id/album_song_image">
 
     </android.support.v7.widget.RecyclerView>
