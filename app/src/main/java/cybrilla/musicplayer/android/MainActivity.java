@@ -1,8 +1,6 @@
 package cybrilla.musicplayer.android;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -49,7 +47,7 @@ import cybrilla.musicplayer.util.SharedPreferenceHandler;
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Toolbar toolBarTop;
+    private Toolbar toolBarTop, playingSongToolBar;
     private TextView tabTitle, selectedTrackTitle, selectedTrackArtist;
     private ImageView selectedAlbumCover, playerControl, menuItem, detailControler;
     private ImageView detailForward, detailReverse, shuffle, repeat;
@@ -156,7 +154,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpSlidingPanel() {
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        slidingUpPanelLayout.isTouchEnabled();
+        playingSongToolBar = (Toolbar) findViewById(R.id.playing_song_toolbar);
+
+        playingSongToolBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (slidingUpPanelLayout != null && (slidingUpPanelLayout.getPanelState()
+                        == PanelState.EXPANDED || slidingUpPanelLayout.getPanelState()
+                        == PanelState.ANCHORED)) {
+                    slidingUpPanelLayout.setPanelState(PanelState.COLLAPSED);
+                } else {
+                    if (slidingUpPanelLayout != null) {
+                        Log.e(TAG, "Expand damn it");
+                        slidingUpPanelLayout.setPanelState(PanelState.EXPANDED);
+                    }
+                }
+            }
+        });
 
         slidingUpPanelLayout.setPanelSlideListener(new PanelSlideListener() {
             @Override
@@ -184,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPanelCollapsed(View panel) {
                 playerControl.setVisibility(View.VISIBLE);
-                seekHandler.removeCallbacks(run);
             }
 
             @Override
@@ -383,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferenceHandler.getInstance().setSongPosition(this,
                         MusicPlayerHelper.getInstance().getSongPosition());
             }
+            seekHandler.removeCallbacks(run);
         }
     }
 
@@ -409,20 +423,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Main Activity", "Getting set to pause");
                 playerControl.setImageResource(android.R.drawable.ic_media_pause);
             }
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            byte[] rawArt;
-            Bitmap art;
-            BitmapFactory.Options bfo = new BitmapFactory.Options();
-            Uri uri = song.getUri();
-            mmr.setDataSource(this, uri);
-            try {
-                rawArt = mmr.getEmbeddedPicture();
-                art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-                selectedAlbumCover.setImageBitmap(art);
-            } catch (Exception e) {
-                selectedAlbumCover.setImageResource(R.drawable.ic_action_ic_default_cover);
-            }
-
+            setAlbumCover(song);
         }
         super.onResumeFragments();
     }

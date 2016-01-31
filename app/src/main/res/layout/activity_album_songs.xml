@@ -1,26 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cybrilla.musicplayer.album.AlbumSongsActivity">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="325dp"
-        android:id="@+id/album_song_image"
-        android:transitionName="albumImage"
-        android:scaleType="fitXY"/>
-
-    <android.support.v7.widget.RecyclerView
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/album_song_list"
-        android:layout_marginTop="10dp"
-        android:background="@color/song_card_black"
-        android:layout_below="@+id/album_song_image">
+        android:gravity="bottom"
+        sothree:umanoDragView="@+id/dragView"
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoParallaxOffset="100dp"
+        sothree:umanoScrollableView="@+id/list"
+        sothree:umanoShadowHeight="4dp">
 
-    </android.support.v7.widget.RecyclerView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarTop"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/tabTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="Roboto bold"
+                        android:text="All Songs"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <ImageView
+                        android:id="@+id/menuItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="10dp"
+                        android:background="?android:selectableItemBackground"/>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+            <ImageView
+                android:id="@+id/album_song_image"
+                android:layout_width="match_parent"
+                android:layout_height="325dp"
+                android:scaleType="fitXY"
+                android:transitionName="albumImage"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/album_song_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/album_song_image"
+                android:layout_marginTop="10dp"
+                android:background="@color/song_card_black">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+        <include layout="@layout/song_tool_bar"/>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>

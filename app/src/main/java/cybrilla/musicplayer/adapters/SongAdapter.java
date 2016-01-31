@@ -5,7 +5,6 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private TextView selectedTractTitle, selectedTrackArtist;
     private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
-    private Toolbar songSelectedToolbar;
     private int previouslySelectedSong;
 
     public SongAdapter(Activity activity) {
@@ -43,7 +41,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_card, parent, false);
 
-        songSelectedToolbar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
         songSelected(view);
         return new SongViewHolder(view);
     }
@@ -96,29 +93,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         playerController.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
+                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
+                } else {
+                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                        .getInstance().getSongPosition());
+                    playerController.setImageResource(android.R.drawable.ic_media_pause);
+                }
             }
         });
-        setToolBarListener();
-    }
-
-    private void setToolBarListener() {
-//        songSelectedToolbar.setOnClickListener(new OnClickListener() {
-//            @TargetApi(VERSION_CODES.LOLLIPOP)
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(mActivity, SongDetailActivity.class);
-//                intent.putExtra(Constants.TITLE_NAME,
-//                        selectedTractTitle.getText().toString());
-//                intent.putExtra(Constants.SONG_ARTIST,
-//                        selectedTrackArtist.getText().toString());
-//                ActivityOptionsCompat options =
-//                        ActivityOptionsCompat.makeSceneTransitionAnimation
-//                                (mActivity, songSelectedToolbar
-//                                        , songSelectedToolbar.getTransitionName());
-//                ActivityCompat.startActivity(mActivity, intent, options.toBundle());
-//            }
-//        });
     }
 
     @Override

@@ -55,7 +55,8 @@ public class AllSongsFragment extends Fragment {
         selectedSongArtist = (TextView) getActivity().findViewById(R.id.selected_track_artist);
 
         songList.setHasFixedSize(true);
-        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(),
+                    LinearLayoutManager.VERTICAL, false);
         songList.setLayoutManager(linearLayout);
         getSongList();
         if (!MusicPlayerHelper.getInstance().getMusicStartedOnce() ||
