@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         }
         SlidingPanel.getInstance().initializedSlidingLayout(this);
         SlidingPanel.getInstance().setUpSlidingPanel();
-        Log.e("Main Activity", "On Create getting called");
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -63,7 +61,15 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         toolBarTop.setCollapsible(true);
-        //Change actionbar text with tab change
+        setViewPagerListener();
+        setUpTabIcon();
+    }
+
+    /**
+     * Changing tab title and menu icon with changing tabs.
+     */
+
+    private void setViewPagerListener(){
         viewPager.addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -93,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        setUpTabIcon();
     }
 
     @Override
     public void onBackPressed() {
+        //Check if sliding panel is expanded
         PanelState panelState = SlidingPanel.getInstance().getSlidingPanelState();
         if (panelState == PanelState.EXPANDED || panelState == PanelState.ANCHORED) {
             SlidingPanel.getInstance().collapseSlidingPanel();
@@ -139,13 +145,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Set selected track toolbar with playing song and stop notification if running.
+     * Useful when user comes back to Main Activity after starting a new song in either
+     * Artist Songs or Album Songs.
      */
 
     @Override
     protected void onResumeFragments() {
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
                 MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
-            Log.e("Main Activity", "Resume Fragment getting called");
             Intent intent = new Intent(this, MediaPlayerService.class);
             intent.setAction(Constants.STOP_NOTIFICATION);
             startService(intent);

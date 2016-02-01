@@ -20,7 +20,8 @@ import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
- * Created by shashankm on 21/01/16.
+ * Checks for permissions (Android 6.0 and above) and sends data to adapter to set
+ * album data.
  */
 
 public class AlbumFragment extends Fragment {

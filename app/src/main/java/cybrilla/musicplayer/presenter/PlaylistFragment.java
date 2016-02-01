@@ -21,8 +21,9 @@ import cybrilla.musicplayer.database.PlaylistDBHelper;
 import cybrilla.musicplayer.modle.Playlist;
 
 /**
- * Created by shashankm on 28/01/16.
+ * Contains a list of all play lists added by user.
  */
+
 public class PlaylistFragment extends Fragment {
     private PlaylistDBHelper playlistDBHelper;
     private RecyclerView playlist;

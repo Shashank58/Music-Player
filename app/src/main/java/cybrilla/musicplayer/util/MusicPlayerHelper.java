@@ -19,7 +19,7 @@ import java.util.Random;
 import cybrilla.musicplayer.modle.Song;
 
 /**
- * Main class responsible for playing song, getting all songs from user's phone.
+ * Main helper class responsible for playing song, getting all songs from user's phone.
  * In charge of all functions with respect to media player.
  **/
 
@@ -29,14 +29,12 @@ public class MusicPlayerHelper{
     private boolean isPaused = false;
     public static List<Song> allSongsList;
     private int songPosition = 0;
-    private boolean musicStartedOnce = false;
+    private boolean musicStartedOnce = false; //If false then no song is played before it
     private boolean shuffleOn = false;
     private boolean repeatOn = false;
-    private Random random;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
-            Log.e("Music player helper", "Creating new instance");
             instance = new MusicPlayerHelper();
         }
         return instance;
@@ -44,7 +42,6 @@ public class MusicPlayerHelper{
 
     public void initializeMediaPlayer(){
         if (mediaPlayer == null) {
-            Log.e("Music player helper", "Creating new media player");
             mediaPlayer = new MediaPlayer();
         }
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -96,10 +93,9 @@ public class MusicPlayerHelper{
 
     public void startMusic(int pos){
         musicStartedOnce = true;
-        this.songPosition = pos;
+        songPosition = pos;
         Song s = allSongsList.get(songPosition);
         try {
-            mediaPlayer.reset();
             mediaPlayer.setDataSource(s.getPath());
             mediaPlayer.prepare();
             mediaPlayer.seekTo(0);
@@ -126,7 +122,6 @@ public class MusicPlayerHelper{
                     playerController.setImageResource(android.R.drawable.ic_media_pause);
             }
         } else {
-            Log.e("Music Player Helper", "Yay song starting");
             initializeMediaPlayer();
             startMusic(songPosition);
             if (playerController != null)
@@ -136,7 +131,6 @@ public class MusicPlayerHelper{
 
     public void releaseMediaPlayer(){
         if (mediaPlayer != null) {
-            Log.e("Music Player Helper", "Media Player releasing");
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();
@@ -184,7 +178,6 @@ public class MusicPlayerHelper{
 
     public void playNextSong(){
         if (mediaPlayer.isPlaying() || isPaused) {
-            Log.e("Music Player Helper", "Music player is stopping and resetting");
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
@@ -201,9 +194,7 @@ public class MusicPlayerHelper{
     }
 
     private void playRandomSong(){
-        if (random == null){
-            random = new Random();
-        }
+        Random random = new Random();
         songPosition = random.nextInt(allSongsList.size());
     }
 

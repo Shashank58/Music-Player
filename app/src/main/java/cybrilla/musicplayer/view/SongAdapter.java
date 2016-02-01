@@ -19,16 +19,14 @@ import com.bumptech.glide.Glide;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
  * Sets all songs recycler view and plays song when a song is selected.
- * Also brings up SongDetailActivity when selected song toolbar is clicked.
  */
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private Activity mActivity;
-    private TextView selectedTractTitle, selectedTrackArtist;
-    private ImageView playerController, selectedAlbumCover;
     private static final String TAG = "SongAdapter";
     private int previouslySelectedSong;
 
@@ -45,36 +43,23 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return new SongViewHolder(view);
     }
 
+    /**
+     * Brightens the
+     * @param view the song card that was clicked.
+     */
     private void songSelected(final View view) {
-        playerController = (ImageView) mActivity.findViewById(R.id.player_control);
-        selectedTractTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
-        selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
         previouslySelectedSong = MusicPlayerHelper.getInstance().getSongPosition();
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
                 int pos = (int) v.getTag();
                 if (v.getRootView().findViewWithTag(previouslySelectedSong) != null) {
-                    Log.e(TAG, "Working?");
                     v.getRootView().findViewWithTag(previouslySelectedSong).setAlpha(0.6f);
                 }
                 previouslySelectedSong = pos;
                 v.findViewById(R.id.songCard).setAlpha(1);
-                Song song = MusicPlayerHelper.allSongsList.get(pos);
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                byte[] rawArt;
-                Uri uri = song.getUri();
-                mmr.setDataSource(mActivity, uri);
-                if (mmr.getEmbeddedPicture() != null) {
-                    rawArt = mmr.getEmbeddedPicture();
-                    Glide.with(mActivity).load(rawArt)
-                            .asBitmap().into(selectedAlbumCover);
-                } else {
-                    Glide.with(mActivity).load(R.drawable.no_image)
-                            .asBitmap().into(selectedAlbumCover);
-                }
-                playerController.setImageResource(android.R.drawable.ic_media_pause);
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null)
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
                                 || MusicPlayerHelper.getInstance().getIsPaused()) {
                     Log.e("Song adapter", "Seriously this should be called");
@@ -82,23 +67,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
                 }
                 MusicPlayerHelper.getInstance().startMusic(pos);
-                selectedTrackArtist.setText(MusicPlayerHelper.allSongsList.get(pos).getSongArtist());
-                selectedTractTitle.setText(MusicPlayerHelper.allSongsList.get(pos).getSongTitle());
+                SlidingPanel.getInstance().setPlayingSongDetails();
             }
         });
-
-//        playerController.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
-//                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
-//                } else {
-//                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-//                        .getInstance().getSongPosition());
-//                    playerController.setImageResource(android.R.drawable.ic_media_pause);
-//                }
-//            }
-//        });
     }
 
     @Override

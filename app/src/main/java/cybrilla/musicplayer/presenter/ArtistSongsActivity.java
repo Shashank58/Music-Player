@@ -9,8 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.view.ArtistSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
+
+/**
+ * Gets the Songs sent in from Artist adapter and sends it to it's own adapter
+ * to show as the artist's songs.
+ */
 
 public class ArtistSongsActivity extends AppCompatActivity {
     private RecyclerView artistSongsList;
@@ -23,7 +29,7 @@ public class ArtistSongsActivity extends AppCompatActivity {
         artistSongsList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         artistSongsList.setLayoutManager(linearLayoutManager);
-        List<Song> songs = ((ArrayList<Song>) getIntent().getExtras().get("Songs"));
+        List<Song> songs = ((ArrayList<Song>) getIntent().getExtras().get(Constants.SONGS));
         ArtistSongsAdapter adapter = new ArtistSongsAdapter(this, songs);
         artistSongsList.setAdapter(adapter);
     }

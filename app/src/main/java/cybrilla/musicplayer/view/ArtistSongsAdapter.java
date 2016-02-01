@@ -20,8 +20,9 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
- * Created by shashankm on 26/01/16.
+ * Displays list of all songs of the selected artist.
  */
+
 public class ArtistSongsAdapter extends RecyclerView.Adapter<ArtistSongsAdapter
             .ArtistSongsViewHolder> {
     private List<Song> artistSongs;

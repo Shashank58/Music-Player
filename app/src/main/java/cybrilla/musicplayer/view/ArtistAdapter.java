@@ -18,10 +18,12 @@ import java.util.Iterator;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.presenter.ArtistSongsActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
 
 /**
- * Created by shashankm on 22/01/16.
+ * Displays list of Artists and the number of songs for each artist.
  */
+
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder> {
     private Activity mActivity;
     private HashMap<String, ArrayList<Song>> allArtistList;
@@ -44,7 +46,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
                 TextView artistName = (TextView) v.findViewById(R.id.song_title);
                 ArrayList<Song> songs = allArtistList.get(artistName.getText().toString());
                 Intent intent = new Intent(mActivity, ArtistSongsActivity.class);
-                intent.putExtra("Songs", songs);
+                intent.putExtra(Constants.SONGS, songs);
                 mActivity.startActivity(intent);
             }
         });

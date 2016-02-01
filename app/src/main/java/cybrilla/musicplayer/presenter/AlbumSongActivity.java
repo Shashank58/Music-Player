@@ -17,13 +17,14 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.view.AlbumSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
- * Created by shashankm on 22/01/16.
+ * Activity which contains songs of an album. Sends data to adapter to set it.
  */
 
 public class AlbumSongActivity extends AppCompatActivity{
@@ -42,6 +43,7 @@ public class AlbumSongActivity extends AppCompatActivity{
         if (actionBar != null)
             actionBar.hide();
 
+        //Makes status bar transparent and allows image to appear behind it.
         if (VERSION.SDK_INT >= 21){
             getWindow().setStatusBarColor(Color.TRANSPARENT);
             getWindow().getDecorView().setSystemUiVisibility(
@@ -61,7 +63,7 @@ public class AlbumSongActivity extends AppCompatActivity{
     }
 
     private void setUpAlbum(){
-        int pos = getIntent().getIntExtra("SongPosition", -1);
+        int pos = getIntent().getIntExtra(Constants.SONG_POSITION, -1);
         Song song = MusicPlayerHelper.allSongsList.get(pos);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;

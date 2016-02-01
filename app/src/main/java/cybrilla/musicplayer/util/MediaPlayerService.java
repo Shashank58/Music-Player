@@ -19,7 +19,7 @@ import cybrilla.musicplayer.presenter.MainActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
- * Service responsible for displaying notification and all functionality.
+ * Service responsible for displaying notification.
  * All functions related to notification is handled here.
  */
 
@@ -68,6 +68,11 @@ public class MediaPlayerService extends Service {
         startForeground(Constants.FOREGROUND_SERVICE, notification);
     }
 
+    /**
+     * Listens for broadcasts when notification controls are clicked and
+     * takes appropriate actions for each.
+     */
+
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -103,7 +108,6 @@ public class MediaPlayerService extends Service {
                         MusicPlayerHelper.getInstance().setIsPaused(true);
                         toggleMusic();
                     }
-                    Log.e("Media Player Service", "Play pause working");
                     break;
             }
         }

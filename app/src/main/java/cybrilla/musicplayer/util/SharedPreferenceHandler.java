@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 /**
- * Created by shashankm on 22/01/16.
+ * Stores position of last song played in Shared preference and retrieves it
+ * when needed.
  */
+
 public class SharedPreferenceHandler {
     private static SharedPreferenceHandler instance;
     private SharedPreferences pref;

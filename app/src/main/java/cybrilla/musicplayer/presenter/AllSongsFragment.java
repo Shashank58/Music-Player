@@ -23,8 +23,8 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
- * Displays all the songs of user. Fetches song position from shared preference
- * and sets it in selected song tool bar if no song is playing. Also checks for
+ * Sends data containing all songs of user. Checks if music has been started once.
+ * If not asks Sliding Panel class to set song to last played. Also checks for
  * user permissions.
  */
 

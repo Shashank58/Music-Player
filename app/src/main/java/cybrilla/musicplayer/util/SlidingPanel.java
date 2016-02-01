@@ -24,8 +24,10 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 
 /**
- * Created by shashankm on 31/01/16.
+ * The Sliding panel containing details of current playing song, along with a
+ * detail view of playing song when expanded.
  */
+
 public class SlidingPanel {
     private static SlidingPanel instance;
     private SeekBar musicSeeker;
@@ -104,7 +106,6 @@ public class SlidingPanel {
     }
 
     public void setUpSlidingPanel() {
-
         playingSongToolBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,7 +218,7 @@ public class SlidingPanel {
         int position = SharedPreferenceHandler.getInstance().getSongPosition(mActivity);
         MusicPlayerHelper.getInstance().setSongPosition(position);
         Song song = MusicPlayerHelper.allSongsList.get(position);
-        Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
+        Log.e("Sliding Panel", "Song title: " + song.getSongTitle());
         selectedTrackTitle.setText(song.getSongTitle());
         selectedTrackArtist.setText(song.getSongArtist());
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
@@ -242,6 +243,10 @@ public class SlidingPanel {
         }
     }
 
+    /**
+     * Updates the music seeker every second to the song's current position.
+     */
+
     private void seekUpdation() {
         musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
                 .getCurrentPosition());
@@ -252,7 +257,8 @@ public class SlidingPanel {
         playerControl.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Sliding Panel", "Music controller clicked");
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null)
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                     MusicPlayerHelper.getInstance().toggleMusicPlayer(playerControl);
                 } else {

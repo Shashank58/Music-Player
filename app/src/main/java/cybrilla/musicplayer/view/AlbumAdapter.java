@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
@@ -30,7 +31,6 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
     private Activity mActivity;
-    private int lastPosition = -1;
 
     public AlbumAdapter(Activity mActivity){
         this.mActivity = mActivity;
@@ -48,7 +48,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                 int pos = (int) v.getTag();
                 ImageView imageStart = (ImageView) v.findViewById(R.id.album_image);
                 Intent intent = new Intent(mActivity, AlbumSongActivity.class);
-                intent.putExtra("SongPosition", pos);
+                intent.putExtra(Constants.SONG_POSITION, pos);
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation
                         (mActivity,imageStart, imageStart.getTransitionName());

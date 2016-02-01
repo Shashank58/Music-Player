@@ -21,8 +21,9 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
- * Created by shashankm on 11/01/16.
+ * Displays list of all songs in album and starts song when list is clicked on.
  */
+
 public class AlbumSongsAdapter extends
         RecyclerView.Adapter<AlbumSongsAdapter.AlbumSongsViewHolder> {
     private Activity mActivity;
@@ -43,13 +44,11 @@ public class AlbumSongsAdapter extends
             public void onClick(View v) {
                 Log.e("Album Songs Adapter", "Contains? "+MusicPlayerHelper.allSongsList.contains(song));
                 int pos = MusicPlayerHelper.allSongsList.indexOf(song);
-                Log.e("Album Songs Adapter", "Position: "+pos);
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null){
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 }
                 if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
                         || MusicPlayerHelper.getInstance().getIsPaused()){
-                    Log.e("Album Song Adapter", "When song is paused And blah");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
                 }
