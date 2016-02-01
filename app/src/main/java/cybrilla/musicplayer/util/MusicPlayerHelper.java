@@ -28,7 +28,7 @@ public class MusicPlayerHelper{
     private static MusicPlayerHelper instance;
     private boolean isPaused = false;
     public static List<Song> allSongsList;
-    private int songPosition;
+    private int songPosition = 0;
     private boolean musicStartedOnce = false;
     private boolean shuffleOn = false;
     private boolean repeatOn = false;
@@ -56,6 +56,10 @@ public class MusicPlayerHelper{
 
     public boolean getIsPaused(){
         return isPaused;
+    }
+
+    public void setMusicStartedOnce(boolean value){
+        musicStartedOnce = value;
     }
 
     public void setIsPaused(boolean pausedValue){

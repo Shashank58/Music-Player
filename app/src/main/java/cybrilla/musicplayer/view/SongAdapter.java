@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.adapters;
+package cybrilla.musicplayer.view;
 
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
@@ -75,9 +75,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                             .asBitmap().into(selectedAlbumCover);
                 }
                 playerController.setImageResource(android.R.drawable.ic_media_pause);
-                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
-                }
                 if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
                                 || MusicPlayerHelper.getInstance().getIsPaused()) {
                     Log.e("Song adapter", "Seriously this should be called");
@@ -90,18 +87,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             }
         });
 
-        playerController.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
-                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
-                } else {
-                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-                        .getInstance().getSongPosition());
-                    playerController.setImageResource(android.R.drawable.ic_media_pause);
-                }
-            }
-        });
+//        playerController.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+//                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerController);
+//                } else {
+//                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+//                        .getInstance().getSongPosition());
+//                    playerController.setImageResource(android.R.drawable.ic_media_pause);
+//                }
+//            }
+//        });
     }
 
     @Override

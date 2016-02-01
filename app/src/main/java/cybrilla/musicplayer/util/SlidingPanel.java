@@ -1,17 +1,11 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.util;
 
-import android.annotation.TargetApi;
-import android.graphics.Color;
+import android.app.Activity;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -26,92 +21,100 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapters.AlbumSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
 
 /**
- * Created by shashankm on 22/01/16.
+ * Created by shashankm on 31/01/16.
  */
-
-public class AlbumSongActivity extends AppCompatActivity{
-    private RecyclerView albumSongList;
-    private ImageView albumSongImage;
-    private Toolbar playingSongToolBar;
-    private AlbumSongsAdapter mAdapter;
-    private static final String TAG = "Album Song Activity";
+public class SlidingPanel {
+    private static SlidingPanel instance;
     private SeekBar musicSeeker;
     private Handler seekHandler = new Handler();
-    private ImageView detailForward, detailReverse, shuffle, repeat, playerControl, detailControler;
+    private Toolbar playingSongToolBar;
+    private TextView selectedTrackTitle, selectedTrackArtist;
+    private ImageView selectedAlbumCover, detailControler;
+    private ImageView detailForward, detailReverse, shuffle, repeat, playerControl;
     private SlidingUpPanelLayout slidingUpPanelLayout;
+    private static Activity mActivity;
 
-    @TargetApi(VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album_songs);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.hide();
-
-        if (VERSION.SDK_INT >= 21){
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    public static SlidingPanel getInstance(){
+        if (instance == null){
+            instance = new SlidingPanel();
         }
-        albumSongList = (RecyclerView) findViewById(R.id.album_song_list);
-        albumSongImage = (ImageView) findViewById(R.id.album_song_image);
-        musicSeeker = (SeekBar) findViewById(R.id.music_seeker);
-        playingSongToolBar = (Toolbar) findViewById(R.id.playing_song_toolbar);
-        playerControl = (ImageView) findViewById(R.id.player_control);
-        detailForward = (ImageView) findViewById(R.id.detail_fast_forward);
-        detailReverse = (ImageView) findViewById(R.id.detail_reverse);
-        detailControler = (ImageView) findViewById(R.id.detail_controller);
-        shuffle = (ImageView) findViewById(R.id.shuffle);
-        repeat = (ImageView) findViewById(R.id.repeat);
-
-        albumSongList.setHasFixedSize(true);
-        LinearLayoutManager linearLayout = new LinearLayoutManager(this);
-        albumSongList.setLayoutManager(linearLayout);
-        setUpAlbum();
+        return instance;
     }
 
-    private void setUpAlbum(){
-        int pos = getIntent().getIntExtra("SongPosition", -1);
-        Song song = MusicPlayerHelper.allSongsList.get(pos);
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        byte[] rawArt;
-        Uri uri = song.getUri();
-        mmr.setDataSource(this, uri);
-        if (mmr.getEmbeddedPicture() != null) {
-            rawArt = mmr.getEmbeddedPicture();
-            Glide.with(this).load(rawArt)
-                    .asBitmap().into(albumSongImage);
-        } else {
-            Glide.with(this).load(R.drawable.no_image)
-                    .asBitmap().into(albumSongImage);
+    public void initializedSlidingLayout(Activity activity){
+        mActivity = activity;
+        musicSeeker = (SeekBar) mActivity.findViewById(R.id.music_seeker);
+        playingSongToolBar = (Toolbar) mActivity.findViewById(R.id.playing_song_toolbar);
+        playerControl = (ImageView) mActivity.findViewById(R.id.player_control);
+        detailForward = (ImageView) mActivity.findViewById(R.id.detail_fast_forward);
+        detailReverse = (ImageView) mActivity.findViewById(R.id.detail_reverse);
+        detailControler = (ImageView) mActivity.findViewById(R.id.detail_controller);
+        shuffle = (ImageView) mActivity.findViewById(R.id.shuffle);
+        repeat = (ImageView) mActivity.findViewById(R.id.repeat);
+        selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
+        selectedTrackTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
+        selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
+        slidingUpPanelLayout = (SlidingUpPanelLayout) mActivity.findViewById(R.id.sliding_layout);
+
+        if (MusicPlayerHelper.getInstance().getShuffleOn()){
+            shuffle.setImageResource(R.drawable.ic_shuffle_selected);
         }
-        mAdapter = new AlbumSongsAdapter(song, this);
-        albumSongList.setAdapter(mAdapter);
+
+        if (MusicPlayerHelper.getInstance().getRepeatOn()){
+            repeat.setImageResource(R.drawable.ic_repeat_selected);
+        }
+        if (MusicPlayerHelper.getInstance().getMusicStartedOnce())
+            completion();
     }
 
-    private void setUpSlidingPanel() {
-        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        playingSongToolBar = (Toolbar) findViewById(R.id.playing_song_toolbar);
+    public PanelState getSlidingPanelState(){
+        return slidingUpPanelLayout.getPanelState();
+    }
+
+    public void collapseSlidingPanel(){
+        slidingUpPanelLayout.setPanelState(PanelState.COLLAPSED);
+    }
+
+    public void expandSlidingPanel(){
+        slidingUpPanelLayout.setPanelState(PanelState.EXPANDED);
+    }
+
+    private void completion() {
+        MusicPlayerHelper.getInstance().getMediaPlayer().
+                setOnCompletionListener(new OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        if (!MusicPlayerHelper.getInstance().getRepeatOn()) {
+                            MusicPlayerHelper.getInstance()
+                                    .playNextSong();
+                            Song song = MusicPlayerHelper.allSongsList.get
+                                    (MusicPlayerHelper.getInstance().getSongPosition());
+                            selectedTrackTitle.setText(song.getSongTitle());
+                            selectedTrackArtist.setText(song.getSongArtist());
+                            setAlbumCover(song);
+                        } else {
+                            MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                                    .getInstance().getSongPosition());
+                        }
+                    }
+                });
+    }
+
+    public void setUpSlidingPanel() {
 
         playingSongToolBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (slidingUpPanelLayout != null && (slidingUpPanelLayout.getPanelState()
-                        == PanelState.EXPANDED || slidingUpPanelLayout.getPanelState()
+                if (slidingUpPanelLayout != null && (getSlidingPanelState()
+                        == PanelState.EXPANDED || getSlidingPanelState()
                         == PanelState.ANCHORED)) {
-                    slidingUpPanelLayout.setPanelState(PanelState.COLLAPSED);
+                    collapseSlidingPanel();
                 } else {
                     if (slidingUpPanelLayout != null) {
-                        Log.e(TAG, "Expand damn it");
-                        slidingUpPanelLayout.setPanelState(PanelState.EXPANDED);
+                        expandSlidingPanel();
                     }
                 }
             }
@@ -142,17 +145,19 @@ public class AlbumSongActivity extends AppCompatActivity{
 
             @Override
             public void onPanelCollapsed(View panel) {
+                if (MusicPlayerHelper.getInstance().getIsPaused())
+                    playerControl.setImageResource(android.R.drawable.ic_media_play);
+                else
+                    playerControl.setImageResource(android.R.drawable.ic_media_pause);
                 playerControl.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPanelAnchored(View panel) {
-                Log.i(TAG, "onPanelAnchored");
             }
 
             @Override
             public void onPanelHidden(View panel) {
-                Log.i(TAG, "onPanelHidden");
             }
         });
 
@@ -192,6 +197,51 @@ public class AlbumSongActivity extends AppCompatActivity{
         }
     };
 
+    public void setPlayingSongDetails(){
+        Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
+                .getSongPosition());
+        selectedTrackTitle.setText(song.getSongTitle());
+        selectedTrackArtist.setText(song.getSongArtist());
+        setAlbumCover(song);
+        if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
+            if (MusicPlayerHelper.getInstance().getIsPaused())
+                playerControl.setImageResource(android.R.drawable.ic_media_play);
+            else
+                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            playerControl.setImageResource(android.R.drawable.ic_media_play);
+        }
+    }
+
+    public void setSongToLastPlayed(){
+        int position = SharedPreferenceHandler.getInstance().getSongPosition(mActivity);
+        MusicPlayerHelper.getInstance().setSongPosition(position);
+        Song song = MusicPlayerHelper.allSongsList.get(position);
+        Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
+        selectedTrackTitle.setText(song.getSongTitle());
+        selectedTrackArtist.setText(song.getSongArtist());
+        if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+            if (MusicPlayerHelper.getInstance().getIsPaused())
+                playerControl.setImageResource(android.R.drawable.ic_media_play);
+            else
+                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            playerControl.setImageResource(android.R.drawable.ic_media_play);
+        }
+        setAlbumCover(song);
+    }
+
+    public void setPlayerControl(){
+        if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
+            if (MusicPlayerHelper.getInstance().getIsPaused())
+                playerControl.setImageResource(android.R.drawable.ic_media_play);
+            else
+                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            playerControl.setImageResource(android.R.drawable.ic_media_play);
+        }
+    }
+
     private void seekUpdation() {
         musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
                 .getCurrentPosition());
@@ -199,6 +249,20 @@ public class AlbumSongActivity extends AppCompatActivity{
     }
 
     private void controllerListeners(){
+        playerControl.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Sliding Panel", "Music controller clicked");
+                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerControl);
+                } else {
+                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                        .getInstance().getSongPosition());
+                    playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                }
+            }
+        });
+
         detailControler.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,7 +303,7 @@ public class AlbumSongActivity extends AppCompatActivity{
                 MusicPlayerHelper.getInstance().playNextSong();
                 detailControler.setImageResource(android.R.drawable.ic_media_pause);
                 playerControl.setImageResource(android.R.drawable.ic_media_pause);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
+                Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
                         .getSongPosition());
                 selectedTrackTitle.setText(song.getSongTitle());
                 selectedTrackArtist.setText(song.getSongArtist());
@@ -256,7 +320,7 @@ public class AlbumSongActivity extends AppCompatActivity{
             public void onClick(View v) {
                 MusicPlayerHelper.getInstance().playPrevSong();
                 detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
+                Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
                         .getInstance().getSongPosition());
                 selectedTrackTitle.setText(song.getSongTitle());
                 selectedTrackArtist.setText(song.getSongArtist());
@@ -288,5 +352,24 @@ public class AlbumSongActivity extends AppCompatActivity{
 
             }
         });
+    }
+
+    public void removeSeeker(){
+        seekHandler.removeCallbacks(run);
+    }
+
+    public void setAlbumCover(Song song) {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        byte[] rawArt;
+        Uri uri = song.getUri();
+        mmr.setDataSource(mActivity, uri);
+        if (mmr.getEmbeddedPicture() != null) {
+            rawArt = mmr.getEmbeddedPicture();
+            Glide.with(mActivity).load(rawArt)
+                    .asBitmap().into(selectedAlbumCover);
+        } else {
+            Glide.with(mActivity).load(R.drawable.no_image)
+                    .asBitmap().into(selectedAlbumCover);
+        }
     }
 }

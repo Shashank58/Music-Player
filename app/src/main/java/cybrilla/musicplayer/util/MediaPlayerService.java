@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.MainActivity;
+import cybrilla.musicplayer.presenter.MainActivity;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -76,6 +76,7 @@ public class MediaPlayerService extends Service {
                 case "cybrilla.musicplayer.util.quit":
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().releaseMediaPlayer();
+                    MusicPlayerHelper.getInstance().setMusicStartedOnce(false);
                     unregisterReceiver(broadcastReceiver);
                     stopSelf();
                     break;

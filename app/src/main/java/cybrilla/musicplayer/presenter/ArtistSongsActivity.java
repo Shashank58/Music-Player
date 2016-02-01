@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.presenter;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapters.ArtistSongsAdapter;
+import cybrilla.musicplayer.view.ArtistSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 
 public class ArtistSongsActivity extends AppCompatActivity {

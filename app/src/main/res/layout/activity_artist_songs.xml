@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/card_song_background"
-    tools:context=".android.ArtistSongsActivity">
+    tools:context=".presenter.ArtistSongsActivity">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

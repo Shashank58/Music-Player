@@ -1,7 +1,6 @@
-package cybrilla.musicplayer.adapters;
+package cybrilla.musicplayer.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
  * Created by shashankm on 26/01/16.
@@ -55,8 +54,9 @@ public class ArtistSongsAdapter extends RecyclerView.Adapter<ArtistSongsAdapter
                 }
                 MusicPlayerHelper.getInstance().startMusic(position);
                 MusicPlayerHelper.getInstance().setIsPaused(false);
-                Intent intent = new Intent(mActivity, SongDetailActivity.class);
-                mActivity.startActivity(intent);
+                SlidingPanel.getInstance().initializedSlidingLayout(mActivity);
+                SlidingPanel.getInstance().setUpSlidingPanel();
+                SlidingPanel.getInstance().setPlayingSongDetails();
             }
         });
 

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.presenter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

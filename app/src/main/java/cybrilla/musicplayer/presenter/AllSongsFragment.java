@@ -1,9 +1,7 @@
-package cybrilla.musicplayer.android;
+package cybrilla.musicplayer.presenter;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -17,17 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.adapters.SongAdapter;
-import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.view.SongAdapter;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SharedPreferenceHandler;
+import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
  * Displays all the songs of user. Fetches song position from shared preference
@@ -37,8 +30,6 @@ import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 public class AllSongsFragment extends Fragment {
     private static final String TAG = "All Songs Fragment";
-    private TextView selectedSongTrack, selectedSongArtist;
-    private ImageView playerControl, selectedAlbumCover;
     private RecyclerView songList;
     private SongAdapter mAdapter;
     private View view;
@@ -49,58 +40,29 @@ public class AllSongsFragment extends Fragment {
 
     private void getAllViews(){
         songList = (RecyclerView) view.findViewById(R.id.songList);
-        selectedSongTrack = (TextView) getActivity().findViewById(R.id.selected_track_title);
-        playerControl = (ImageView) getActivity().findViewById(R.id.player_control);
-        selectedAlbumCover = (ImageView) getActivity().findViewById(R.id.selected_album_cover);
-        selectedSongArtist = (TextView) getActivity().findViewById(R.id.selected_track_artist);
 
         songList.setHasFixedSize(true);
         LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(),
                     LinearLayoutManager.VERTICAL, false);
         songList.setLayoutManager(linearLayout);
         getSongList();
-        if (!MusicPlayerHelper.getInstance().getMusicStartedOnce() ||
-                 MusicPlayerHelper.getInstance().getMediaPlayer() == null) {
-            setSongToLastPlayed();
+        if (!MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+            SlidingPanel.getInstance().setSongToLastPlayed();
+        } else {
+            SlidingPanel.getInstance().setPlayerControl();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SlidingPanel.getInstance().setPlayingSongDetails();
     }
 
     private void getSongList(){
         MusicPlayerHelper.getInstance().getSongList(getActivity());
-        Log.e(TAG, "This is bull");
         mAdapter = new SongAdapter(getActivity());
         songList.setAdapter(mAdapter);
-    }
-
-    private void setSongToLastPlayed(){
-        int position = SharedPreferenceHandler.getInstance().getSongPosition(getActivity());
-        MusicPlayerHelper.getInstance().setSongPosition(position);
-        MusicPlayerHelper.getInstance().setIsPaused(true);
-        Song song = MusicPlayerHelper.allSongsList.get(position);
-        Log.e("All Songs Fragment", "Song title: " + song.getSongTitle());
-        selectedSongTrack.setText(song.getSongTitle());
-        selectedSongArtist.setText(song.getSongArtist());
-        if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
-            if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(android.R.drawable.ic_media_play);
-            else
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
-        } else {
-            playerControl.setImageResource(android.R.drawable.ic_media_play);
-        }
-        byte[] rawArt;
-        Uri uri = song.getUri();
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(getActivity(), uri);
-        Log.e("All songs Fragment", "Are you the freaking reason?");
-        if (mmr.getEmbeddedPicture() != null){
-            rawArt = mmr.getEmbeddedPicture();
-            Glide.with(this).load(rawArt)
-                    .asBitmap().into(selectedAlbumCover);
-        } else {
-            Glide.with(this).load(R.drawable.no_image)
-                    .asBitmap().into(selectedAlbumCover);
-        }
     }
 
     @Override

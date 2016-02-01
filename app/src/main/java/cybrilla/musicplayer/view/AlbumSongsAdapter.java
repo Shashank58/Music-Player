@@ -1,7 +1,6 @@
-package cybrilla.musicplayer.adapters;
+package cybrilla.musicplayer.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
@@ -17,10 +16,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.SongDetailActivity;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.util.SlidingPanel;
 
 /**
  * Created by shashankm on 11/01/16.
@@ -57,9 +55,7 @@ public class AlbumSongsAdapter extends
                 }
                 MusicPlayerHelper.getInstance().startMusic(pos);
                 MusicPlayerHelper.getInstance().setIsPaused(false);
-                Intent intent = new Intent(mActivity, SongDetailActivity.class);
-                intent.putExtra(Constants.TITLE_NAME, song.getSongTitle());
-                mActivity.startActivity(intent);
+                SlidingPanel.getInstance().setPlayingSongDetails();
             }
         });
         return new AlbumSongsViewHolder(view);

@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.adapters;
+package cybrilla.musicplayer.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.android.AlbumSongActivity;
+import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
