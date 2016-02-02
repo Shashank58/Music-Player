@@ -16,6 +16,7 @@ public class Constants {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 10;
     public static final int FOREGROUND_SERVICE = 101;
     public static final int PRIVATE_MODE = 2;
+    public static final int DEFAULT_MAX = 10001;
     public static final String SONG_KEY = "Song Position Key";
     public static final String SONG_NUMBER = "Song Number";
     public static final String SONG_POSITION = "Song Position";

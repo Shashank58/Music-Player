@@ -71,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/album_song_image"
                 android:layout_marginTop="10dp"
-                android:background="@color/song_card_black">
+                android:background="@drawable/light_blue_background">
 
             </android.support.v7.widget.RecyclerView>
 

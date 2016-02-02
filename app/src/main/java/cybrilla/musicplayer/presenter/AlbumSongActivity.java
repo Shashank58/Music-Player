@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
@@ -79,5 +80,16 @@ public class AlbumSongActivity extends AppCompatActivity{
         }
         mAdapter = new AlbumSongsAdapter(song, this);
         albumSongList.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Check if sliding panel is expanded
+        PanelState panelState = SlidingPanel.getInstance().getSlidingPanelState();
+        if (panelState == PanelState.EXPANDED || panelState == PanelState.ANCHORED) {
+            SlidingPanel.getInstance().collapseSlidingPanel();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

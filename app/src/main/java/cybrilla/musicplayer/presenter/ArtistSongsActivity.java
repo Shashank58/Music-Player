@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.SlidingPanel;
 import cybrilla.musicplayer.view.ArtistSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 
@@ -32,5 +35,19 @@ public class ArtistSongsActivity extends AppCompatActivity {
         List<Song> songs = ((ArrayList<Song>) getIntent().getExtras().get(Constants.SONGS));
         ArtistSongsAdapter adapter = new ArtistSongsAdapter(this, songs);
         artistSongsList.setAdapter(adapter);
+        SlidingPanel.getInstance().initializedSlidingLayout(this);
+        SlidingPanel.getInstance().setUpSlidingPanel();
+        SlidingPanel.getInstance().setPlayingSongDetails();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Check if sliding panel is expanded
+        PanelState panelState = SlidingPanel.getInstance().getSlidingPanelState();
+        if (panelState == PanelState.EXPANDED || panelState == PanelState.ANCHORED) {
+            SlidingPanel.getInstance().collapseSlidingPanel();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -151,12 +151,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResumeFragments() {
+        SlidingPanel.getInstance().initializedSlidingLayout(this);
         if (MusicPlayerHelper.getInstance().getMediaPlayer() != null &&
                 MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
             Intent intent = new Intent(this, MediaPlayerService.class);
             intent.setAction(Constants.STOP_NOTIFICATION);
             startService(intent);
-            SlidingPanel.getInstance().initializedSlidingLayout(this);
             SlidingPanel.getInstance().setPlayingSongDetails();
         }
         super.onResumeFragments();

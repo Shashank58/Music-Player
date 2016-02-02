@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -28,13 +27,13 @@ import cybrilla.musicplayer.modle.Song;
  * detail view of playing song when expanded.
  */
 
-public class SlidingPanel {
+public class SlidingPanel implements View.OnClickListener{
     private static SlidingPanel instance;
     private SeekBar musicSeeker;
     private Handler seekHandler = new Handler();
     private Toolbar playingSongToolBar;
     private TextView selectedTrackTitle, selectedTrackArtist;
-    private ImageView selectedAlbumCover, detailControler;
+    private ImageView selectedAlbumCover, detailControler, playingSongDetail;
     private ImageView detailForward, detailReverse, shuffle, repeat, playerControl;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private static Activity mActivity;
@@ -59,6 +58,7 @@ public class SlidingPanel {
         selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
         selectedTrackTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
+        playingSongDetail = (ImageView) mActivity.findViewById(R.id.playing_song_detail);
         slidingUpPanelLayout = (SlidingUpPanelLayout) mActivity.findViewById(R.id.sliding_layout);
 
         if (MusicPlayerHelper.getInstance().getShuffleOn()){
@@ -77,6 +77,7 @@ public class SlidingPanel {
     }
 
     public void collapseSlidingPanel(){
+        Log.e("Sliding Panel", "Sliding down, no!");
         slidingUpPanelLayout.setPanelState(PanelState.COLLAPSED);
     }
 
@@ -106,20 +107,9 @@ public class SlidingPanel {
     }
 
     public void setUpSlidingPanel() {
-        playingSongToolBar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (slidingUpPanelLayout != null && (getSlidingPanelState()
-                        == PanelState.EXPANDED || getSlidingPanelState()
-                        == PanelState.ANCHORED)) {
-                    collapseSlidingPanel();
-                } else {
-                    if (slidingUpPanelLayout != null) {
-                        expandSlidingPanel();
-                    }
-                }
-            }
-        });
+        playingSongToolBar.setOnClickListener(this);
+        shuffle.setOnClickListener(this);
+        repeat.setOnClickListener(this);
 
         slidingUpPanelLayout.setPanelSlideListener(new PanelSlideListener() {
             @Override
@@ -133,23 +123,36 @@ public class SlidingPanel {
                 if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                     musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
                             .getDuration());
-                }
-                if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                    detailControler.setImageResource(android.R.drawable.ic_media_play);
+                    if (MusicPlayerHelper.getInstance().getIsPaused()) {
+                        detailControler.setImageResource(R.drawable.ic_play_0);
+                    } else {
+                        detailControler.setImageResource(R.drawable.ic_pause_0);
+                        seekUpdation();
+                    }
                 } else {
-                    detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                    musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
-                            .getDuration());
-                    seekUpdation();
+                    Log.e("Sliding Panel", "Max getting set to one");
+                    musicSeeker.setMax(Constants.DEFAULT_MAX);
+                    detailControler.setImageResource(R.drawable.ic_play_0);
                 }
             }
 
             @Override
             public void onPanelCollapsed(View panel) {
-                if (MusicPlayerHelper.getInstance().getIsPaused())
-                    playerControl.setImageResource(android.R.drawable.ic_media_play);
-                else
-                    playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+                    if (MusicPlayerHelper.getInstance().getIsPaused()) {
+                        playerControl.setBackground(null);
+                        playerControl.setImageResource(0);
+                        playerControl.setImageResource(R.drawable.ic_play_0);
+                    } else {
+                        playerControl.setBackground(null);
+                        playerControl.setImageResource(0);
+                        playerControl.setImageResource(R.drawable.ic_pause_0);
+                    }
+                } else {
+                    playerControl.setBackground(null);
+                    playerControl.setImageResource(0);
+                    playerControl.setImageResource(R.drawable.ic_play_0);
+                }
                 playerControl.setVisibility(View.VISIBLE);
             }
 
@@ -161,33 +164,6 @@ public class SlidingPanel {
             public void onPanelHidden(View panel) {
             }
         });
-
-        shuffle.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MusicPlayerHelper.getInstance().getShuffleOn()) {
-                    shuffle.setImageResource(R.drawable.ic_shuffle_not_slected);
-                    MusicPlayerHelper.getInstance().setShuffleOn(false);
-                } else {
-                    shuffle.setImageResource(R.drawable.ic_shuffle_selected);
-                    MusicPlayerHelper.getInstance().setShuffleOn(true);
-                }
-            }
-        });
-
-        repeat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MusicPlayerHelper.getInstance().getRepeatOn()) {
-                    repeat.setImageResource(R.drawable.ic_repeat_not_selected);
-                    MusicPlayerHelper.getInstance().setRepeatOn(false);
-                } else {
-                    repeat.setImageResource(R.drawable.ic_repeat_selected);
-                    MusicPlayerHelper.getInstance().setRepeatOn(true);
-                }
-            }
-        });
-
         controllerListeners();
     }
 
@@ -206,11 +182,11 @@ public class SlidingPanel {
         setAlbumCover(song);
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(android.R.drawable.ic_media_play);
+                playerControl.setImageResource(R.drawable.ic_play_0);
             else
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                playerControl.setImageResource(R.drawable.ic_pause_0);
         } else {
-            playerControl.setImageResource(android.R.drawable.ic_media_play);
+            playerControl.setImageResource(R.drawable.ic_play_0);
         }
     }
 
@@ -223,11 +199,11 @@ public class SlidingPanel {
         selectedTrackArtist.setText(song.getSongArtist());
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(android.R.drawable.ic_media_play);
+                playerControl.setImageResource(R.drawable.ic_play_0);
             else
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                playerControl.setImageResource(R.drawable.ic_pause_0);
         } else {
-            playerControl.setImageResource(android.R.drawable.ic_media_play);
+            playerControl.setImageResource(R.drawable.ic_play_0);
         }
         setAlbumCover(song);
     }
@@ -235,11 +211,11 @@ public class SlidingPanel {
     public void setPlayerControl(){
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(android.R.drawable.ic_media_play);
+                playerControl.setImageResource(R.drawable.ic_play_0);
             else
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
+                playerControl.setImageResource(R.drawable.ic_pause_0);
         } else {
-            playerControl.setImageResource(android.R.drawable.ic_media_play);
+            playerControl.setImageResource(R.drawable.ic_play_0);
         }
     }
 
@@ -254,89 +230,10 @@ public class SlidingPanel {
     }
 
     private void controllerListeners(){
-        playerControl.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null)
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
-                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
-                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerControl);
-                } else {
-                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-                        .getInstance().getSongPosition());
-                    playerControl.setImageResource(android.R.drawable.ic_media_pause);
-                }
-            }
-        });
-
-        detailControler.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
-                    if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
-                        if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                            detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                            playerControl.setImageResource(android.R.drawable.ic_media_pause);
-                            MusicPlayerHelper.getInstance().toggleMusicPlayer(null);
-                            seekUpdation();
-                        } else {
-                            detailControler.setImageResource(android.R.drawable.ic_media_play);
-                            playerControl.setImageResource(android.R.drawable.ic_media_play);
-                            MusicPlayerHelper.getInstance().toggleMusicPlayer(null);
-                        }
-                    } else {
-                        MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-                                .getInstance().getSongPosition());
-                        detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                        playerControl.setImageResource(android.R.drawable.ic_media_pause);
-                        musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
-                                .getDuration());
-                        seekUpdation();
-                    }
-                } else {
-                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
-                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-                            .getInstance().getSongPosition());
-                    detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                    seekUpdation();
-                }
-            }
-        });
-
-        detailForward.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MusicPlayerHelper.getInstance().playNextSong();
-                detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                playerControl.setImageResource(android.R.drawable.ic_media_pause);
-                Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
-                        .getSongPosition());
-                selectedTrackTitle.setText(song.getSongTitle());
-                selectedTrackArtist.setText(song.getSongArtist());
-                setAlbumCover(song);
-                musicSeeker.setMax(MusicPlayerHelper.getInstance()
-                        .getMediaPlayer().getDuration());
-                musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
-                        .getCurrentPosition());
-            }
-        });
-
-        detailReverse.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MusicPlayerHelper.getInstance().playPrevSong();
-                detailControler.setImageResource(android.R.drawable.ic_media_pause);
-                Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
-                        .getInstance().getSongPosition());
-                selectedTrackTitle.setText(song.getSongTitle());
-                selectedTrackArtist.setText(song.getSongArtist());
-                setAlbumCover(song);
-                musicSeeker.setMax(MusicPlayerHelper.getInstance()
-                        .getMediaPlayer().getDuration());
-                musicSeeker.setProgress(MusicPlayerHelper.getInstance()
-                        .getMediaPlayer().getCurrentPosition());
-            }
-        });
+        playerControl.setOnClickListener(this);
+        detailControler.setOnClickListener(this);
+        detailForward.setOnClickListener(this);
+        detailReverse.setOnClickListener(this);
 
         musicSeeker.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
@@ -373,9 +270,123 @@ public class SlidingPanel {
             rawArt = mmr.getEmbeddedPicture();
             Glide.with(mActivity).load(rawArt)
                     .asBitmap().into(selectedAlbumCover);
+            Glide.with(mActivity).load(rawArt)
+                    .asBitmap().into(playingSongDetail);
         } else {
             Glide.with(mActivity).load(R.drawable.no_image)
                     .asBitmap().into(selectedAlbumCover);
+            Glide.with(mActivity).load(R.drawable.no_image)
+                    .asBitmap().into(playingSongDetail);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.playing_song_toolbar:
+                if (slidingUpPanelLayout != null && (getSlidingPanelState()
+                        == PanelState.EXPANDED || getSlidingPanelState()
+                        == PanelState.ANCHORED)) {
+                    collapseSlidingPanel();
+                } else {
+                    if (slidingUpPanelLayout != null) {
+                        expandSlidingPanel();
+                    }
+                }
+                break;
+
+            case R.id.shuffle:
+                if (MusicPlayerHelper.getInstance().getShuffleOn()) {
+                    shuffle.setImageResource(R.drawable.ic_shuffle_not_slected);
+                    MusicPlayerHelper.getInstance().setShuffleOn(false);
+                } else {
+                    shuffle.setImageResource(R.drawable.ic_shuffle_selected);
+                    MusicPlayerHelper.getInstance().setShuffleOn(true);
+                }
+                break;
+
+            case R.id.repeat:
+                if (MusicPlayerHelper.getInstance().getRepeatOn()) {
+                    repeat.setImageResource(R.drawable.ic_repeat_not_selected);
+                    MusicPlayerHelper.getInstance().setRepeatOn(false);
+                } else {
+                    repeat.setImageResource(R.drawable.ic_repeat_selected);
+                    MusicPlayerHelper.getInstance().setRepeatOn(true);
+                }
+                break;
+
+            case R.id.player_control:
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() == null)
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
+                if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+                    MusicPlayerHelper.getInstance().toggleMusicPlayer(playerControl, mActivity);
+                } else {
+                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                            .getInstance().getSongPosition());
+                    playerControl.setImageResource(R.drawable.ic_pause_0);
+                }
+                break;
+
+            case R.id.detail_controller:
+                if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
+                    if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
+                        if (MusicPlayerHelper.getInstance().getIsPaused()) {
+                            detailControler.setImageResource(R.drawable.ic_pause_0);
+                            playerControl.setImageResource(R.drawable.ic_pause_0);
+                            MusicPlayerHelper.getInstance().toggleMusicPlayer
+                                    (playerControl, mActivity);
+                            seekUpdation();
+                        } else {
+                            detailControler.setImageResource(R.drawable.ic_play_0);
+                            playerControl.setImageResource(R.drawable.ic_play_0);
+                            MusicPlayerHelper.getInstance().toggleMusicPlayer(null, null);
+                        }
+                    } else {
+                        MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                                .getInstance().getSongPosition());
+                        detailControler.setImageResource(R.drawable.ic_pause_0);
+                        playerControl.setImageResource(R.drawable.ic_pause_0);
+                        musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
+                                .getDuration());
+                        seekUpdation();
+                    }
+                } else {
+                    MusicPlayerHelper.getInstance().initializeMediaPlayer();
+                    MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
+                            .getInstance().getSongPosition());
+                    detailControler.setImageResource(R.drawable.ic_pause_0);
+                    seekUpdation();
+                }
+                break;
+
+            case R.id.detail_fast_forward:
+                MusicPlayerHelper.getInstance().playNextSong();
+                detailControler.setImageResource(R.drawable.ic_pause_0);
+                playerControl.setImageResource(R.drawable.ic_pause_0);
+                Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
+                        .getSongPosition());
+                selectedTrackTitle.setText(song.getSongTitle());
+                selectedTrackArtist.setText(song.getSongArtist());
+                setAlbumCover(song);
+                musicSeeker.setMax(MusicPlayerHelper.getInstance()
+                        .getMediaPlayer().getDuration());
+                musicSeeker.setProgress(MusicPlayerHelper.getInstance().getMediaPlayer()
+                        .getCurrentPosition());
+                break;
+
+            case R.id.detail_reverse:
+                MusicPlayerHelper.getInstance().playPrevSong();
+                detailControler.setImageResource(R.drawable.ic_pause_0);
+                Song songOne = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
+                        .getInstance().getSongPosition());
+                selectedTrackTitle.setText(songOne.getSongTitle());
+                selectedTrackArtist.setText(songOne.getSongArtist());
+                setAlbumCover(songOne);
+                musicSeeker.setMax(MusicPlayerHelper.getInstance()
+                        .getMediaPlayer().getDuration());
+                musicSeeker.setProgress(MusicPlayerHelper.getInstance()
+                        .getMediaPlayer().getCurrentPosition());
+                break;
         }
     }
 }

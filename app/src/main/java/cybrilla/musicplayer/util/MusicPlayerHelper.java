@@ -3,6 +3,7 @@ package cybrilla.musicplayer.util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 
 /**
@@ -107,25 +109,37 @@ public class MusicPlayerHelper{
         }
     }
 
-    public void toggleMusicPlayer(ImageView playerController){
+    public void toggleMusicPlayer(ImageView playerController, Activity activity){
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 isPaused = true;
                 if (playerController != null) {
-                    playerController.setImageResource(android.R.drawable.ic_media_play);
+                    Log.e("Music Player Helper", "Pause to Play");
+                    playerController.setBackground(null);
+                    playerController.setImageResource(0);
+                    playerController.setBackground(activity.getResources().getDrawable
+                            (R.drawable.pause_to_play));
+                    ((AnimationDrawable) playerController.getBackground()).start();
                 }
             } else {
                 isPaused = false;
                 mediaPlayer.start();
-                if (playerController != null)
-                    playerController.setImageResource(android.R.drawable.ic_media_pause);
+                if (playerController != null) {
+                    Log.e("Music Player Helper", "Play to Pause");
+                    playerController.setBackground(null);
+                    playerController.setImageResource(0);
+                    playerController.setBackground(activity.getResources().getDrawable
+                            (R.drawable.play_to_pause));
+                    ((AnimationDrawable) playerController.getBackground()).start();
+                }
             }
+
         } else {
             initializeMediaPlayer();
             startMusic(songPosition);
             if (playerController != null)
-                playerController.setImageResource(android.R.drawable.ic_media_pause);
+                playerController.setImageResource(R.drawable.ic_pause_0);
         }
     }
 

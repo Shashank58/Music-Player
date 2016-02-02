@@ -19,12 +19,6 @@
 
         <!-- <service android:name="cybrilla.musicplayer.MusicService"/> -->
         <activity
-            android:name=".android.SongDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_song_detail"
-            android:theme="@style/FullscreenTheme">
-        </activity>
-        <activity
             android:name=".presenter.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

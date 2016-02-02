@@ -33,7 +33,7 @@
                 android:id="@+id/appToolBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#212121">
+                android:background="#2196F3">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbarTop"
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appToolBar"
-                android:background="@drawable/card_song_background"
+                android:background="@drawable/light_blue_background"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             </android.support.v4.view.ViewPager>

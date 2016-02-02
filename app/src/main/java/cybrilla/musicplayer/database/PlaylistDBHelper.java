@@ -21,6 +21,8 @@ public class PlaylistDBHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "playlist_table";
     private static final String SONG_POSITION = "song_position";
     private static final String PLAYLIST_NAME = "playlist_name";
+    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+            SONG_POSITION + " INTEGER PRIMARY KEY, " + PLAYLIST_NAME + " TEXT)";
     private SQLiteDatabase db;
 
     public PlaylistDBHelper(Context context) {
@@ -29,8 +31,7 @@ public class PlaylistDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_NAME + "(" + SONG_POSITION +
-                " INTEGER PRIMARY KEY, " + PLAYLIST_NAME + " TEXT)");
+        db.execSQL(CREATE_TABLE);
     }
 
     public int getCount(){

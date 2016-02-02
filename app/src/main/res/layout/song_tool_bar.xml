@@ -9,7 +9,7 @@
         android:id="@+id/playing_song_toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#212121"
+        android:background="@color/white"
         android:visibility="visible"
         app:elevation="4dp">
 
@@ -34,7 +34,7 @@
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
@@ -49,18 +49,20 @@
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="12sp"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/player_control"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/ripple_effect"
                 android:clickable="true"
                 android:elevation="5dp"
-                android:scaleType="center"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:scaleType="fitXY"/>
 
         </RelativeLayout>
 
@@ -70,7 +72,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/playing_song_toolbar"
-        android:background="@drawable/musical_image"/>
+        android:background="@drawable/light_blue_background"/>
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="220dp"
+        android:id="@+id/playing_song_detail"
+        android:scaleType="fitXY"
+        android:layout_below="@+id/playing_song_toolbar"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/detail_controls_layout"
+        android:src="@drawable/ic_add_playlist"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:backgroundTint="@color/white"
+        app:rippleColor="@android:color/black"
+        app:borderWidth="0dp"
+        app:elevation="2dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_marginRight="25dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_fav"
+        android:src="@drawable/ic_fav"
+        android:layout_above="@+id/detail_controls_layout"
+        app:backgroundTint="@color/white"
+        app:rippleColor="@android:color/black"
+        app:borderWidth="0dp"
+        app:elevation="2dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginBottom="15dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sound_control"
+        android:src="@drawable/ic_equalizer"
+        android:layout_above="@+id/detail_controls_layout"
+        app:backgroundTint="@color/white"
+        app:rippleColor="@android:color/black"
+        app:borderWidth="0dp"
+        app:elevation="2dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="15dp"/>
 
     <RelativeLayout
         android:id="@+id/detail_controls_layout"
@@ -78,7 +135,7 @@
         android:layout_height="110dp"
         android:layout_alignParentBottom="true"
         android:alpha="0.8"
-        android:background="@color/pure_black">
+        android:background="@color/white">
 
         <SeekBar
             android:id="@+id/music_seeker"
@@ -91,9 +148,8 @@
             android:layout_height="63dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="22dp"
-            android:background="?android:selectableItemBackground"
             android:padding="3dp"
-            android:src="@android:drawable/ic_media_play"/>
+            android:src="@drawable/ic_play_0"/>
 
         <ImageView
             android:id="@+id/detail_fast_forward"
@@ -119,8 +175,8 @@
 
         <ImageView
             android:id="@+id/shuffle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/music_seeker"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
@@ -129,8 +185,8 @@
 
         <ImageView
             android:id="@+id/repeat"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_below="@+id/music_seeker"
             android:layout_marginRight="15dp"
             android:layout_marginTop="7dp"

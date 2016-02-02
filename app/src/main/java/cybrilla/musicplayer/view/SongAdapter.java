@@ -47,6 +47,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
      * Brightens the
      * @param view the song card that was clicked.
      */
+
     private void songSelected(final View view) {
         previouslySelectedSong = MusicPlayerHelper.getInstance().getSongPosition();
         view.setOnClickListener(new OnClickListener() {
