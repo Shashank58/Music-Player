@@ -1,8 +1,6 @@
 package cybrilla.musicplayer.view;
 
 import android.app.Activity;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,6 +43,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     /**
      * Brightens the
+     *
      * @param view the song card that was clicked.
      */
 
@@ -62,7 +61,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() == null)
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                 if (MusicPlayerHelper.getInstance().getMediaPlayer().isPlaying()
-                                || MusicPlayerHelper.getInstance().getIsPaused()) {
+                        || MusicPlayerHelper.getInstance().getIsPaused()) {
                     Log.e("Song adapter", "Seriously this should be called");
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().getMediaPlayer().reset();
@@ -78,25 +77,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         holder.songCard.setTag(position);
         if (position == MusicPlayerHelper.getInstance().getSongPosition()) {
             holder.songCard.setAlpha(1);
-        }
-        else {
+        } else {
             holder.songCard.setAlpha(0.6f);
         }
         final Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        byte[] rawArt;
-        Uri uri = song.getUri();
-        mmr.setDataSource(mActivity, uri);
-        if (mmr.getEmbeddedPicture() != null) {
-            rawArt = mmr.getEmbeddedPicture();
-            Glide.with(mActivity).load(rawArt)
-                    .asBitmap().into(holder.songImage);
-        } else {
-            Glide.with(mActivity).load(R.drawable.no_image)
-                    .asBitmap().into(holder.songImage);
-        }
+        Glide.with(mActivity).load(R.drawable.default_image)
+                .asBitmap().into(holder.songImage);
+
     }
 
     @Override

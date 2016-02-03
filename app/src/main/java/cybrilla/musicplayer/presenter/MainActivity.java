@@ -130,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             SharedPreferenceHandler.getInstance().setSongPosition(this,
                     MusicPlayerHelper.getInstance().getSongPosition());
-            Intent intent = new Intent(this, MediaPlayerService.class);
-            startService(intent);
+            if (MusicPlayerHelper.getInstance().getShdStartNotification()) {
+                Intent intent = new Intent(this, MediaPlayerService.class);
+                startService(intent);
+            }
         }
     }
 

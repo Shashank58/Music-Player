@@ -39,7 +39,7 @@ public class Constants {
         } else {
             try {
                 bm = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.no_image, options);
+                        R.drawable.default_image, options);
             } catch (Exception e) {
                 e.printStackTrace();
             }

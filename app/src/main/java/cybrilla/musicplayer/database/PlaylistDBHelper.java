@@ -22,7 +22,7 @@ public class PlaylistDBHelper extends SQLiteOpenHelper {
     private static final String SONG_POSITION = "song_position";
     private static final String PLAYLIST_NAME = "playlist_name";
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
-            SONG_POSITION + " INTEGER PRIMARY KEY, " + PLAYLIST_NAME + " TEXT)";
+            PLAYLIST_NAME + " TEXT PRIMARY KEY, " + SONG_POSITION + " INTEGER)";
     private SQLiteDatabase db;
 
     public PlaylistDBHelper(Context context) {
@@ -73,6 +73,14 @@ public class PlaylistDBHelper extends SQLiteOpenHelper {
             db.insert(TABLE_NAME, null, contentValues);
         }
         db.close();
+    }
+
+    public void updatePlayList(int songPosition, String playlistName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SONG_POSITION, songPosition);
+
     }
 
     public List<Playlist> getAllPlaylistSongs(){

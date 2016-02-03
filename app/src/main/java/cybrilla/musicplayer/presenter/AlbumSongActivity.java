@@ -89,6 +89,7 @@ public class AlbumSongActivity extends AppCompatActivity{
         if (panelState == PanelState.EXPANDED || panelState == PanelState.ANCHORED) {
             SlidingPanel.getInstance().collapseSlidingPanel();
         } else {
+            MusicPlayerHelper.getInstance().setStartNotification(true);
             super.onBackPressed();
         }
     }

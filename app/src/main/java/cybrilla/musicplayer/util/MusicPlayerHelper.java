@@ -34,6 +34,7 @@ public class MusicPlayerHelper{
     private boolean musicStartedOnce = false; //If false then no song is played before it
     private boolean shuffleOn = false;
     private boolean repeatOn = false;
+    public boolean startNotification = true;
 
     public static MusicPlayerHelper getInstance(){
         if (instance == null){
@@ -55,6 +56,14 @@ public class MusicPlayerHelper{
 
     public boolean getIsPaused(){
         return isPaused;
+    }
+
+    public boolean getShdStartNotification(){
+        return startNotification;
+    }
+
+    public void setStartNotification(boolean value){
+        startNotification = value;
     }
 
     public void setMusicStartedOnce(boolean value){

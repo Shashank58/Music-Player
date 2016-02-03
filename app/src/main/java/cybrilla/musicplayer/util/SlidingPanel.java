@@ -1,6 +1,7 @@
 package cybrilla.musicplayer.util;
 
 import android.app.Activity;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -119,6 +120,8 @@ public class SlidingPanel implements View.OnClickListener{
 
             @Override
             public void onPanelExpanded(View panel) {
+                detailControler.setBackground(null);
+                detailControler.setImageResource(0);
                 playerControl.setVisibility(View.GONE);
                 if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                     musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
@@ -180,11 +183,15 @@ public class SlidingPanel implements View.OnClickListener{
         selectedTrackTitle.setText(song.getSongTitle());
         selectedTrackArtist.setText(song.getSongArtist());
         setAlbumCover(song);
+        playerControl.setBackground(null);
+        playerControl.setImageResource(0);
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
-            if (MusicPlayerHelper.getInstance().getIsPaused())
+            if (MusicPlayerHelper.getInstance().getIsPaused()) {
                 playerControl.setImageResource(R.drawable.ic_play_0);
-            else
+            }
+            else {
                 playerControl.setImageResource(R.drawable.ic_pause_0);
+            }
         } else {
             playerControl.setImageResource(R.drawable.ic_play_0);
         }
@@ -273,9 +280,9 @@ public class SlidingPanel implements View.OnClickListener{
             Glide.with(mActivity).load(rawArt)
                     .asBitmap().into(playingSongDetail);
         } else {
-            Glide.with(mActivity).load(R.drawable.no_image)
+            Glide.with(mActivity).load(R.drawable.default_image)
                     .asBitmap().into(selectedAlbumCover);
-            Glide.with(mActivity).load(R.drawable.no_image)
+            Glide.with(mActivity).load(R.drawable.default_image)
                     .asBitmap().into(playingSongDetail);
         }
     }
@@ -331,20 +338,32 @@ public class SlidingPanel implements View.OnClickListener{
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
                     if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                         if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                            detailControler.setImageResource(R.drawable.ic_pause_0);
+                            detailControler.setBackground(null);
+                            detailControler.setImageResource(0);
+                            detailControler.setBackground(mActivity.getResources().getDrawable
+                                    (R.drawable.play_to_pause));
+                            ((AnimationDrawable) detailControler.getBackground()).start();
                             playerControl.setImageResource(R.drawable.ic_pause_0);
                             MusicPlayerHelper.getInstance().toggleMusicPlayer
                                     (playerControl, mActivity);
                             seekUpdation();
                         } else {
-                            detailControler.setImageResource(R.drawable.ic_play_0);
+                            detailControler.setBackground(null);
+                            detailControler.setImageResource(0);
+                            detailControler.setBackground(mActivity.getResources().getDrawable
+                                    (R.drawable.pause_to_play));
+                            ((AnimationDrawable) detailControler.getBackground()).start();
                             playerControl.setImageResource(R.drawable.ic_play_0);
                             MusicPlayerHelper.getInstance().toggleMusicPlayer(null, null);
                         }
                     } else {
                         MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
                                 .getInstance().getSongPosition());
-                        detailControler.setImageResource(R.drawable.ic_pause_0);
+                        detailControler.setBackground(null);
+                        detailControler.setImageResource(0);
+                        detailControler.setBackground(mActivity.getResources().getDrawable
+                                (R.drawable.play_to_pause));
+                        ((AnimationDrawable) detailControler.getBackground()).start();
                         playerControl.setImageResource(R.drawable.ic_pause_0);
                         musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
                                 .getDuration());
@@ -354,7 +373,11 @@ public class SlidingPanel implements View.OnClickListener{
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                     MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
                             .getInstance().getSongPosition());
-                    detailControler.setImageResource(R.drawable.ic_pause_0);
+                    detailControler.setBackground(null);
+                    detailControler.setImageResource(0);
+                    detailControler.setBackground(mActivity.getResources().getDrawable
+                            (R.drawable.play_to_pause));
+                    ((AnimationDrawable) detailControler.getBackground()).start();
                     seekUpdation();
                 }
                 break;

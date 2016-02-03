@@ -45,6 +45,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
             @TargetApi(VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                MusicPlayerHelper.getInstance().setStartNotification(false);
                 int pos = (int) v.getTag();
                 ImageView imageStart = (ImageView) v.findViewById(R.id.album_image);
                 Intent intent = new Intent(mActivity, AlbumSongActivity.class);

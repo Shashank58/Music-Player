@@ -40,7 +40,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:fontFamily="Roboto bold"
-                        android:text="All Songs"
+                        android:text="@string/all_songs"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold"/>
@@ -50,7 +50,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="15dp"
+                        android:layout_marginEnd="15dp"
                         android:layout_marginTop="10dp"
                         android:background="?android:selectableItemBackground"/>
 

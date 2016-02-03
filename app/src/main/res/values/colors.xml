@@ -6,6 +6,7 @@
     <color name="white">#ffffff</color>
     <color name="pure_black">#000000</color>
     <color name="song_card_black">#212121</color>
+    <color name="app_blue">#2196F3</color>
 
     <!-- A transparent black -->
     <color name="transparent_black">#aa000000</color>
