@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
@@ -112,10 +113,31 @@ public class MusicPlayerHelper{
             mediaPlayer.seekTo(0);
             mediaPlayer.start();
             isPaused = false;
+            completion();
             Log.e("Music player helper", "Path is: " + s.getPath());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void completion() {
+        MusicPlayerHelper.getInstance().getMediaPlayer().
+                setOnCompletionListener(new OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        if (repeatOn) {
+                            startMusic(songPosition);
+                        } else if (shuffleOn){
+                            playRandomSong();
+                            SlidingPanel.getInstance().setPlayingSongDetails();
+                        } else {
+                            playNextSong();
+                            SlidingPanel.getInstance().setPlayingSongDetails();
+                        }
+                    }
+                });
     }
 
     public void toggleMusicPlayer(ImageView playerController, Activity activity){
@@ -201,6 +223,7 @@ public class MusicPlayerHelper{
 
     public void playNextSong(){
         if (mediaPlayer.isPlaying() || isPaused) {
+            Log.e("Music Player Helper", "Stopping and resetting");
             mediaPlayer.stop();
             mediaPlayer.reset();
         }

@@ -19,9 +19,9 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:id="@+id/song_image"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="7dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:layout_width="220dp"
@@ -32,10 +32,11 @@
             android:textColor="@color/black"
             android:layout_toRightOf="@+id/song_image"
             android:layout_toEndOf="@+id/song_image"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="2dp"
             android:textStyle="bold"
-            android:gravity="start"
-            />
+            android:gravity="start"/>
 
         <TextView
             android:layout_width="220dp"
@@ -47,7 +48,9 @@
             android:layout_below="@+id/song_title"
             android:layout_toRightOf="@+id/song_image"
             android:layout_toEndOf="@+id/song_image"
-            android:padding="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="2dp"
             android:gravity="start"/>
 
         <ImageView

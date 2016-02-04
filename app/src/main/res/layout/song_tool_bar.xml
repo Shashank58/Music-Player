@@ -72,8 +72,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/playing_song_toolbar"
-        android:background="@drawable/light_blue_background"/>
+        android:id="@+id/music_song_image"
+        android:orientation="vertical"
+        android:background="@drawable/light_blue_background"
+        android:layout_below="@+id/playing_song_toolbar"/>
 
     <ImageView
         android:layout_width="240dp"

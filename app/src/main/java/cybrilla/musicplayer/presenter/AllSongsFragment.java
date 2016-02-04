@@ -11,16 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.view.SongAdapter;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.view.SongAdapter;
 
 /**
  * Sends data containing all songs of user. Checks if music has been started once.
@@ -38,7 +37,7 @@ public class AllSongsFragment extends Fragment {
 
     }
 
-    private void getAllViews(){
+    public void getAllViews(){
         songList = (RecyclerView) view.findViewById(R.id.songList);
 
         songList.setHasFixedSize(true);
@@ -78,7 +77,6 @@ public class AllSongsFragment extends Fragment {
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
                     permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "printing?");
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{permission.READ_EXTERNAL_STORAGE},
                         Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
@@ -92,17 +90,4 @@ public class AllSongsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getAllViews();
-                }
-            }
-        }
-    }
 }

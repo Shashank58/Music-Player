@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/playlist_name_edittext"
         android:hint="@string/enter_playlist"
+        android:textColor="@color/black"
         android:layout_marginTop="25dp"/>
 
 </LinearLayout>

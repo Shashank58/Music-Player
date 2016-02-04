@@ -1,11 +1,17 @@
 package cybrilla.musicplayer.presenter;
 
+import android.Manifest.permission;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolBarTop;
     private TextView tabTitle;
     private ImageView menuItem;
+    private AllSongsFragment allSongsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +65,31 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
 
         tabTitle.setText("All Songs");
-        setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
+        if (checkPermissions()) {
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+            setViewPagerListener();
+            setUpTabIcon();
+        }
         toolBarTop.setCollapsible(true);
-        setViewPagerListener();
-        setUpTabIcon();
+    }
+
+    private boolean checkPermissions() {
+        boolean granted;
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{permission.READ_EXTERNAL_STORAGE},
+                        Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                granted = false;
+            } else {
+                granted = true;
+            }
+        } else {
+            granted = true;
+        }
+        return granted;
     }
 
     /**
@@ -85,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     menuItem.setImageResource(android.R.drawable.ic_menu_search);
                 } else if (pos == 3 && (!"Playlist".equals(tabTitle.getText().toString()))) {
                     tabTitle.setText("Playlist");
-                    menuItem.setImageResource(R.drawable.ic_add_playlist);
+                    menuItem.setImageResource(android.R.drawable.btn_star);
                 }
             }
 
@@ -187,12 +214,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        allSongsFragment = new AllSongsFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AllSongsFragment());
+        adapter.addFragment(allSongsFragment);
         adapter.addFragment(new AlbumFragment());
         adapter.addFragment(new ArtistFragment());
         adapter.addFragment(new PlaylistFragment());
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setupViewPager(viewPager);
+                    tabLayout.setupWithViewPager(viewPager);
+                    setViewPagerListener();
+                    setUpTabIcon();
+                }
+            }
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

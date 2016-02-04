@@ -15,13 +15,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MusicPlayerHelper;
 
@@ -61,7 +62,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     }
 
     @Override
-    public void onBindViewHolder(AlbumAdapter.AlbumViewHolder holder, int position) {
+    public void onBindViewHolder(final AlbumAdapter.AlbumViewHolder holder, int position) {
         holder.albumCard.setTag(position);
         Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.albumName.setText(song.getSongAlbum());
@@ -79,22 +80,23 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         }
     }
 
-
     @Override
     public int getItemCount() {
         return MusicPlayerHelper.allSongsList.size();
     }
 
     public static class AlbumViewHolder extends RecyclerView.ViewHolder{
-        private ImageView albumImage;
-        private TextView albumName;
-        private CardView albumCard;
+        protected ImageView albumImage;
+        protected TextView albumName;
+        protected CardView albumCard;
+        protected LinearLayout albumContainer;
 
         public AlbumViewHolder(View itemView) {
             super(itemView);
             albumImage = (ImageView) itemView.findViewById(R.id.album_image);
             albumName = (TextView) itemView.findViewById(R.id.album_name);
             albumCard = (CardView) itemView.findViewById(R.id.albumCard);
+            albumContainer = (LinearLayout) itemView.findViewById(R.id.album_container);
         }
     }
 }

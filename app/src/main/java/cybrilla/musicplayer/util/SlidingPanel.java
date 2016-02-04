@@ -3,14 +3,13 @@ package cybrilla.musicplayer.util;
 import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -38,6 +37,7 @@ public class SlidingPanel implements View.OnClickListener{
     private ImageView detailForward, detailReverse, shuffle, repeat, playerControl;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private static Activity mActivity;
+    private LinearLayout musicSongImage;
 
     public static SlidingPanel getInstance(){
         if (instance == null){
@@ -60,6 +60,7 @@ public class SlidingPanel implements View.OnClickListener{
         selectedTrackTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
         playingSongDetail = (ImageView) mActivity.findViewById(R.id.playing_song_detail);
+        musicSongImage = (LinearLayout) mActivity.findViewById(R.id.music_song_image);
         slidingUpPanelLayout = (SlidingUpPanelLayout) mActivity.findViewById(R.id.sliding_layout);
 
         if (MusicPlayerHelper.getInstance().getShuffleOn()){
@@ -69,8 +70,6 @@ public class SlidingPanel implements View.OnClickListener{
         if (MusicPlayerHelper.getInstance().getRepeatOn()){
             repeat.setImageResource(R.drawable.ic_repeat_selected);
         }
-        if (MusicPlayerHelper.getInstance().getMusicStartedOnce())
-            completion();
     }
 
     public PanelState getSlidingPanelState(){
@@ -84,27 +83,6 @@ public class SlidingPanel implements View.OnClickListener{
 
     public void expandSlidingPanel(){
         slidingUpPanelLayout.setPanelState(PanelState.EXPANDED);
-    }
-
-    private void completion() {
-        MusicPlayerHelper.getInstance().getMediaPlayer().
-                setOnCompletionListener(new OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        if (!MusicPlayerHelper.getInstance().getRepeatOn()) {
-                            MusicPlayerHelper.getInstance()
-                                    .playNextSong();
-                            Song song = MusicPlayerHelper.allSongsList.get
-                                    (MusicPlayerHelper.getInstance().getSongPosition());
-                            selectedTrackTitle.setText(song.getSongTitle());
-                            selectedTrackArtist.setText(song.getSongArtist());
-                            setAlbumCover(song);
-                        } else {
-                            MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
-                                    .getInstance().getSongPosition());
-                        }
-                    }
-                });
     }
 
     public void setUpSlidingPanel() {
@@ -185,15 +163,20 @@ public class SlidingPanel implements View.OnClickListener{
         setAlbumCover(song);
         playerControl.setBackground(null);
         playerControl.setImageResource(0);
+        detailControler.setBackground(null);
+        detailControler.setImageResource(0);
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
                 playerControl.setImageResource(R.drawable.ic_play_0);
+                detailControler.setImageResource(R.drawable.ic_play_0);
             }
             else {
                 playerControl.setImageResource(R.drawable.ic_pause_0);
+                detailControler.setImageResource(R.drawable.ic_pause_0);
             }
         } else {
             playerControl.setImageResource(R.drawable.ic_play_0);
+            detailControler.setImageResource(R.drawable.ic_play_0);
         }
     }
 
