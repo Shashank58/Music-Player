@@ -36,6 +36,10 @@ public class MediaPlayerService extends Service {
         return null;
     }
 
+    /**
+     * Set up intent filters and pending intent and register the broad cast receiver to
+     * listen to music player actions on the notification.
+     */
     @Override
     public void onCreate() {
         mNotificationManager = (NotificationManager)getSystemService
@@ -44,13 +48,13 @@ public class MediaPlayerService extends Service {
 
         // Initialize pending intents
         quitPendingIntent = PendingIntent.getBroadcast(this, 0,
-                new Intent("cybrilla.musicplayer.util.quit"), 0);
+                new Intent(Constants.MUSIC_PLAYER_QUIT), 0);
         previousPendingIntent = PendingIntent.getBroadcast(this, 0,
-                new Intent("cybrilla.musicplayer.util.previous"), 0);
+                new Intent(Constants.MUSIC_PLAYER_PREVIOUS), 0);
         playpausePendingIntent = PendingIntent.getBroadcast(this, 0,
-                new Intent("cybrilla.musicplayer.util.playpause"), 0);
+                new Intent(Constants.MUSIC_PLAYER_PLAY_PAUSE), 0);
         nextPendingIntent = PendingIntent.getBroadcast(this, 0,
-                new Intent("cybrilla.musicplayer.util.next"), 0);
+                new Intent(Constants.MUSIC_PLAYER_NEXT), 0);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
                         MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -58,11 +62,10 @@ public class MediaPlayerService extends Service {
         setUpNotification();
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("cybrilla.musicplayer.util.quit");
-        intentFilter.addAction("cybrilla.musicplayer.util.previous");
-        intentFilter.addAction("cybrilla.musicplayer.util.previousNoRestart");
-        intentFilter.addAction("cybrilla.musicplayer.util.playpause");
-        intentFilter.addAction("cybrilla.musicplayer.util.next");
+        intentFilter.addAction(Constants.MUSIC_PLAYER_QUIT);
+        intentFilter.addAction(Constants.MUSIC_PLAYER_PREVIOUS);
+        intentFilter.addAction(Constants.MUSIC_PLAYER_PLAY_PAUSE);
+        intentFilter.addAction(Constants.MUSIC_PLAYER_NEXT);
 
         registerReceiver(broadcastReceiver, intentFilter);
         startForeground(Constants.FOREGROUND_SERVICE, notification);
@@ -78,7 +81,7 @@ public class MediaPlayerService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action){
-                case "cybrilla.musicplayer.util.quit":
+                case Constants.MUSIC_PLAYER_QUIT:
                     MusicPlayerHelper.getInstance().getMediaPlayer().stop();
                     MusicPlayerHelper.getInstance().releaseMediaPlayer();
                     MusicPlayerHelper.getInstance().setMusicStartedOnce(false);
@@ -86,19 +89,19 @@ public class MediaPlayerService extends Service {
                     stopSelf();
                     break;
 
-                case "cybrilla.musicplayer.util.next":
+                case Constants.MUSIC_PLAYER_NEXT:
                     MusicPlayerHelper.getInstance().playNextSong();
                     setUpNotification();
                     updateNotification();
                     break;
 
-                case "cybrilla.musicplayer.util.previous":
+                case Constants.MUSIC_PLAYER_PREVIOUS:
                     MusicPlayerHelper.getInstance().playPrevSong();
                     setUpNotification();
                     updateNotification();
                     break;
 
-                case "cybrilla.musicplayer.util.playpause":
+                case Constants.MUSIC_PLAYER_PLAY_PAUSE:
                     if (MusicPlayerHelper.getInstance().getMusicStartedOnce())
                         toggleMusic();
                     else {
@@ -137,6 +140,10 @@ public class MediaPlayerService extends Service {
         updateNotification();
     }
 
+    /**
+     * Set up all the custom views of the notification, both the big and small views.
+     * Sets up relevant information on the notification.
+     */
     private void setUpNotification(){
         if (views == null || bigViews == null) {
             views = new RemoteViews(getPackageName(),

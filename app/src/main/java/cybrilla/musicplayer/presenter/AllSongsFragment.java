@@ -58,6 +58,10 @@ public class AllSongsFragment extends Fragment {
         SlidingPanel.getInstance().setPlayingSongDetails();
     }
 
+
+    /**
+     * Gets list of all songs and sets it in the adapter.
+     */
     private void getSongList(){
         MusicPlayerHelper.getInstance().getSongList(getActivity());
         mAdapter = new SongAdapter(getActivity());

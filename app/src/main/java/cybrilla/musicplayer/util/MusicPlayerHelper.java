@@ -59,6 +59,10 @@ public class MusicPlayerHelper{
         return isPaused;
     }
 
+    /**
+     * To check if app has been close or a new activity is starting from main activity.
+     * @return true if new activity isn't started and false otherwise.
+     */
     public boolean getShdStartNotification(){
         return startNotification;
     }
@@ -183,6 +187,10 @@ public class MusicPlayerHelper{
         }
     }
 
+    /**
+     * Fetches list of all songs in the device from content provider.
+     * @param activity context of activity.
+     */
     public void getSongList(Activity activity){
         allSongsList = new ArrayList<>();
         ContentResolver musicResolver = activity.getContentResolver();

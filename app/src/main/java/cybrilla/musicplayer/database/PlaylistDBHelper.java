@@ -34,6 +34,7 @@ public class PlaylistDBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE);
     }
 
+
     public int getCount(){
         SQLiteDatabase db = this.getWritableDatabase();
         String countQuery = "SELECT * from " + TABLE_NAME;

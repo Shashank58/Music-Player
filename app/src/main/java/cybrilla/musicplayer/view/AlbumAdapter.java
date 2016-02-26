@@ -70,14 +70,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         byte[] rawArt;
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        if (mmr.getEmbeddedPicture() != null) {
+        //if (mmr.getEmbeddedPicture() != null) {
             rawArt = mmr.getEmbeddedPicture();
-            Glide.with(mActivity).load(rawArt)
-                    .asBitmap().into(holder.albumImage);
-        } else {
-            Glide.with(mActivity).load(R.drawable.no_image)
-                    .asBitmap().into(holder.albumImage);
-        }
+            Glide.with(mActivity).load(rawArt).placeholder(R.drawable.no_image)
+                    .crossFade().into(holder.albumImage);
+//        } else {
+//            Glide.with(mActivity).load(R.drawable.no_image)
+//                    .asBitmap().into(holder.albumImage);
+//        }
     }
 
     @Override

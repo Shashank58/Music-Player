@@ -16,8 +16,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!-- <service android:name="cybrilla.musicplayer.MusicService"/> -->
         <activity
             android:name=".presenter.MainActivity"
             android:screenOrientation="portrait">

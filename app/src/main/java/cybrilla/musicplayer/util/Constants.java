@@ -21,8 +21,18 @@ public class Constants {
     public static final String SONG_NUMBER = "Song Number";
     public static final String SONG_POSITION = "Song Position";
     public static final String SONGS = "Songs";
-    public static final String STOP_NOTIFICATION = "cybrilla.musicplayer.action.stopnotification";
+    private static final String PACKAGE = "cybrilla.musicplayer";
+    public static final String STOP_NOTIFICATION = PACKAGE + "action.stopnotification";
+    public static final String MUSIC_PLAYER_QUIT = PACKAGE + ".util.quit";
+    public static final String MUSIC_PLAYER_PREVIOUS = PACKAGE + ".util.previous";
+    public static final String MUSIC_PLAYER_PLAY_PAUSE = PACKAGE + ".util.playpause";
+    public static final String MUSIC_PLAYER_NEXT = PACKAGE + ".util.next";
 
+    /**
+     * Sets album art in the notification.
+     * @param context service context
+     * @return album's image or default image if no album art exists
+     */
     public static Bitmap getAlbumArt(Context context) {
         Bitmap bm = null;
         BitmapFactory.Options options = new BitmapFactory.Options();

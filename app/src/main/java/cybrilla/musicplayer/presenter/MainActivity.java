@@ -40,10 +40,8 @@ import cybrilla.musicplayer.util.SlidingPanel;
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Toolbar toolBarTop;
     private TextView tabTitle;
     private ImageView menuItem;
-    private AllSongsFragment allSongsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        toolBarTop = (Toolbar) findViewById(R.id.toolbarTop);
+        Toolbar toolBarTop = (Toolbar) findViewById(R.id.toolbarTop);
         tabTitle = (TextView) findViewById(R.id.tabTitle);
         menuItem = (ImageView) findViewById(R.id.menuItem);
 
@@ -74,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         toolBarTop.setCollapsible(true);
     }
 
+    /**
+     * Checks if user has grated the read external storage permission.
+     * @return true if version code is below 23 or if permission is granted. False
+     * otherwise.
+     */
     private boolean checkPermissions() {
         boolean granted;
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
@@ -139,7 +142,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Save last played song to show when app is opened again
+    /**
+     * Save last played song, or playing song position in shared preference, to be showed
+     * when the user re-opens the app.
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -191,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResumeFragments();
     }
 
+    /**
+     * Sets up the tab icons on the tab layout.
+     */
     private void setUpTabIcon() {
         TextView tabOne = (TextView) LayoutInflater.from(this)
                 .inflate(R.layout.custom_tab, null);
@@ -214,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        allSongsFragment = new AllSongsFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(allSongsFragment);
+        adapter.addFragment(new AllSongsFragment());
         adapter.addFragment(new AlbumFragment());
         adapter.addFragment(new ArtistFragment());
         adapter.addFragment(new PlaylistFragment());
