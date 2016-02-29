@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 import cybrilla.musicplayer.view.SongAdapter;
 
 /**
@@ -77,7 +77,7 @@ public class AllSongsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_all_songs, container, false);
+        view = inflater.inflate(R.layout.all_songs_fragment, container, false);
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
                     permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

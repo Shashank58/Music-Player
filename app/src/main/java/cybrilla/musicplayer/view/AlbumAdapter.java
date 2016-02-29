@@ -24,7 +24,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 
 /**
  * Sets up all albums.
@@ -33,14 +33,14 @@ import cybrilla.musicplayer.util.MusicPlayerHelper;
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
     private Activity mActivity;
 
-    public AlbumAdapter(Activity mActivity){
+    public AlbumAdapter(Activity mActivity) {
         this.mActivity = mActivity;
     }
 
     @Override
     public AlbumAdapter.AlbumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
-                        inflate(R.layout.album_card, parent, false);
+                inflate(R.layout.album_card, parent, false);
 
         view.setOnClickListener(new OnClickListener() {
             @TargetApi(VERSION_CODES.LOLLIPOP)
@@ -53,7 +53,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
                 intent.putExtra(Constants.SONG_POSITION, pos);
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.makeSceneTransitionAnimation
-                        (mActivity,imageStart, imageStart.getTransitionName());
+                                (mActivity, imageStart, imageStart.getTransitionName());
                 ActivityCompat.startActivity(mActivity, intent, options.toBundle());
             }
         });
@@ -70,14 +70,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         byte[] rawArt;
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        //if (mmr.getEmbeddedPicture() != null) {
-            rawArt = mmr.getEmbeddedPicture();
-            Glide.with(mActivity).load(rawArt).placeholder(R.drawable.no_image)
-                    .crossFade().into(holder.albumImage);
-//        } else {
-//            Glide.with(mActivity).load(R.drawable.no_image)
-//                    .asBitmap().into(holder.albumImage);
-//        }
+        rawArt = mmr.getEmbeddedPicture();
+        Glide.with(mActivity).load(rawArt).placeholder(R.drawable.default_image)
+                .crossFade().into(holder.albumImage);
     }
 
     @Override
@@ -85,7 +80,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         return MusicPlayerHelper.allSongsList.size();
     }
 
-    public static class AlbumViewHolder extends RecyclerView.ViewHolder{
+    public static class AlbumViewHolder extends RecyclerView.ViewHolder {
         protected ImageView albumImage;
         protected TextView albumName;
         protected CardView albumCard;

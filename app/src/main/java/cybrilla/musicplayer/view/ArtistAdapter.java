@@ -19,7 +19,7 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.presenter.ArtistSongsActivity;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 
 /**
  * Displays list of Artists and the number of songs for each artist.

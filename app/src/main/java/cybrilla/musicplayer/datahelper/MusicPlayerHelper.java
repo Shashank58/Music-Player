@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.util;
+package cybrilla.musicplayer.datahelper;
 
 import android.app.Activity;
 import android.content.ContentResolver;

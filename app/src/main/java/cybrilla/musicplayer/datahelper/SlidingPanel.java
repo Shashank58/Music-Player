@@ -1,4 +1,4 @@
-package cybrilla.musicplayer.util;
+package cybrilla.musicplayer.datahelper;
 
 import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
@@ -21,6 +21,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.util.SharedPreferenceHandler;
 
 /**
  * The Sliding panel containing details of current playing song, along with a
@@ -77,7 +79,6 @@ public class SlidingPanel implements View.OnClickListener{
     }
 
     public void collapseSlidingPanel(){
-        Log.e("Sliding Panel", "Sliding down, no!");
         slidingUpPanelLayout.setPanelState(PanelState.COLLAPSED);
     }
 

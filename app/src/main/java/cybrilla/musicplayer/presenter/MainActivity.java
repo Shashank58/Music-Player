@@ -28,9 +28,9 @@ import java.util.List;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MediaPlayerService;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Set up view pager and tab icons. Sets up playing song tool bar and saves song

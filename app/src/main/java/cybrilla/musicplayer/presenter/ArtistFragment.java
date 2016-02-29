@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.view.ArtistAdapter;
 
 /**

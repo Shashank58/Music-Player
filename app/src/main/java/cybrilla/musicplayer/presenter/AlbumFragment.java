@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.view.AlbumAdapter;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 
 /**
  * Checks for permissions (Android 6.0 and above) and sends data to adapter to set
@@ -40,7 +40,7 @@ public class AlbumFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_albums, container, false);
+        View view = inflater.inflate(R.layout.albums_fragment, container, false);
 
         albumList = (RecyclerView) view.findViewById(R.id.albumList);
         albumList.setHasFixedSize(true);

@@ -16,8 +16,8 @@ import java.util.List;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Displays list of all songs of the selected artist.

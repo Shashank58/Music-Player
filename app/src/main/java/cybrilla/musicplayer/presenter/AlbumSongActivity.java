@@ -21,8 +21,8 @@ import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.view.AlbumSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Activity which contains songs of an album. Sends data to adapter to set it.
@@ -75,7 +75,7 @@ public class AlbumSongActivity extends AppCompatActivity{
             Glide.with(this).load(rawArt)
                     .asBitmap().into(albumSongImage);
         } else {
-            Glide.with(this).load(R.drawable.no_image)
+            Glide.with(this).load(R.drawable.default_image)
                     .asBitmap().into(albumSongImage);
         }
         mAdapter = new AlbumSongsAdapter(song, this);

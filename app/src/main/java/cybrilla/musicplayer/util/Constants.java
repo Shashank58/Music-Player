@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.modle.Song;
 
 /**

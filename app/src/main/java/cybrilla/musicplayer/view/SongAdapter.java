@@ -1,6 +1,8 @@
 package cybrilla.musicplayer.view;
 
 import android.app.Activity;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,8 +18,8 @@ import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Sets all songs recycler view and plays song when a song is selected.
@@ -80,12 +82,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         } else {
             holder.songCard.setAlpha(0.6f);
         }
-        final Song song = MusicPlayerHelper.allSongsList.get(position);
+        Song song = MusicPlayerHelper.allSongsList.get(position);
         holder.songTitle.setText(song.getSongTitle());
         holder.songArtist.setText(song.getSongArtist());
-        Glide.with(mActivity).load(R.drawable.default_image)
-                .asBitmap().into(holder.songImage);
-
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        byte[] rawArt;
+        Uri uri = song.getUri();
+        mmr.setDataSource(mActivity, uri);
+        rawArt = mmr.getEmbeddedPicture();
+        Glide.with(mActivity).load(rawArt).placeholder(R.drawable.default_image)
+                .crossFade().into(holder.songImage);
     }
 
     @Override

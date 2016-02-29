@@ -12,8 +12,8 @@ import java.util.List;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 import cybrilla.musicplayer.view.ArtistSongsAdapter;
 import cybrilla.musicplayer.modle.Song;
 

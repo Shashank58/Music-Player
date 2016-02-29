@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.presenter.MainActivity;
 import cybrilla.musicplayer.modle.Song;
 

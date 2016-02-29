@@ -17,8 +17,8 @@ import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
 import cybrilla.musicplayer.modle.Song;
-import cybrilla.musicplayer.util.MusicPlayerHelper;
-import cybrilla.musicplayer.util.SlidingPanel;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Displays list of all songs in album and starts song when list is clicked on.
@@ -69,14 +69,9 @@ public class AlbumSongsAdapter extends
         byte[] rawArt;
         Uri uri = song.getUri();
         mmr.setDataSource(mActivity, uri);
-        if (mmr.getEmbeddedPicture() != null){
-            rawArt = mmr.getEmbeddedPicture();
-            Glide.with(mActivity).load(rawArt)
-                    .asBitmap().into(holder.songImage);
-        } else {
-            Glide.with(mActivity).load(R.drawable.no_image)
-                    .asBitmap().into(holder.songImage);
-        }
+        rawArt = mmr.getEmbeddedPicture();
+        Glide.with(mActivity).load(rawArt).placeholder(R.drawable.default_image)
+                .crossFade().into(holder.songImage);
     }
 
     @Override
