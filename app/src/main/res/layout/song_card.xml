@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:id="@+id/songCard"
     app:cardElevation="5dp"
-    android:background="?android:selectableItemBackground"
+    android:foreground="?android:selectableItemBackground"
     android:alpha="0.6"
     android:layout_marginTop="0.25dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/white"
+        android:layout_height="72dp"
+        android:background="@color/black_800"
         android:id="@+id/song_container">
 
         <ImageView
@@ -29,7 +29,7 @@
             android:id="@+id/song_title"
             android:textSize="16sp"
             android:maxLines="1"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_toRightOf="@+id/song_image"
             android:layout_toEndOf="@+id/song_image"
             android:paddingTop="5dp"
@@ -44,7 +44,7 @@
             android:id="@+id/song_artist"
             android:maxLines="1"
             android:textSize="12sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_below="@+id/song_title"
             android:layout_toRightOf="@+id/song_image"
             android:layout_toEndOf="@+id/song_image"
@@ -54,9 +54,9 @@
             android:gravity="start"/>
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_add_playlist"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_playlist_add_white_36dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="20dp"

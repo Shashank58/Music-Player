@@ -15,16 +15,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.presenter.AlbumSongActivity;
 import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 
 /**
  * Sets up all albums.
@@ -84,14 +84,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         protected ImageView albumImage;
         protected TextView albumName;
         protected CardView albumCard;
-        protected LinearLayout albumContainer;
+        protected RelativeLayout albumContainer;
 
         public AlbumViewHolder(View itemView) {
             super(itemView);
             albumImage = (ImageView) itemView.findViewById(R.id.album_image);
             albumName = (TextView) itemView.findViewById(R.id.album_name);
             albumCard = (CardView) itemView.findViewById(R.id.albumCard);
-            albumContainer = (LinearLayout) itemView.findViewById(R.id.album_container);
+            albumContainer = (RelativeLayout) itemView.findViewById(R.id.album_container);
         }
     }
 }

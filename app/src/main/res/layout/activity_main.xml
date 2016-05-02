@@ -8,10 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".presenter.MainActivity">
 
-    <!--<RelativeLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
@@ -25,7 +21,7 @@
         sothree:umanoScrollableView="@+id/list"
         sothree:umanoShadowHeight="4dp">
 
-        <RelativeLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -33,17 +29,15 @@
                 android:id="@+id/appToolBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/app_blue">
+                android:background="@color/black_900"
+                android:fitsSystemWindows="true"
+                >
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbarTop"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     app:layout_scrollFlags="scroll|enterAlways">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/tabTitle"
@@ -60,15 +54,12 @@
                             android:id="@+id/menuItem"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="end"
                             android:src="@android:drawable/ic_menu_search"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginEnd="15dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginEnd="16dp"
                             android:layout_marginTop="10dp"
-                            android:background="?android:selectableItemBackground"/>
-
-                    </RelativeLayout>
+                            android:foreground="?android:selectableItemBackground"/>
 
                 </android.support.v7.widget.Toolbar>
 
@@ -92,12 +83,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appToolBar"
-                android:background="@drawable/light_blue_background"
+                android:background="@drawable/black_gradient"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             </android.support.v4.view.ViewPager>
 
-        </RelativeLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
         <include layout="@layout/song_tool_bar"/>
 

@@ -1,7 +1,6 @@
 package cybrilla.musicplayer.datahelper;
 
 import android.app.Activity;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -35,11 +33,10 @@ public class SlidingPanel implements View.OnClickListener{
     private Handler seekHandler = new Handler();
     private Toolbar playingSongToolBar;
     private TextView selectedTrackTitle, selectedTrackArtist;
-    private ImageView selectedAlbumCover, detailControler, playingSongDetail;
+    private ImageView selectedAlbumCover, detailController, playingSongDetail;
     private ImageView detailForward, detailReverse, shuffle, repeat, playerControl;
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private static Activity mActivity;
-    private LinearLayout musicSongImage;
 
     public static SlidingPanel getInstance(){
         if (instance == null){
@@ -55,14 +52,13 @@ public class SlidingPanel implements View.OnClickListener{
         playerControl = (ImageView) mActivity.findViewById(R.id.player_control);
         detailForward = (ImageView) mActivity.findViewById(R.id.detail_fast_forward);
         detailReverse = (ImageView) mActivity.findViewById(R.id.detail_reverse);
-        detailControler = (ImageView) mActivity.findViewById(R.id.detail_controller);
+        detailController = (ImageView) mActivity.findViewById(R.id.detail_controller);
         shuffle = (ImageView) mActivity.findViewById(R.id.shuffle);
         repeat = (ImageView) mActivity.findViewById(R.id.repeat);
         selectedAlbumCover = (ImageView) mActivity.findViewById(R.id.selected_album_cover);
         selectedTrackTitle = (TextView) mActivity.findViewById(R.id.selected_track_title);
         selectedTrackArtist = (TextView) mActivity.findViewById(R.id.selected_track_artist);
         playingSongDetail = (ImageView) mActivity.findViewById(R.id.playing_song_detail);
-        musicSongImage = (LinearLayout) mActivity.findViewById(R.id.music_song_image);
         slidingUpPanelLayout = (SlidingUpPanelLayout) mActivity.findViewById(R.id.sliding_layout);
 
         if (MusicPlayerHelper.getInstance().getShuffleOn()){
@@ -99,22 +95,22 @@ public class SlidingPanel implements View.OnClickListener{
 
             @Override
             public void onPanelExpanded(View panel) {
-                detailControler.setBackground(null);
-                detailControler.setImageResource(0);
+                detailController.setBackground(null);
+                detailController.setImageResource(0);
                 playerControl.setVisibility(View.GONE);
                 if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                     musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
                             .getDuration());
                     if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                        detailControler.setImageResource(R.drawable.ic_play_0);
+                        detailController.setImageResource(R.drawable.ic_play_circle_filled_white_48dp);
                     } else {
-                        detailControler.setImageResource(R.drawable.ic_pause_0);
+                        detailController.setImageResource(R.drawable.ic_pause_circle_filled_white_48dp);
                         seekUpdation();
                     }
                 } else {
                     Log.e("Sliding Panel", "Max getting set to one");
                     musicSeeker.setMax(Constants.DEFAULT_MAX);
-                    detailControler.setImageResource(R.drawable.ic_play_0);
+                    detailController.setImageResource(R.drawable.ic_play_circle_filled_white_48dp);
                 }
             }
 
@@ -124,16 +120,16 @@ public class SlidingPanel implements View.OnClickListener{
                     if (MusicPlayerHelper.getInstance().getIsPaused()) {
                         playerControl.setBackground(null);
                         playerControl.setImageResource(0);
-                        playerControl.setImageResource(R.drawable.ic_play_0);
+                        playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                     } else {
                         playerControl.setBackground(null);
                         playerControl.setImageResource(0);
-                        playerControl.setImageResource(R.drawable.ic_pause_0);
+                        playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
                     }
                 } else {
                     playerControl.setBackground(null);
                     playerControl.setImageResource(0);
-                    playerControl.setImageResource(R.drawable.ic_play_0);
+                    playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                 }
                 playerControl.setVisibility(View.VISIBLE);
             }
@@ -164,20 +160,20 @@ public class SlidingPanel implements View.OnClickListener{
         setAlbumCover(song);
         playerControl.setBackground(null);
         playerControl.setImageResource(0);
-        detailControler.setBackground(null);
-        detailControler.setImageResource(0);
+        detailController.setBackground(null);
+        detailController.setImageResource(0);
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                playerControl.setImageResource(R.drawable.ic_play_0);
-                detailControler.setImageResource(R.drawable.ic_play_0);
+                playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                detailController.setImageResource(R.drawable.ic_play_circle_filled_white_48dp);
             }
             else {
-                playerControl.setImageResource(R.drawable.ic_pause_0);
-                detailControler.setImageResource(R.drawable.ic_pause_0);
+                playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
+                detailController.setImageResource(R.drawable.ic_pause_circle_filled_white_48dp);
             }
         } else {
-            playerControl.setImageResource(R.drawable.ic_play_0);
-            detailControler.setImageResource(R.drawable.ic_play_0);
+            playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+            detailController.setImageResource(R.drawable.ic_play_circle_filled_white_48dp);
         }
     }
 
@@ -190,11 +186,11 @@ public class SlidingPanel implements View.OnClickListener{
         selectedTrackArtist.setText(song.getSongArtist());
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(R.drawable.ic_play_0);
+                playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
             else
-                playerControl.setImageResource(R.drawable.ic_pause_0);
+                playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
         } else {
-            playerControl.setImageResource(R.drawable.ic_play_0);
+            playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
         }
         setAlbumCover(song);
     }
@@ -202,11 +198,11 @@ public class SlidingPanel implements View.OnClickListener{
     public void setPlayerControl(){
         if (MusicPlayerHelper.getInstance().getMusicStartedOnce()){
             if (MusicPlayerHelper.getInstance().getIsPaused())
-                playerControl.setImageResource(R.drawable.ic_play_0);
+                playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
             else
-                playerControl.setImageResource(R.drawable.ic_pause_0);
+                playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
         } else {
-            playerControl.setImageResource(R.drawable.ic_play_0);
+            playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
         }
     }
 
@@ -222,7 +218,7 @@ public class SlidingPanel implements View.OnClickListener{
 
     private void controllerListeners(){
         playerControl.setOnClickListener(this);
-        detailControler.setOnClickListener(this);
+        detailController.setOnClickListener(this);
         detailForward.setOnClickListener(this);
         detailReverse.setOnClickListener(this);
 
@@ -314,7 +310,7 @@ public class SlidingPanel implements View.OnClickListener{
                 } else {
                     MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
                             .getInstance().getSongPosition());
-                    playerControl.setImageResource(R.drawable.ic_pause_0);
+                    playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
                 }
                 break;
 
@@ -322,33 +318,21 @@ public class SlidingPanel implements View.OnClickListener{
                 if (MusicPlayerHelper.getInstance().getMediaPlayer() != null) {
                     if (MusicPlayerHelper.getInstance().getMusicStartedOnce()) {
                         if (MusicPlayerHelper.getInstance().getIsPaused()) {
-                            detailControler.setBackground(null);
-                            detailControler.setImageResource(0);
-                            detailControler.setBackground(mActivity.getResources().getDrawable
-                                    (R.drawable.play_to_pause));
-                            ((AnimationDrawable) detailControler.getBackground()).start();
-                            playerControl.setImageResource(R.drawable.ic_pause_0);
+                            detailController.setImageResource(R.drawable.ic_pause_circle_filled_white_48dp);
+                            playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
                             MusicPlayerHelper.getInstance().toggleMusicPlayer
                                     (playerControl, mActivity);
                             seekUpdation();
                         } else {
-                            detailControler.setBackground(null);
-                            detailControler.setImageResource(0);
-                            detailControler.setBackground(mActivity.getResources().getDrawable
-                                    (R.drawable.pause_to_play));
-                            ((AnimationDrawable) detailControler.getBackground()).start();
-                            playerControl.setImageResource(R.drawable.ic_play_0);
+                            detailController.setImageResource(R.drawable.ic_play_circle_filled_white_48dp);
+                            playerControl.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                             MusicPlayerHelper.getInstance().toggleMusicPlayer(null, null);
                         }
                     } else {
                         MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
                                 .getInstance().getSongPosition());
-                        detailControler.setBackground(null);
-                        detailControler.setImageResource(0);
-                        detailControler.setBackground(mActivity.getResources().getDrawable
-                                (R.drawable.play_to_pause));
-                        ((AnimationDrawable) detailControler.getBackground()).start();
-                        playerControl.setImageResource(R.drawable.ic_pause_0);
+                        detailController.setImageResource(R.drawable.ic_pause_circle_filled_white_48dp);
+                        playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
                         musicSeeker.setMax(MusicPlayerHelper.getInstance().getMediaPlayer()
                                 .getDuration());
                         seekUpdation();
@@ -357,19 +341,15 @@ public class SlidingPanel implements View.OnClickListener{
                     MusicPlayerHelper.getInstance().initializeMediaPlayer();
                     MusicPlayerHelper.getInstance().startMusic(MusicPlayerHelper
                             .getInstance().getSongPosition());
-                    detailControler.setBackground(null);
-                    detailControler.setImageResource(0);
-                    detailControler.setBackground(mActivity.getResources().getDrawable
-                            (R.drawable.play_to_pause));
-                    ((AnimationDrawable) detailControler.getBackground()).start();
+                    detailController.setImageResource(R.drawable.ic_pause_circle_filled_white_48dp);
                     seekUpdation();
                 }
                 break;
 
             case R.id.detail_fast_forward:
                 MusicPlayerHelper.getInstance().playNextSong();
-                detailControler.setImageResource(R.drawable.ic_pause_0);
-                playerControl.setImageResource(R.drawable.ic_pause_0);
+                detailController.setImageResource(R.drawable.ic_pause_white_24dp);
+                playerControl.setImageResource(R.drawable.ic_pause_white_24dp);
                 Song song = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper.getInstance()
                         .getSongPosition());
                 selectedTrackTitle.setText(song.getSongTitle());
@@ -383,7 +363,7 @@ public class SlidingPanel implements View.OnClickListener{
 
             case R.id.detail_reverse:
                 MusicPlayerHelper.getInstance().playPrevSong();
-                detailControler.setImageResource(R.drawable.ic_pause_0);
+                detailController.setImageResource(R.drawable.ic_pause_white_24dp);
                 Song songOne = MusicPlayerHelper.allSongsList.get(MusicPlayerHelper
                         .getInstance().getSongPosition());
                 selectedTrackTitle.setText(songOne.getSongTitle());

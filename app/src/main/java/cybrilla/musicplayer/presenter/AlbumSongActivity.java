@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +17,11 @@ import com.bumptech.glide.Glide;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import cybrilla.musicplayer.R;
-import cybrilla.musicplayer.util.Constants;
-import cybrilla.musicplayer.view.AlbumSongsAdapter;
-import cybrilla.musicplayer.modle.Song;
 import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.datahelper.SlidingPanel;
+import cybrilla.musicplayer.modle.Song;
+import cybrilla.musicplayer.util.Constants;
+import cybrilla.musicplayer.view.AlbumSongsAdapter;
 
 /**
  * Activity which contains songs of an album. Sends data to adapter to set it.
@@ -39,10 +38,6 @@ public class AlbumSongActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_songs);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.hide();
 
         //Makes status bar transparent and allows image to appear behind it.
         if (VERSION.SDK_INT >= 21){

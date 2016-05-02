@@ -31,6 +31,7 @@ public class Constants {
 
     /**
      * Sets album art in the notification.
+     *
      * @param context service context
      * @return album's image or default image if no album art exists
      */
@@ -39,22 +40,26 @@ public class Constants {
         BitmapFactory.Options options = new BitmapFactory.Options();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         byte[] rawArt;
-        Song song = MusicPlayerHelper.allSongsList.get(
-                MusicPlayerHelper.getInstance().getSongPosition());
-        Uri uri = song.getUri();
-        mmr.setDataSource(context, uri);
-        if (mmr.getEmbeddedPicture() != null) {
-            rawArt = mmr.getEmbeddedPicture();
-            bm = BitmapFactory.decodeByteArray(rawArt, 0,
-                    rawArt.length, options);
-        } else {
-            try {
-                bm = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.default_image, options);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (MusicPlayerHelper.allSongsList != null) {
+            Song song = MusicPlayerHelper.allSongsList.get(
+                    MusicPlayerHelper.getInstance().getSongPosition());
+            Uri uri = song.getUri();
+            mmr.setDataSource(context, uri);
+            if (mmr.getEmbeddedPicture() != null) {
+                rawArt = mmr.getEmbeddedPicture();
+                bm = BitmapFactory.decodeByteArray(rawArt, 0,
+                        rawArt.length, options);
+            } else {
+                try {
+                    bm = BitmapFactory.decodeResource(context.getResources(),
+                            R.drawable.default_image, options);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            return bm;
+        } else {
+            return null;
         }
-        return bm;
     }
 }

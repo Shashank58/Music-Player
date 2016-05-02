@@ -9,7 +9,7 @@
         android:id="@+id/playing_song_toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white"
+        android:background="@color/black_900"
         android:visibility="visible"
         app:elevation="4dp">
 
@@ -35,7 +35,7 @@
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
@@ -45,12 +45,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/selected_track_title"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/selected_album_cover"
+                android:layout_toRightOf="@id/selected_album_cover"
+                android:layout_toEndOf="@id/selected_album_cover"
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingStart="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="12sp"/>
 
             <ImageView
@@ -69,23 +71,15 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/music_song_image"
-        android:orientation="vertical"
-        android:background="@drawable/light_blue_background"
-        android:layout_below="@+id/playing_song_toolbar"/>
 
     <ImageView
-        android:layout_width="240dp"
-        android:layout_height="220dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/playing_song_detail"
-        android:scaleType="fitXY"
-        android:layout_below="@+id/playing_song_toolbar"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"/>
+        android:scaleType="centerCrop"
+        android:background="@color/black_800"
+        android:layout_below="@+id/playing_song_toolbar"/>
+
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -114,8 +108,7 @@
         app:borderWidth="0dp"
         app:elevation="2dp"
         app:pressedTranslationZ="12dp"
-        android:layout_marginLeft="150dp"
-        android:layout_marginStart="150dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -138,8 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_alignParentBottom="true"
-        android:alpha="0.8"
-        android:background="@color/white">
+        android:background="@color/black_900">
 
         <SeekBar
             android:id="@+id/music_seeker"
@@ -148,12 +140,13 @@
 
         <ImageView
             android:id="@+id/detail_controller"
-            android:layout_width="63dp"
-            android:layout_height="63dp"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="22dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_play_0"/>
+            android:layout_centerVertical="true"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:src="@drawable/ic_play_circle_filled_white_48dp"/>
 
         <ImageView
             android:id="@+id/detail_fast_forward"

@@ -16,7 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cybrilla.musicplayer.R;
+import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
+import cybrilla.musicplayer.datahelper.SlidingPanel;
 import cybrilla.musicplayer.util.Constants;
 import cybrilla.musicplayer.util.MediaPlayerService;
-import cybrilla.musicplayer.datahelper.MusicPlayerHelper;
 import cybrilla.musicplayer.util.SharedPreferenceHandler;
-import cybrilla.musicplayer.datahelper.SlidingPanel;
 
 /**
  * Set up view pager and tab icons. Sets up playing song tool bar and saves song
@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
         }
         SlidingPanel.getInstance().initializedSlidingLayout(this);
         SlidingPanel.getInstance().setUpSlidingPanel();
-
-        if (getSupportActionBar() != null)
-            getSupportActionBar().hide();
 
         tabTitle.setText("All Songs");
         if (checkPermissions()) {
@@ -201,25 +198,25 @@ public class MainActivity extends AppCompatActivity {
      * Sets up the tab icons on the tab layout.
      */
     private void setUpTabIcon() {
-        TextView tabOne = (TextView) LayoutInflater.from(this)
-                .inflate(R.layout.custom_tab, null);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_all_songs, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
+        View allSongs = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        ImageView iconAllSongs = (ImageView) allSongs.findViewById(R.id.tabIcon);
+        iconAllSongs.setImageResource(R.drawable.ic_all_songs);
+        tabLayout.getTabAt(0).setCustomView(allSongs);
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this)
-                .inflate(R.layout.custom_tab, null);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_album, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
+        View albumSongs = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        ImageView iconAlbumSongs = (ImageView) albumSongs.findViewById(R.id.tabIcon);
+        iconAlbumSongs.setImageResource(R.drawable.ic_album);
+        tabLayout.getTabAt(1).setCustomView(albumSongs);
 
-        TextView tabThree = (TextView) LayoutInflater.from(this)
-                .inflate(R.layout.custom_tab, null);
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_brush, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
+        View artistSongs = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        ImageView iconArtistSongs = (ImageView) artistSongs.findViewById(R.id.tabIcon);
+        iconArtistSongs.setImageResource(R.drawable.ic_brush);
+        tabLayout.getTabAt(2).setCustomView(artistSongs);
 
-        TextView tabFour = (TextView) LayoutInflater.from(this)
-                .inflate(R.layout.custom_tab, null);
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_playlist, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabFour);
+        View playList = getLayoutInflater().inflate(R.layout.custom_tab, null);
+        ImageView iconPlaylist = (ImageView) playList.findViewById(R.id.tabIcon);
+        iconPlaylist.setImageResource(R.drawable.ic_playlist);
+        tabLayout.getTabAt(3).setCustomView(playList);
     }
 
     private void setupViewPager(ViewPager viewPager) {

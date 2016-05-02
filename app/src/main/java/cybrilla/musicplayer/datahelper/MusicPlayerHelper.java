@@ -3,7 +3,6 @@ package cybrilla.musicplayer.datahelper;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -151,22 +150,14 @@ public class MusicPlayerHelper{
                 isPaused = true;
                 if (playerController != null) {
                     Log.e("Music Player Helper", "Pause to Play");
-                    playerController.setBackground(null);
-                    playerController.setImageResource(0);
-                    playerController.setBackground(activity.getResources().getDrawable
-                            (R.drawable.pause_to_play));
-                    ((AnimationDrawable) playerController.getBackground()).start();
+                    playerController.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                 }
             } else {
                 isPaused = false;
                 mediaPlayer.start();
                 if (playerController != null) {
                     Log.e("Music Player Helper", "Play to Pause");
-                    playerController.setBackground(null);
-                    playerController.setImageResource(0);
-                    playerController.setBackground(activity.getResources().getDrawable
-                            (R.drawable.play_to_pause));
-                    ((AnimationDrawable) playerController.getBackground()).start();
+                    playerController.setImageResource(R.drawable.ic_pause_white_24dp);
                 }
             }
 
@@ -174,7 +165,7 @@ public class MusicPlayerHelper{
             initializeMediaPlayer();
             startMusic(songPosition);
             if (playerController != null)
-                playerController.setImageResource(R.drawable.ic_pause_0);
+                playerController.setImageResource(R.drawable.ic_pause_white_24dp);
         }
     }
 
